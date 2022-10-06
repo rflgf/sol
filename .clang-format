@@ -1,0 +1,12 @@
+﻿---
+AccessModifierOffset: '-4'
+BreakBeforeBraces: Allman
+BreakStringLiterals: 'true'
+IndentWidth: '4'
+SortIncludes: 'true'
+SpaceBeforeCpp11BracedList: 'true'
+Standard: Cpp11
+TabWidth: '4'
+UseTab: ForIndentation
+
+...
