@@ -1,19 +1,25 @@
 cmake_minimum_required(VERSION 3.20)
 
-#sol #
-    project(sol CXX)
+# sol #
+project(sol CXX)
 
-        set(sol_src "Application.cpp"
-                    "EntryPoint.h")
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/spdlog)
 
-            list(TRANSFORM sol_src PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/src/")
+set(sol_src
+	"Application.cpp"
+	"EntryPoint.h"
+)
 
-                add_library(sol STATIC $ {sol_src})
+list(TRANSFORM sol_src PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/src/")
 
-#target_link_libraries(sol nlohmann_json imgui imgui - node -                  \
-                       editor stb nativefiledialog fmt)
+add_library(sol STATIC ${sol_src})
 
-                    target_include_directories(
-                        sol PRIVATE $ {CMAKE_CURRENT_SOURCE_DIR} /
-                        src PUBLIC $ {CMAKE_CURRENT_SOURCE_DIR})
-#/ sol #
+# target_link_libraries(sol nlohmann_json imgui imgui-node-editor stb nativefiledialog fmt)
+
+target_include_directories(sol
+PRIVATE
+	${CMAKE_CURRENT_SOURCE_DIR}/src
+PUBLIC
+	${CMAKE_CURRENT_SOURCE_DIR}
+)
+# /sol #
