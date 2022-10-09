@@ -1,8 +1,11 @@
 cmake_minimum_required(VERSION 3.20)
 
+project(sol_engine)
+
 # set(CMAKE_CXX_COMPILER "clang")
 set(CMAKE_CXX_STANDARD "23")
 set(CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # # dependencies #
 # set(vendor_dir "${CMAKE_SOURCE_DIR}/vendor")
@@ -95,3 +98,7 @@ set(CXX_STANDARD_REQUIRED ON)
 add_subdirectory(sol)
 add_subdirectory(eclipse)
 add_subdirectory(example_app)
+
+set_property(GLOBAL PROPERTY USE_FOLDERS YES)
+set_property(GLOBAL PROPERTY PREDEFINED_TARGETS_FOLDER "Utilities/cmake")
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT "eclipse")

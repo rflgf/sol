@@ -10,4 +10,4 @@ planned features:
 
 build steps:
 
-`cmake -Bbuild`
+`cmake -Bbuild && cmake --build build`
