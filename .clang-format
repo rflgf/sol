@@ -1,7 +1,10 @@
 ﻿---
 AccessModifierOffset: '-4'
+AlignConsecutiveAssignments: 'true'
 BreakBeforeBraces: Allman
+BreakConstructorInitializers: BeforeComma
 BreakStringLiterals: 'true'
+IncludeBlocks: Regroup
 IndentWidth: '4'
 SortIncludes: 'true'
 SpaceBeforeCpp11BracedList: 'true'

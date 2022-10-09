@@ -4,7 +4,7 @@ import logging
 def clang_format(project_dirs : list):
 	dirs_to_format = []
 	ignored_dirs = ["vendor"]
-	
+
 	for proj_dir in project_dirs:
 		for dir, _, _ in os.walk(proj_dir):
 			should_format = True
@@ -16,7 +16,7 @@ def clang_format(project_dirs : list):
 				continue
 			dirs_to_format.append(os.path.join(dir, "*.cpp"))
 			dirs_to_format.append(os.path.join(dir, "*.h"))
-	
+
 	# FIXME(rafael): this warns on directories with no *.h
 	# or *.cpp files, maybe look into how to suppress that.
 	logging.getLogger("sol").info('applying clang-format, "invalid'

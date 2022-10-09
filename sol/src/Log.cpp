@@ -1,4 +1,5 @@
 #include "Log.h"
+
 #include <spdlog/sinks/stdout_color_sinks.h>
 
 namespace sol
@@ -18,4 +19,4 @@ void Log::init()
 	client_logger->set_level(spdlog::level::trace);
 }
 
-}
+} // namespace sol

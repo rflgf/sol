@@ -6,7 +6,10 @@ namespace example_app
 class ExampleApp : public sol::Application
 {
 public:
-	ExampleApp() : Application() {}
+	ExampleApp()
+	    : Application()
+	{
+	}
 	~ExampleApp() {}
 };
 

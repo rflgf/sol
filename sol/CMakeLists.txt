@@ -7,7 +7,6 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/spdlog)
 
 set(sol_src
 	"Application.cpp"
-	"EntryPoint.h"
 	"Log.cpp"
 )
 

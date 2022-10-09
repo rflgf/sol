@@ -6,7 +6,10 @@ namespace ecl
 class Eclipse : public sol::Application
 {
 public:
-	Eclipse() : Application() {}
+	Eclipse()
+	    : Application()
+	{
+	}
 	~Eclipse() {}
 };
 
