@@ -24,4 +24,11 @@ set_target_properties(eclipse PROPERTIES
                     RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_SOURCE_DIR}/bin/Release/eclipse
                     RUNTIME_OUTPUT_DIRECTORY_DIST ${CMAKE_SOURCE_DIR}/bin/Dist/eclipse
 )
+
+target_compile_definitions(eclipse PRIVATE
+                            _CRT_SECURE_NO_WARNINGS
+                            $<$<CONFIG:Debug>:ECL_DEBUG>
+                            $<$<CONFIG:Release>:ECL_RELEASE>
+                            $<$<CONFIG:Dist>:ECL_DIST>
+)
 # /eclipse #

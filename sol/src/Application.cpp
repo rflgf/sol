@@ -3,14 +3,19 @@
 namespace sol
 {
 
-Application::Application() {}
+Application::Application()
+{
+	window = std::unique_ptr<Window>(Window::create());
+}
 
 Application::~Application() {}
 
 void Application::run()
 {
-	while (true)
-		;
+	while (running)
+	{
+		window->on_update();
+	}
 }
 
 } // namespace sol

@@ -1,3 +1,6 @@
 [submodule "sol/vendor/spdlog"]
 	path = sol/vendor/spdlog
 	url = https://github.com/gabime/spdlog
+[submodule "sol/vendor/SDL"]
+	path = sol/vendor/SDL
+	url = https://github.com/libsdl-org/SDL.git
