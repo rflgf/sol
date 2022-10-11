@@ -5,6 +5,8 @@
 #include "Event/MouseEvent.h"
 #include "Log.h"
 
+#include <glad/glad.h>
+
 namespace sol
 {
 
@@ -40,6 +42,10 @@ void WindowsWindow::init(const WindowProps &props)
 	              data.width, data.height);
 
 	gl_context = SDL_GL_CreateContext(window);
+	SOL_CORE_ASSERT(gl_context, "failed to create GL context");
+
+	int status = gladLoadGLLoader(SDL_GL_GetProcAddress);
+	SOL_CORE_ASSERT(status, "failed to initialize OpenGL context with glad");
 }
 
 void WindowsWindow::shutdown()
@@ -57,7 +63,6 @@ void WindowsWindow::on_update()
 
 void WindowsWindow::poll_events()
 {
-
 	SDL_Event e;
 	while (SDL_PollEvent(&e))
 		switch (e.type)

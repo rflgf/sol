@@ -5,6 +5,7 @@ project(sol CXX)
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/spdlog)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/SDL)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/glad)
 
 set(sol_src
 	"Application.cpp"
@@ -18,7 +19,7 @@ list(TRANSFORM sol_src PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/src/")
 
 add_library(sol STATIC ${sol_src})
 
-target_link_libraries(sol spdlog SDL2main SDL2-static)
+target_link_libraries(sol spdlog SDL2main SDL2-static glad)
 # target_link_libraries(sol nlohmann_json imgui imgui-node-editor stb nativefiledialog fmt)
 
 target_include_directories(sol
