@@ -10,15 +10,15 @@ namespace sol
 struct MouseButtonEvent : public Event
 {
 protected:
-	uint8_t button_code;
+	uint16_t button_code;
 
-	MouseButtonEvent(uint8_t button_code)
+	MouseButtonEvent(uint16_t button_code)
 	    : button_code(button_code)
 	{
 	}
 
 public:
-	uint8_t get_button_code() const { return button_code; }
+	uint16_t get_button_code() const { return button_code; }
 
 	EVENT_CLASS_CATEGORY(INPUT | MOUSE | MOUSE_BUTTON)
 };
@@ -26,7 +26,7 @@ public:
 struct MouseButtonPressedEvent : public MouseButtonEvent
 {
 public:
-	MouseButtonPressedEvent(uint8_t button_code)
+	MouseButtonPressedEvent(uint16_t button_code)
 	    : MouseButtonEvent(button_code)
 	{
 	}
@@ -44,7 +44,7 @@ public:
 struct MouseButtonReleasedEvent : public MouseButtonEvent
 {
 public:
-	MouseButtonReleasedEvent(uint8_t button_code)
+	MouseButtonReleasedEvent(uint16_t button_code)
 	    : MouseButtonEvent(button_code)
 	{
 	}

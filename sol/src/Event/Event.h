@@ -31,7 +31,7 @@ public:
 		// clang-format on
 	};
 
-	enum Category : uint8_t
+	enum Category : uint16_t
 	{
 		NONE         = 0,
 		APPLICATION  = BIT(0),
@@ -70,9 +70,9 @@ public:
 		}
 	};
 
-	virtual Event::Type get_event_type() const = 0;
-	virtual const char *get_name() const       = 0;
-	virtual uint8_t get_category_flags() const = 0;
+	virtual Event::Type get_event_type() const  = 0;
+	virtual const char *get_name() const        = 0;
+	virtual uint16_t get_category_flags() const = 0;
 	virtual std::string to_string() const { return get_name(); }
 
 	bool is_in_category(Event::Category c) { return get_category_flags() & c; }
@@ -89,6 +89,6 @@ inline std::ostream &operator<<(std::ostream &os, const Event &e)
 	virtual const char *get_name() const override { return #type; }
 
 #define EVENT_CLASS_CATEGORY(category)                                         \
-	virtual uint8_t get_category_flags() const override { return category; }
+	virtual uint16_t get_category_flags() const override { return category; }
 
 } // namespace sol

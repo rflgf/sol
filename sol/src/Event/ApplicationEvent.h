@@ -38,17 +38,17 @@ public:
 struct WindowResizeEvent : public Event
 {
 private:
-	uint8_t width, height;
+	uint16_t width, height;
 
 public:
-	WindowResizeEvent(uint8_t width, uint8_t height)
+	WindowResizeEvent(uint16_t width, uint16_t height)
 	    : width(width)
 	    , height(height)
 	{
 	}
 
-	uint8_t get_width() const { return width; }
-	uint8_t get_height() const { return height; }
+	uint16_t get_width() const { return width; }
+	uint16_t get_height() const { return height; }
 
 	virtual std::string to_string() const override
 	{

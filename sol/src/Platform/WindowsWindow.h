@@ -11,15 +11,17 @@ namespace sol
 
 struct WindowsWindow : public Window
 {
-private:
+public:
 	struct Data
 	{
 		std::string title;
-		uint8_t width, height;
+		uint16_t width, height;
 		bool vsync;
 
 		EventCallbackFn callback;
 	};
+
+private:
 	Data data;
 	SDL_Window *window;
 	SDL_GLContext gl_context;
@@ -29,8 +31,8 @@ public:
 	virtual ~WindowsWindow();
 
 	virtual void on_update() override;
-	virtual uint8_t get_width() const { return data.width; };
-	virtual uint8_t get_height() const { return data.height; };
+	virtual uint16_t get_width() const { return data.width; };
+	virtual uint16_t get_height() const { return data.height; };
 
 	virtual void set_event_callback(const EventCallbackFn &callback) override
 	{
@@ -41,5 +43,8 @@ public:
 
 	virtual void init(const WindowProps &props);
 	virtual void shutdown();
+
+	void poll_events();
+	static uint16_t sol_key_from(SDL_Keysym &keysym);
 };
 } // namespace sol

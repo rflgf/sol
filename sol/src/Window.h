@@ -16,10 +16,10 @@ public:
 	{
 	public:
 		std::string title;
-		uint8_t width, height;
+		uint16_t width, height;
 
 		WindowProps(const std::string &title = "Sol Window",
-		            uint8_t width = 1280, uint8_t height = 720)
+		            uint16_t width = 1280, uint16_t height = 720)
 		    : title(title)
 		    , width(width)
 		    , height(height)
@@ -31,8 +31,8 @@ public:
 
 	virtual void on_update() = 0;
 
-	virtual uint8_t get_width() const  = 0;
-	virtual uint8_t get_height() const = 0;
+	virtual uint16_t get_width() const  = 0;
+	virtual uint16_t get_height() const = 0;
 
 	virtual void set_event_callback(const EventCallbackFn &callback) = 0;
 	virtual void set_vsync(bool enabled)                             = 0;

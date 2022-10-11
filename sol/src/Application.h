@@ -17,6 +17,7 @@ public:
 	Application();
 	virtual ~Application();
 
+	void on_event(Event &event);
 	void run();
 };
 

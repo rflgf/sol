@@ -1,9 +1,14 @@
 #include "Platform/WindowsWindow.h"
 
+#include "Event/ApplicationEvent.h"
+#include "Event/KeyboardEvent.h"
+#include "Event/MouseEvent.h"
 #include "Log.h"
 
 namespace sol
 {
+
+uint16_t WindowsWindow::sol_key_from(SDL_Keysym &keysym) { return 0; }
 
 Window *Window::create(const WindowProps &props)
 {
@@ -46,11 +51,80 @@ void WindowsWindow::shutdown()
 
 void WindowsWindow::on_update()
 {
-	SDL_Event e;
-	while (SDL_PollEvent(&e) != 0)
-	{
-	}
+	poll_events();
 	SDL_GL_SwapWindow(window);
+}
+
+void WindowsWindow::poll_events()
+{
+
+	SDL_Event e;
+	while (SDL_PollEvent(&e))
+		switch (e.type)
+		{
+
+		// application events:
+		case SDL_QUIT:
+		{
+			WindowCloseEvent event;
+			data.callback(event);
+			break;
+		}
+		case SDL_WINDOWEVENT:
+		{
+			if (e.window.event == SDL_WINDOWEVENT_RESIZED)
+			{
+				WindowResizeEvent event {static_cast<uint16_t>(e.window.data1),
+				                         static_cast<uint16_t>(e.window.data2)};
+				data.callback(event);
+			}
+			break;
+		}
+
+		// keyboard events:
+		case SDL_KEYDOWN:
+		{
+			KeyPressedEvent event {sol_key_from(e.key.keysym), e.key.repeat};
+			data.callback(event);
+			break;
+		}
+		case SDL_KEYUP:
+		{
+			KeyReleasedEvent event {sol_key_from(e.key.keysym)};
+			data.callback(event);
+			break;
+		}
+
+		// mouse events:
+		case SDL_MOUSEMOTION:
+		{
+			MouseMovedEvent event {static_cast<float>(e.motion.x),
+			                       static_cast<float>(e.motion.y)};
+			data.callback(event);
+			break;
+		}
+		case SDL_MOUSEBUTTONDOWN:
+		{
+			MouseButtonPressedEvent event {e.button.button};
+			data.callback(event);
+			break;
+		}
+		case SDL_MOUSEBUTTONUP:
+		{
+			MouseButtonReleasedEvent event {e.button.button};
+			data.callback(event);
+			break;
+		}
+		case SDL_MOUSEWHEEL:
+		{
+			MouseScrolledEvent event {e.wheel.preciseX, e.wheel.preciseY};
+			data.callback(event);
+			break;
+		}
+
+		default:
+			break;
+		};
 }
 
 void WindowsWindow::set_vsync(bool enabled = true)
