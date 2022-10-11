@@ -8,6 +8,8 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/SDL)
 
 set(sol_src
 	"Application.cpp"
+    "Layer.cpp"
+    "LayerStack.cpp"
 	"Log.cpp"
     "Platform/WindowsWindow.cpp"
 )

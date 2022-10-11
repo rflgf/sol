@@ -25,6 +25,10 @@ void Application::run()
 {
 	while (running)
 	{
+		for (Layer *layer : layer_stack)
+			if (layer->is_enabled())
+				layer->on_update();
+
 		window->on_update();
 	}
 }
@@ -40,7 +44,26 @@ void Application::on_event(Event &event)
 		    return true;
 	    });
 
+	for (auto it = layer_stack.end(); it != layer_stack.begin();)
+	{
+		--it;
+		Layer &layer = *(*it);
+		if (layer.is_enabled())
+		{
+			layer.on_event(event);
+			if (event.handled)
+				break;
+		}
+	}
+
 	SOL_CORE_TRACE("{}", event);
+}
+
+void Application::push_layer(Layer *layer) { layer_stack.push(layer); }
+
+void Application::push_overlay_layer(Layer *layer)
+{
+	layer_stack.push_overlay(layer);
 }
 
 } // namespace sol

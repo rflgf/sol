@@ -12,9 +12,6 @@ namespace sol
 
 struct Event
 {
-protected:
-	bool handled = false;
-
 public:
 	enum class Type
 	{
@@ -69,6 +66,8 @@ public:
 			return false;
 		}
 	};
+
+	bool handled = false;
 
 	virtual Event::Type get_event_type() const  = 0;
 	virtual const char *get_name() const        = 0;
