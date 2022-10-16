@@ -4,12 +4,17 @@
 #include "Event/Event.h"
 #include "Event/KeyboardEvent.h"
 #include "Event/MouseEvent.h"
+#include "ImGui/ImGuiLayer.h"
 
 namespace sol
 {
 
 Application::Application()
 {
+	SOL_CORE_ASSERT(!application_instance,
+	                "attempt to instantiate multiple Application");
+	application_instance = this;
+
 	window = std::unique_ptr<Window>(Window::create());
 	window->set_event_callback(
 	    [this](Event &e) -> bool
@@ -17,6 +22,9 @@ Application::Application()
 		    on_event(e);
 		    return true;
 	    });
+
+	ImGuiLayer *debug_imgui_layer = new ImGuiLayer;
+	push_overlay(debug_imgui_layer);
 }
 
 Application::~Application() {}
@@ -61,9 +69,9 @@ void Application::on_event(Event &event)
 
 void Application::push_layer(Layer *layer) { layer_stack.push(layer); }
 
-void Application::push_overlay_layer(Layer *layer)
+void Application::push_overlay(Layer *overlay)
 {
-	layer_stack.push_overlay(layer);
+	layer_stack.push_overlay(overlay);
 }
 
 } // namespace sol

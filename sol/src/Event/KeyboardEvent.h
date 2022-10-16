@@ -66,4 +66,22 @@ public:
 	EVENT_CLASS_TYPE(KEY_RELEASED)
 };
 
+struct KeyTypedEvent : public KeyboardEvent
+{
+public:
+	KeyTypedEvent(uint16_t key_code)
+	    : KeyboardEvent(key_code)
+	{
+	}
+
+	virtual std::string to_string() const override
+	{
+		std::stringstream ss;
+		ss << "KeyTypedEvent: " << static_cast<unsigned>(key_code);
+		return ss.str();
+	}
+
+	EVENT_CLASS_TYPE(KEY_TYPED)
+};
+
 } // namespace sol

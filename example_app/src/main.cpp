@@ -11,7 +11,10 @@ public:
 	{
 	}
 
-	virtual void on_attach() override { SOL_INFO("example layer attached"); }
+	virtual void on_attach() override {}
+	virtual void on_detatch() override {}
+	virtual void on_update() override {}
+	virtual void on_event(sol::Event &e) override {}
 };
 
 class ExampleApp : public sol::Application

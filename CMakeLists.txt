@@ -18,37 +18,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # add_subdirectory("${vendor_dir}/nativefiledialog")
 
 
-# #### imgui ####
-# set(imgui_dir "${vendor_dir}/imgui")
-# set(imgui_src
-# 	"${imgui_dir}/imgui.cpp"
-# 	"${imgui_dir}/imgui_demo.cpp"
-# 	"${imgui_dir}/imgui_draw.cpp"
-# 	"${imgui_dir}/imgui_tables.cpp"
-# 	"${imgui_dir}/imgui_widgets.cpp"
-
-# 	"${imgui_dir}/backends/imgui_impl_sdl.cpp"
-# 	"${imgui_dir}/backends/imgui_impl_sdlrenderer.cpp"
-# 	"${imgui_dir}/backends/imgui_impl_opengl3.cpp"
-# 	"${imgui_dir}/backends/imgui_impl_opengl3_loader.h"
-
-#     "${imgui_dir}/misc/cpp/imgui_stdlib.cpp"
-# )
-# source_group("" FILES ${imgui_src})
-# add_library(imgui STATIC ${imgui_src})
-# target_include_directories(imgui
-# 	PUBLIC
-# 		"${imgui_dir}"
-# 		"${imgui_dir}/backends"
-# 		"${imgui_dir}/misc/cpp"
-# )
-# target_compile_definitions(imgui
-#     PUBLIC
-#         "-D IMGUI_IMPL_OPENGL_LOADER_GLAD"
-# )
-# target_link_libraries(imgui SDL2main SDL2-static glad)
-# #### /imgui ####
-
 # #### imgui-node-editor ####
 # set(imgui-node-editor_dir "${vendor_dir}/imgui-node-editor")
 # add_library(imgui-node-editor STATIC
@@ -94,6 +63,36 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #         "${stb_dir}"
 # )
 # #### /stb ####
+
+
+#### imgui ####
+set(imgui_dir "vendor/imgui")
+set(imgui_src
+	"${imgui_dir}/imgui.cpp"
+	"${imgui_dir}/imgui_demo.cpp"
+	"${imgui_dir}/imgui_draw.cpp"
+	"${imgui_dir}/imgui_tables.cpp"
+	"${imgui_dir}/imgui_widgets.cpp"
+
+	"${imgui_dir}/backends/imgui_impl_sdl.cpp"
+	"${imgui_dir}/backends/imgui_impl_sdlrenderer.cpp"
+	"${imgui_dir}/backends/imgui_impl_opengl3.cpp"
+	"${imgui_dir}/backends/imgui_impl_opengl3_loader.h"
+
+    "${imgui_dir}/misc/cpp/imgui_stdlib.cpp"
+)
+source_group("" FILES ${imgui_src})
+add_library(imgui STATIC ${imgui_src})
+target_include_directories(imgui
+	PUBLIC
+		"${imgui_dir}"
+)
+target_compile_definitions(imgui
+    PUBLIC
+        "-D IMGUI_IMPL_OPENGL_LOADER_GLAD"
+)
+target_link_libraries(imgui SDL2main SDL2-static glad)
+#### /imgui ####
 
 add_subdirectory(sol)
 add_subdirectory(eclipse)

@@ -5,7 +5,12 @@
 #include "Event/MouseEvent.h"
 #include "Log.h"
 
+#pragma once
+
+#include <backends/imgui_impl_opengl3.h>
+#include <backends/imgui_impl_sdl.h>
 #include <glad/glad.h>
+#include <imgui.h>
 
 namespace sol
 {
@@ -52,12 +57,14 @@ void WindowsWindow::shutdown()
 {
 	SDL_GL_DeleteContext(gl_context);
 	SDL_DestroyWindow(window);
+
 	SDL_Quit();
 }
 
 void WindowsWindow::on_update()
 {
 	poll_events();
+
 	SDL_GL_SwapWindow(window);
 }
 
@@ -72,6 +79,7 @@ void WindowsWindow::poll_events()
 		case SDL_QUIT:
 		{
 			WindowCloseEvent event;
+			event.underlying_event = static_cast<void *>(&e);
 			data.callback(event);
 			break;
 		}
@@ -81,6 +89,7 @@ void WindowsWindow::poll_events()
 			{
 				WindowResizeEvent event {static_cast<uint16_t>(e.window.data1),
 				                         static_cast<uint16_t>(e.window.data2)};
+				event.underlying_event = static_cast<void *>(&e);
 				data.callback(event);
 			}
 			break;
@@ -90,12 +99,14 @@ void WindowsWindow::poll_events()
 		case SDL_KEYDOWN:
 		{
 			KeyPressedEvent event {sol_key_from(e.key.keysym), e.key.repeat};
+			event.underlying_event = static_cast<void *>(&e);
 			data.callback(event);
 			break;
 		}
 		case SDL_KEYUP:
 		{
 			KeyReleasedEvent event {sol_key_from(e.key.keysym)};
+			event.underlying_event = static_cast<void *>(&e);
 			data.callback(event);
 			break;
 		}
@@ -105,24 +116,28 @@ void WindowsWindow::poll_events()
 		{
 			MouseMovedEvent event {static_cast<float>(e.motion.x),
 			                       static_cast<float>(e.motion.y)};
+			event.underlying_event = static_cast<void *>(&e);
 			data.callback(event);
 			break;
 		}
 		case SDL_MOUSEBUTTONDOWN:
 		{
 			MouseButtonPressedEvent event {e.button.button};
+			event.underlying_event = static_cast<void *>(&e);
 			data.callback(event);
 			break;
 		}
 		case SDL_MOUSEBUTTONUP:
 		{
 			MouseButtonReleasedEvent event {e.button.button};
+			event.underlying_event = static_cast<void *>(&e);
 			data.callback(event);
 			break;
 		}
 		case SDL_MOUSEWHEEL:
 		{
 			MouseScrolledEvent event {e.wheel.preciseX, e.wheel.preciseY};
+			event.underlying_event = static_cast<void *>(&e);
 			data.callback(event);
 			break;
 		}
@@ -141,5 +156,15 @@ void WindowsWindow::set_vsync(bool enabled = true)
 }
 
 bool WindowsWindow::is_vsync() const { return data.vsync; }
+
+void *WindowsWindow::get_native_window() const
+{
+	return static_cast<void *>(window);
+}
+
+void *WindowsWindow::get_native_rendering_context() const
+{
+	return static_cast<void *>(gl_context);
+}
 
 } // namespace sol

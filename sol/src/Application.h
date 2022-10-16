@@ -7,10 +7,14 @@
 #include <memory>
 
 namespace sol
+
 {
 
 class Application
 {
+private:
+	static inline Application *application_instance = nullptr;
+
 protected:
 	bool running = true;
 	std::unique_ptr<Window> window;
@@ -24,7 +28,10 @@ public:
 	void run();
 
 	void push_layer(Layer *layer);
-	void push_overlay_layer(Layer *overlay_layer);
+	void push_overlay(Layer *overlay);
+
+	static Application &get() { return *application_instance; }
+	Window *get_window() const { return window.get(); }
 };
 
 Application *GetApplication();

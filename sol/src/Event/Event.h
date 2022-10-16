@@ -20,7 +20,7 @@ public:
 
 		APP_RENDER, APP_TICK, APP_UPDATE,
 
-		KEY_PRESSED, KEY_RELEASED,
+		KEY_PRESSED, KEY_RELEASED, KEY_TYPED,
 
 		MOUSE_BUTTON_PRESSED, MOUSE_BUTTON_RELEASED, MOUSE_MOVED, MOUSE_SCROLLED,
 
@@ -67,7 +67,8 @@ public:
 		}
 	};
 
-	bool handled = false;
+	void *underlying_event = nullptr;
+	bool handled           = false;
 
 	virtual Event::Type get_event_type() const  = 0;
 	virtual const char *get_name() const        = 0;

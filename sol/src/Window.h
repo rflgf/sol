@@ -31,8 +31,10 @@ public:
 
 	virtual void on_update() = 0;
 
-	virtual uint16_t get_width() const  = 0;
-	virtual uint16_t get_height() const = 0;
+	virtual uint16_t get_width() const                 = 0;
+	virtual uint16_t get_height() const                = 0;
+	virtual void *get_native_window() const            = 0;
+	virtual void *get_native_rendering_context() const = 0;
 
 	virtual void set_event_callback(const EventCallbackFn &callback) = 0;
 	virtual void set_vsync(bool enabled)                             = 0;

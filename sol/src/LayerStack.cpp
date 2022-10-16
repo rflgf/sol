@@ -22,11 +22,11 @@ void LayerStack::push(Layer *layer)
 		layer->on_attach();
 }
 
-void LayerStack::push_overlay(Layer *layer)
+void LayerStack::push_overlay(Layer *overlay)
 {
-	layers.emplace_back(layer);
-	if (layer->is_enabled())
-		layer->on_attach();
+	layers.emplace_back(overlay);
+	if (overlay->is_enabled())
+		overlay->on_attach();
 }
 
 void LayerStack::pop(Layer *layer)
@@ -48,23 +48,23 @@ void LayerStack::pop(Layer *layer)
 #endif
 }
 
-void LayerStack::pop_overlay(Layer *layer)
+void LayerStack::pop_overlay(Layer *overlay)
 {
 
 	std::vector<Layer *>::iterator it =
-	    std::find(layers.begin(), layers.end(), layer);
+	    std::find(layers.begin(), layers.end(), overlay);
 	if (it != layers.end())
 	{
 		layers.erase(it);
-		if (layer->is_enabled())
-			layer->on_detatch();
+		if (overlay->is_enabled())
+			overlay->on_detatch();
 	}
 
 #ifdef SOL_DEBUG
 	else
 		SOL_CORE_WARN(
 		    "attempt to pop_overlay layer not present on the stack: {}",
-		    layer->get_name());
+		    overlay->get_name());
 #endif
 }
 

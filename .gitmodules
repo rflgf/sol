@@ -7,3 +7,7 @@
 [submodule "sol/vendor/glad"]
 	path = sol/vendor/glad
 	url = https://github.com/Dav1dde/glad.git
+[submodule "vendor/imgui"]
+	path = vendor/imgui
+	url = https://github.com/ocornut/imgui.git
+	branch = docking

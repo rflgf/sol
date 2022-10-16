@@ -31,8 +31,11 @@ public:
 	virtual ~WindowsWindow();
 
 	virtual void on_update() override;
-	virtual uint16_t get_width() const { return data.width; };
-	virtual uint16_t get_height() const { return data.height; };
+	virtual uint16_t get_width() const override { return data.width; };
+	virtual uint16_t get_height() const override { return data.height; };
+
+	virtual void *get_native_window() const override;
+	virtual void *get_native_rendering_context() const override;
 
 	virtual void set_event_callback(const EventCallbackFn &callback) override
 	{
