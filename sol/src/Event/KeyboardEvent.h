@@ -10,15 +10,15 @@ namespace sol
 struct KeyboardEvent : public Event
 {
 protected:
-	uint16_t key_code;
+	KeyCode key_code;
 
-	KeyboardEvent(uint16_t key_code)
+	KeyboardEvent(KeyCode key_code)
 	    : key_code(key_code)
 	{
 	}
 
 public:
-	uint16_t get_key_code() const { return key_code; }
+	KeyCode get_key_code() const { return key_code; }
 
 	EVENT_CLASS_CATEGORY(INPUT | KEYBOARD)
 };
@@ -26,21 +26,22 @@ public:
 struct KeyPressedEvent : public KeyboardEvent
 {
 private:
-	uint16_t repeat_count = 0;
+	uint8_t repeat_count = 0;
 
 public:
-	KeyPressedEvent(uint16_t key_code, uint16_t repeat_count = 0)
+	KeyPressedEvent(KeyCode key_code, uint8_t repeat_count = 0)
 	    : KeyboardEvent(key_code)
 	    , repeat_count(repeat_count)
 	{
 	}
 
-	uint16_t get_repeat_count() const { return repeat_count; }
+	uint8_t get_repeat_count() const { return repeat_count; }
 
 	virtual std::string to_string() const override
 	{
 		std::stringstream ss;
-		ss << "KeyPressedEvent: " << static_cast<unsigned>(key_code) << " ("
+		ss << "KeyPressedEvent: " << key_code << " ("
+		   << static_cast<char>(key_code) << " as char), repeated "
 		   << static_cast<unsigned>(repeat_count) << " times)";
 		return ss.str();
 	}
@@ -51,7 +52,7 @@ public:
 struct KeyReleasedEvent : public KeyboardEvent
 {
 public:
-	KeyReleasedEvent(uint16_t key_code)
+	KeyReleasedEvent(KeyCode key_code)
 	    : KeyboardEvent(key_code)
 	{
 	}
@@ -59,7 +60,8 @@ public:
 	virtual std::string to_string() const override
 	{
 		std::stringstream ss;
-		ss << "KeyReleasedEvent: " << static_cast<unsigned>(key_code);
+		ss << "KeyReleasedEvent: " << key_code << " ("
+		   << static_cast<char>(key_code) << " as char)";
 		return ss.str();
 	}
 
@@ -69,7 +71,7 @@ public:
 struct KeyTypedEvent : public KeyboardEvent
 {
 public:
-	KeyTypedEvent(uint16_t key_code)
+	KeyTypedEvent(KeyCode key_code)
 	    : KeyboardEvent(key_code)
 	{
 	}
@@ -77,7 +79,7 @@ public:
 	virtual std::string to_string() const override
 	{
 		std::stringstream ss;
-		ss << "KeyTypedEvent: " << static_cast<unsigned>(key_code);
+		ss << "KeyTypedEvent: " << static_cast<char>(key_code);
 		return ss.str();
 	}
 

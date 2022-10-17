@@ -10,15 +10,15 @@ namespace sol
 struct MouseButtonEvent : public Event
 {
 protected:
-	uint16_t button_code;
+	MouseButtonCode button_code;
 
-	MouseButtonEvent(uint16_t button_code)
+	MouseButtonEvent(MouseButtonCode button_code)
 	    : button_code(button_code)
 	{
 	}
 
 public:
-	uint16_t get_button_code() const { return button_code; }
+	MouseButtonCode get_button_code() const { return button_code; }
 
 	EVENT_CLASS_CATEGORY(INPUT | MOUSE | MOUSE_BUTTON)
 };
@@ -26,7 +26,7 @@ public:
 struct MouseButtonPressedEvent : public MouseButtonEvent
 {
 public:
-	MouseButtonPressedEvent(uint16_t button_code)
+	MouseButtonPressedEvent(MouseButtonCode button_code)
 	    : MouseButtonEvent(button_code)
 	{
 	}
@@ -34,7 +34,7 @@ public:
 	virtual std::string to_string() const override
 	{
 		std::stringstream ss;
-		ss << "MouseButtonPressedEvent: " << static_cast<unsigned>(button_code);
+		ss << "MouseButtonPressedEvent: " << button_code;
 		return ss.str();
 	}
 
@@ -44,7 +44,7 @@ public:
 struct MouseButtonReleasedEvent : public MouseButtonEvent
 {
 public:
-	MouseButtonReleasedEvent(uint16_t button_code)
+	MouseButtonReleasedEvent(MouseButtonCode button_code)
 	    : MouseButtonEvent(button_code)
 	{
 	}
@@ -52,8 +52,7 @@ public:
 	virtual std::string to_string() const override
 	{
 		std::stringstream ss;
-		ss << "MouseButtonReleasedEvent: "
-		   << static_cast<unsigned>(button_code);
+		ss << "MouseButtonReleasedEvent: " << button_code;
 		return ss.str();
 	}
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core.h"
+#include "KeyCodes.h"
 
 #include <concepts>
 #include <functional>
@@ -41,9 +42,6 @@ public:
 	class Dispatcher
 	{
 		template <typename T> using EventFn = std::function<bool(T &)>;
-
-		// template <class T>
-		// concept dispatchable_event = ;
 
 	private:
 		Event &event;

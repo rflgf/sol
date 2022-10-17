@@ -3,7 +3,9 @@
 #include "Event/ApplicationEvent.h"
 #include "Event/KeyboardEvent.h"
 #include "Event/MouseEvent.h"
+#include "Input.h"
 #include "Log.h"
+#include "Platform/WindowsInput.h"
 
 #pragma once
 
@@ -15,10 +17,9 @@
 namespace sol
 {
 
-uint16_t WindowsWindow::sol_key_from(SDL_Keysym &keysym) { return 0; }
-
 Window *Window::create(const WindowProps &props)
 {
+	Input::instance = new WindowsInput;
 	return new WindowsWindow(props);
 }
 
@@ -98,14 +99,15 @@ void WindowsWindow::poll_events()
 		// keyboard events:
 		case SDL_KEYDOWN:
 		{
-			KeyPressedEvent event {sol_key_from(e.key.keysym), e.key.repeat};
+			KeyPressedEvent event {static_cast<KeyCode>(e.key.keysym.sym),
+			                       e.key.repeat};
 			event.underlying_event = static_cast<void *>(&e);
 			data.callback(event);
 			break;
 		}
 		case SDL_KEYUP:
 		{
-			KeyReleasedEvent event {sol_key_from(e.key.keysym)};
+			KeyReleasedEvent event {static_cast<KeyCode>(e.key.keysym.sym)};
 			event.underlying_event = static_cast<void *>(&e);
 			data.callback(event);
 			break;
@@ -117,19 +119,22 @@ void WindowsWindow::poll_events()
 			MouseMovedEvent event {static_cast<float>(e.motion.x),
 			                       static_cast<float>(e.motion.y)};
 			event.underlying_event = static_cast<void *>(&e);
+			SOL_TRACE(event);
 			data.callback(event);
 			break;
 		}
 		case SDL_MOUSEBUTTONDOWN:
 		{
-			MouseButtonPressedEvent event {e.button.button};
+			MouseButtonPressedEvent event {
+			    static_cast<MouseButtonCode>(e.button.button)};
 			event.underlying_event = static_cast<void *>(&e);
 			data.callback(event);
 			break;
 		}
 		case SDL_MOUSEBUTTONUP:
 		{
-			MouseButtonReleasedEvent event {e.button.button};
+			MouseButtonReleasedEvent event {
+			    static_cast<MouseButtonCode>(e.button.button)};
 			event.underlying_event = static_cast<void *>(&e);
 			data.callback(event);
 			break;

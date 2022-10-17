@@ -1,3 +1,4 @@
+#include <SDL.h>
 #include <sol.h>
 
 namespace example_app
@@ -13,8 +14,17 @@ public:
 
 	virtual void on_attach() override {}
 	virtual void on_detatch() override {}
-	virtual void on_update() override {}
-	virtual void on_event(sol::Event &e) override {}
+	virtual void on_update() override
+	{
+		if (sol::Input::is_mouse_button_pressed(
+		        sol::MouseButtonCode::SOL_MB_LEFT))
+			SOL_INFO("Left mouse button pressed!");
+	}
+	virtual void on_event(sol::Event &e) override
+	{
+		if (e.get_event_type() == sol::Event::Type::KEY_PRESSED)
+			SOL_INFO("{}", e);
+	}
 };
 
 class ExampleApp : public sol::Application

@@ -64,7 +64,7 @@ void Application::on_event(Event &event)
 		}
 	}
 
-	SOL_CORE_TRACE("{}", event);
+	// SOL_CORE_TRACE("{}", event);
 }
 
 void Application::push_layer(Layer *layer) { layer_stack.push(layer); }

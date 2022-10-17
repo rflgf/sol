@@ -20,10 +20,6 @@ void ImGuiLayer::on_attach()
 	ImGui::StyleColorsDark();
 
 	auto &io = ImGui::GetIO();
-	// io.ConfigFlags |= ImGuiBackendFlags_HasMouseCursors;
-	// io.ConfigFlags |= ImGuiBackendFlags_HasSetMousePos;
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-	// io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
 	Window *window_abstraction = Application::get().get_window();
@@ -47,10 +43,12 @@ void ImGuiLayer::on_update()
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame();
 	ImGui::NewFrame();
+
 	static bool active = true;
 	ImGui::Begin("ImGui Debug Layer", &active, ImGuiWindowFlags_MenuBar);
 	ImGui::ShowDemoWindow();
 	ImGui::End();
+
 	ImGui::EndFrame();
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
