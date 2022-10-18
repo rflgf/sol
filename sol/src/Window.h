@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Event/Event.h"
+#include "RenderingContext.h"
 
 #include <functional>
 
@@ -10,6 +11,9 @@ namespace sol
 struct Window
 {
 	using EventCallbackFn = std::function<bool(Event &)>;
+
+protected:
+	std::unique_ptr<RenderingContext> rendering_context;
 
 public:
 	struct WindowProps
@@ -31,10 +35,13 @@ public:
 
 	virtual void on_update() = 0;
 
-	virtual uint16_t get_width() const                 = 0;
-	virtual uint16_t get_height() const                = 0;
-	virtual void *get_native_window() const            = 0;
-	virtual void *get_native_rendering_context() const = 0;
+	virtual uint16_t get_width() const      = 0;
+	virtual uint16_t get_height() const     = 0;
+	virtual void *get_native_window() const = 0;
+	RenderingContext *get_rendering_context()
+	{
+		return rendering_context.get();
+	}
 
 	virtual void set_event_callback(const EventCallbackFn &callback) = 0;
 	virtual void set_vsync(bool enabled)                             = 0;

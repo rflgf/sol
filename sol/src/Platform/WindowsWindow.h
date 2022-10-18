@@ -24,7 +24,6 @@ public:
 private:
 	Data data;
 	SDL_Window *window;
-	SDL_GLContext gl_context;
 
 public:
 	WindowsWindow(const WindowProps &props);
@@ -35,7 +34,6 @@ public:
 	virtual uint16_t get_height() const override { return data.height; };
 
 	virtual void *get_native_window() const override;
-	virtual void *get_native_rendering_context() const override;
 
 	virtual void set_event_callback(const EventCallbackFn &callback) override
 	{

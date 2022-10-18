@@ -16,6 +16,7 @@ set(sol_src
 	"Log.cpp"
     "Platform/WindowsInput.cpp"
     "Platform/WindowsWindow.cpp"
+    "Renderer/OpenGLContext.cpp"
 )
 
 list(TRANSFORM sol_src PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/src/")

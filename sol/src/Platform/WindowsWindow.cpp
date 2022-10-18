@@ -1,17 +1,16 @@
-#include "Platform/WindowsWindow.h"
+#pragma once
+
+#include "WindowsWindow.h"
 
 #include "Event/ApplicationEvent.h"
 #include "Event/KeyboardEvent.h"
 #include "Event/MouseEvent.h"
 #include "Input.h"
 #include "Log.h"
-#include "Platform/WindowsInput.h"
+#include "Renderer/OpenGLContext.h"
+#include "WindowsInput.h"
 
-#pragma once
-
-#include <backends/imgui_impl_opengl3.h>
 #include <backends/imgui_impl_sdl.h>
-#include <glad/glad.h>
 #include <imgui.h>
 
 namespace sol
@@ -47,19 +46,13 @@ void WindowsWindow::init(const WindowProps &props)
 	SOL_CORE_INFO("created window {} with dimensions ({}, {})", data.title,
 	              data.width, data.height);
 
-	gl_context = SDL_GL_CreateContext(window);
-	SOL_CORE_ASSERT(gl_context, "failed to create GL context");
-
-	int status = gladLoadGLLoader(SDL_GL_GetProcAddress);
-	SOL_CORE_ASSERT(status, "failed to initialize OpenGL context with glad");
-
-	SDL_GL_MakeCurrent(window, gl_context);
-	SDL_GL_SetSwapInterval(1);
+	rendering_context = std::make_unique<OpenGLContext>(window);
+	rendering_context->init();
 }
 
 void WindowsWindow::shutdown()
 {
-	SDL_GL_DeleteContext(gl_context);
+	rendering_context->deinit();
 	SDL_DestroyWindow(window);
 
 	SDL_Quit();
@@ -68,8 +61,7 @@ void WindowsWindow::shutdown()
 void WindowsWindow::on_update()
 {
 	poll_events();
-
-	SDL_GL_SwapWindow(window);
+	rendering_context->swap_buffers();
 }
 
 void WindowsWindow::poll_events()
@@ -175,11 +167,6 @@ bool WindowsWindow::is_vsync() const { return data.vsync; }
 void *WindowsWindow::get_native_window() const
 {
 	return static_cast<void *>(window);
-}
-
-void *WindowsWindow::get_native_rendering_context() const
-{
-	return static_cast<void *>(gl_context);
 }
 
 } // namespace sol

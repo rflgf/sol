@@ -21,8 +21,8 @@ void ImGuiLayer::begin()
 	Window *window_abstraction = Application::get().get_window();
 	SDL_Window *native_window =
 	    static_cast<SDL_Window *>(window_abstraction->get_native_window());
-	void *native_rendering_context =
-	    window_abstraction->get_native_rendering_context();
+	void *native_rendering_context = window_abstraction->get_rendering_context()
+	                                     ->get_native_rendering_context();
 	ImGui_ImplSDL2_InitForOpenGL(native_window, native_rendering_context);
 	ImGui_ImplOpenGL3_Init("#version 410");
 }
