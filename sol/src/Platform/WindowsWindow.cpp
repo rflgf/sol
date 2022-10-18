@@ -101,10 +101,12 @@ void WindowsWindow::poll_events()
 
 		// keyboard events:
 		case SDL_TEXTINPUT:
+		{
 			KeyTypedEvent event {static_cast<KeyCode>(e.key.keysym.sym)};
 			event.underlying_event = static_cast<void *>(&e);
 			data.callback(event);
 			break;
+		}
 		case SDL_KEYDOWN:
 		{
 			KeyPressedEvent event {static_cast<KeyCode>(e.key.keysym.sym),
