@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ImGui/ImGuiLayer.h"
 #include "Layer.h"
 #include "LayerStack.h"
 #include "Window.h"
@@ -19,6 +20,7 @@ protected:
 	bool running = true;
 	std::unique_ptr<Window> window;
 	LayerStack layer_stack;
+	ImGuiLayer imgui_layer;
 
 public:
 	Application();

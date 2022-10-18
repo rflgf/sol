@@ -23,19 +23,27 @@ Application::Application()
 		    return true;
 	    });
 
-	ImGuiLayer *debug_imgui_layer = new ImGuiLayer;
-	push_overlay(debug_imgui_layer);
+	imgui_layer.begin();
 }
 
-Application::~Application() {}
+Application::~Application() { imgui_layer.end(); }
 
 void Application::run()
 {
 	while (running)
 	{
+		glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
 		for (Layer *layer : layer_stack)
 			if (layer->is_enabled())
 				layer->on_update();
+
+		imgui_layer.on_update_begin();
+		for (Layer *layer : layer_stack)
+			if (layer->is_enabled())
+				layer->on_imgui_update();
+		imgui_layer.on_update_end();
 
 		window->on_update();
 	}
@@ -43,6 +51,9 @@ void Application::run()
 
 void Application::on_event(Event &event)
 {
+	imgui_layer.on_event(event);
+	if (event.handled)
+		return;
 	Event::Dispatcher dispatcher(event);
 
 	dispatcher.dispatch<WindowCloseEvent>(

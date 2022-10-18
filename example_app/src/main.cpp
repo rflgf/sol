@@ -1,4 +1,3 @@
-#include <SDL.h>
 #include <sol.h>
 
 namespace example_app
@@ -24,6 +23,12 @@ public:
 	{
 		if (e.get_event_type() == sol::Event::Type::KEY_PRESSED)
 			SOL_INFO("{}", e);
+	}
+	virtual void on_imgui_update() override
+	{
+		ImGui::Begin("example app");
+		ImGui::ShowDemoWindow();
+		ImGui::End();
 	}
 };
 

@@ -52,6 +52,9 @@ void WindowsWindow::init(const WindowProps &props)
 
 	int status = gladLoadGLLoader(SDL_GL_GetProcAddress);
 	SOL_CORE_ASSERT(status, "failed to initialize OpenGL context with glad");
+
+	SDL_GL_MakeCurrent(window, gl_context);
+	SDL_GL_SetSwapInterval(1);
 }
 
 void WindowsWindow::shutdown()
@@ -97,6 +100,11 @@ void WindowsWindow::poll_events()
 		}
 
 		// keyboard events:
+		case SDL_TEXTINPUT:
+			KeyTypedEvent event {static_cast<KeyCode>(e.key.keysym.sym)};
+			event.underlying_event = static_cast<void *>(&e);
+			data.callback(event);
+			break;
 		case SDL_KEYDOWN:
 		{
 			KeyPressedEvent event {static_cast<KeyCode>(e.key.keysym.sym),

@@ -13,16 +13,15 @@
 namespace sol
 {
 
-class ImGuiLayer : public Layer
+class ImGuiLayer
 {
 public:
-	ImGuiLayer(const std::string name = "ImGui Layer", bool enabled = true);
-	virtual ~ImGuiLayer();
+	void begin();
+	void end();
 
-	virtual void on_attach() override;
-	virtual void on_detatch() override;
-	virtual void on_update() override;
-	virtual void on_event(Event &event) override;
+	void on_update_begin();
+	void on_update_end();
+	void on_event(Event &event);
 };
 
 } // namespace sol
