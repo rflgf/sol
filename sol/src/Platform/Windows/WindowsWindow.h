@@ -46,6 +46,5 @@ public:
 	virtual void shutdown();
 
 	void poll_events();
-	static uint16_t sol_key_from(SDL_Keysym &keysym);
 };
 } // namespace sol

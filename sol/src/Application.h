@@ -3,6 +3,8 @@
 #include "ImGui/ImGuiLayer.h"
 #include "Layer.h"
 #include "LayerStack.h"
+#include "Renderer/Buffers.h"
+#include "Renderer/Shader.h"
 #include "Window.h"
 
 #include <memory>
@@ -21,6 +23,10 @@ protected:
 	std::unique_ptr<Window> window;
 	LayerStack layer_stack;
 	ImGuiLayer imgui_layer;
+
+	uint32_t vao;
+	std::unique_ptr<VertexBuffer> vbo;
+	std::unique_ptr<IndexBuffer> ibo;
 
 public:
 	Application();

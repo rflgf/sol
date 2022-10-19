@@ -1,4 +1,4 @@
-#include "Platform/WindowsInput.h"
+#include "WindowsInput.h"
 
 #include "Application.h"
 

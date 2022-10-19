@@ -7,7 +7,7 @@
 #include "Event/MouseEvent.h"
 #include "Input.h"
 #include "Log.h"
-#include "Renderer/OpenGLContext.h"
+#include "Platform/OpenGL/OpenGLContext.h"
 #include "WindowsInput.h"
 
 #include <backends/imgui_impl_sdl.h>

@@ -14,9 +14,13 @@ set(sol_src
     "Layer.cpp"
     "LayerStack.cpp"
 	"Log.cpp"
-    "Platform/WindowsInput.cpp"
-    "Platform/WindowsWindow.cpp"
-    "Renderer/OpenGLContext.cpp"
+    "Platform/OpenGL/OpenGLBuffers.cpp"
+    "Platform/OpenGL/OpenGLContext.cpp"
+    "Platform/Windows/WindowsInput.cpp"
+    "Platform/Windows/WindowsWindow.cpp"
+    "Renderer/Buffers.cpp"
+    "Renderer/Renderer.cpp"
+    "Renderer/Shader.cpp"
 )
 
 list(TRANSFORM sol_src PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/src/")

@@ -10,4 +10,7 @@
 #include "src/KeyCodes.h"
 #include "src/Layer.h"
 #include "src/Log.h"
+#include "src/Renderer/Buffers.h"
+#include "src/Renderer/Renderer.h"
+#include "src/Renderer/Shader.h"
 #include "src/Window.h"

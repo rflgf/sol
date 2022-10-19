@@ -4,6 +4,8 @@
 
 #include <SDL.h>
 #undef main
+#include <backends/imgui_impl_opengl3.h>
+#include <glad/glad.h>
 
 namespace sol
 {
