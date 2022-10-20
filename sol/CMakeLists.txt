@@ -28,7 +28,6 @@ list(TRANSFORM sol_src PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/src/")
 add_library(sol STATIC ${sol_src})
 
 target_link_libraries(sol SDL2-static SDL2main glad glm imgui spdlog)
-# target_link_libraries(sol nlohmann_json imgui imgui-node-editor stb nativefiledialog fmt)
 
 target_include_directories(sol
 PUBLIC

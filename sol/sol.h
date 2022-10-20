@@ -5,7 +5,7 @@
 
 #include "Application.h"
 #include "Core.h"
-#include "src/EntryPoint.h"
+#include "EntryPoint.h"
 #include "Input.h"
 #include "KeyCodes.h"
 #include "Layer.h"
