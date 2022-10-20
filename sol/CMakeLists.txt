@@ -31,9 +31,8 @@ target_link_libraries(sol SDL2-static SDL2main glad glm imgui spdlog)
 # target_link_libraries(sol nlohmann_json imgui imgui-node-editor stb nativefiledialog fmt)
 
 target_include_directories(sol
-PRIVATE
-	${CMAKE_CURRENT_SOURCE_DIR}/src
 PUBLIC
+	${CMAKE_CURRENT_SOURCE_DIR}/src
 	${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/vendor/debug_trap
 )
