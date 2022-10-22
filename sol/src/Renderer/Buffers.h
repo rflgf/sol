@@ -8,38 +8,6 @@
 namespace sol
 {
 
-class VertexBuffer
-{
-protected:
-	uint32_t id;
-
-public:
-	VertexBuffer()          = default;
-	virtual ~VertexBuffer() = default;
-
-	static VertexBuffer *create(float *vertices, size_t size);
-	virtual void bind() const   = 0;
-	virtual void unbind() const = 0;
-};
-
-class IndexBuffer
-{
-protected:
-	uint32_t id;
-	size_t count;
-
-public:
-	IndexBuffer(size_t count)
-	    : count(count)
-	{
-	}
-	virtual ~IndexBuffer() = default;
-	static IndexBuffer *create(uint32_t *indices, size_t count);
-	virtual void bind() const   = 0;
-	virtual void unbind() const = 0;
-	size_t get_count() const { return count; }
-};
-
 struct BufferElement
 {
 public:
@@ -90,7 +58,7 @@ public:
 
 struct BufferLayout
 {
-private:
+protected:
 	std::vector<BufferElement> elements;
 	size_t stride;
 
@@ -117,8 +85,62 @@ public:
 
 	size_t get_stride() const { return stride; }
 
+	size_t get_element_count() const { return elements.size(); }
+
 	std::vector<BufferElement>::iterator begin() { return elements.begin(); }
 	std::vector<BufferElement>::iterator end() { return elements.end(); }
+};
+
+class VertexBuffer
+{
+protected:
+	uint32_t id;
+
+public:
+	VertexBuffer() = default;
+	VertexBuffer(BufferLayout layout);
+	virtual ~VertexBuffer() = default;
+
+	static VertexBuffer *create(float *vertices, size_t size);
+	virtual void bind() const                     = 0;
+	virtual void unbind() const                   = 0;
+	virtual void set_layout(BufferLayout &layout) = 0;
+	virtual BufferLayout &get_layout()            = 0;
+};
+
+class IndexBuffer
+{
+protected:
+	uint32_t id;
+	size_t count;
+
+public:
+	IndexBuffer(size_t count)
+	    : count(count)
+	{
+	}
+	virtual ~IndexBuffer() = default;
+
+	static IndexBuffer *create(uint32_t *indices, size_t count);
+	virtual void bind() const   = 0;
+	virtual void unbind() const = 0;
+	size_t get_count() const { return count; }
+};
+
+class VertexArray
+{
+protected:
+	uint32_t id;
+
+public:
+	virtual ~VertexArray() = default;
+
+	static VertexArray *create();
+	virtual void add_vertex_buffer(std::shared_ptr<VertexBuffer> vbo) = 0;
+	virtual void set_index_buffer(std::shared_ptr<IndexBuffer> ibo)   = 0;
+	virtual std::shared_ptr<IndexBuffer> get_index_buffer() const     = 0;
+	virtual void bind() const                                         = 0;
+	virtual void unbind() const                                       = 0;
 };
 
 } // namespace sol

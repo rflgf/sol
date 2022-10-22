@@ -104,4 +104,22 @@ size_t BufferElement::component_count(BufferElement::Type t)
 	}
 }
 
+// VertexArray
+
+VertexArray *VertexArray::create()
+{
+	switch (Renderer::get_api())
+	{
+	case Renderer::API::NONE:
+	{
+		SOL_CORE_ASSERT(0, "sol does not support Renderer::API::NONE yet");
+		return nullptr;
+	case Renderer::API::OPEN_GL:
+		return new OpenGLVertexArray();
+	}
+	}
+	SOL_CORE_ASSERT(0, "Renderer::API not found");
+	return nullptr;
+}
+
 } // namespace sol

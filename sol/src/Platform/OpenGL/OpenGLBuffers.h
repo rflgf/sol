@@ -4,14 +4,20 @@
 
 namespace sol
 {
+
 class OpenGLVertexBuffer : public VertexBuffer
 {
+private:
+	BufferLayout layout;
+
 public:
 	OpenGLVertexBuffer(float *vertices, size_t size);
 	~OpenGLVertexBuffer();
 
 	void bind() const override;
 	void unbind() const override;
+	void set_layout(BufferLayout &layout) override;
+	BufferLayout &get_layout() override { return layout; }
 };
 
 class OpenGLIndexBuffer : public IndexBuffer
@@ -23,4 +29,23 @@ public:
 	void bind() const override;
 	void unbind() const override;
 };
+
+class OpenGLVertexArray : public VertexArray
+{
+private:
+	uint32_t vbo;
+	std::shared_ptr<IndexBuffer> ibo;
+	std::vector<std::shared_ptr<VertexBuffer>> vbos;
+
+public:
+	OpenGLVertexArray();
+	~OpenGLVertexArray();
+
+	void add_vertex_buffer(std::shared_ptr<VertexBuffer> vbo) override;
+	void set_index_buffer(std::shared_ptr<IndexBuffer> ibo) override;
+	std::shared_ptr<IndexBuffer> get_index_buffer() const override;
+	void bind() const override;
+	void unbind() const override;
+};
+
 } // namespace sol

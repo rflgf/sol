@@ -24,9 +24,8 @@ protected:
 	LayerStack layer_stack;
 	ImGuiLayer imgui_layer;
 
-	uint32_t vao;
-	std::unique_ptr<VertexBuffer> vbo;
-	std::unique_ptr<IndexBuffer> ibo;
+	std::unique_ptr<VertexArray> vao;
+	std::unique_ptr<Shader> shader;
 
 public:
 	Application();
