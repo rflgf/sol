@@ -5,11 +5,11 @@
 #undef main
 #include <iostream>
 
-// based on the SDL key codes, and by doing so, no conversion is required when
-// using SDL2 as the windowing library. a map lookup might be required if using
+// based on the SDL key codes, and as such, no conversion is required when
+// using SDL2 as the windowing library. a mapping might be required if using
 // a different one, though (e.g.: GLFW, WinAPI, etc.).
 
-// the following defines are copy-paste from SDL_keycode.h
+// the following defines are copy-paste from SDL_keycode.h.
 
 namespace sol
 {

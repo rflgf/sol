@@ -11,6 +11,7 @@
 #include "Layer.h"
 #include "Log.h"
 #include "Renderer/Buffers.h"
+#include "Renderer/RenderCommand.h"
 #include "Renderer/Renderer.h"
 #include "Renderer/Shader.h"
 #include "Window.h"
