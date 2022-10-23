@@ -16,9 +16,9 @@ VertexBuffer *VertexBuffer::create(float *vertices, size_t size)
 	{
 		SOL_CORE_ASSERT(0, "sol does not support RendererAPI::API::NONE yet");
 		return nullptr;
+	}
 	case RendererAPI::API::OPEN_GL:
 		return new OpenGLVertexBuffer(vertices, size);
-	}
 	}
 	SOL_CORE_ASSERT(0, "RendererAPI::API not found");
 	return nullptr;
@@ -34,9 +34,9 @@ IndexBuffer *IndexBuffer::create(uint32_t *indices, size_t count)
 	{
 		SOL_CORE_ASSERT(0, "sol does not support RendererAPI::API::NONE yet");
 		return nullptr;
+	}
 	case RendererAPI::API::OPEN_GL:
 		return new OpenGLIndexBuffer(indices, count);
-	}
 	}
 	SOL_CORE_ASSERT(0, "RendererAPI::API not found");
 	return nullptr;
@@ -48,7 +48,7 @@ size_t BufferElement::size_from_type(BufferElement::Type t)
 {
 	switch (t)
 	{
-		// clang-format off
+	// clang-format off
 		case BufferElement::Type::BOOL:    return sizeof(bool);
 
 		case BufferElement::Type::INT:     return sizeof(int) * 1;
@@ -78,7 +78,7 @@ size_t BufferElement::component_count(BufferElement::Type t)
 {
 	switch (t)
 	{
-		// clang-format off
+	// clang-format off
 		case BufferElement::Type::BOOL:    return 1;
 
 		case BufferElement::Type::INT:     return 1;
@@ -114,9 +114,9 @@ VertexArray *VertexArray::create()
 	{
 		SOL_CORE_ASSERT(0, "sol does not support RendererAPI::API::NONE yet");
 		return nullptr;
+	}
 	case RendererAPI::API::OPEN_GL:
 		return new OpenGLVertexArray();
-	}
 	}
 	SOL_CORE_ASSERT(0, "RendererAPI::API not found");
 	return nullptr;
