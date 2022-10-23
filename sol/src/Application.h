@@ -4,6 +4,7 @@
 #include "Layer.h"
 #include "LayerStack.h"
 #include "Renderer/Buffers.h"
+#include "Renderer/Renderer.h"
 #include "Renderer/Shader.h"
 #include "Window.h"
 

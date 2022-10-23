@@ -85,7 +85,7 @@ Shader::Shader(const std::string &vertex_source,
 
 Shader::~Shader() { glDeleteProgram(id); }
 
-void Shader::bind() { glUseProgram(id); }
+void Shader::bind() const { glUseProgram(id); }
 
-void Shader::unbind() { glUseProgram(0); }
+void Shader::unbind() const { glUseProgram(0); }
 } // namespace sol

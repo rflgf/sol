@@ -1,24 +1,26 @@
 #pragma once
 
+#include "Buffers.h"
+#include "RenderCommand.h"
+#include "Shader.h"
+
+#include <glm/glm.hpp>
+#include <memory>
+
 namespace sol
 {
 
 class Renderer
 {
 public:
-	enum class API
-	{
-		// clang-format off
-		NONE    = 0,
-		OPEN_GL = 1,
-		// clang-format on
-	};
+	static void init();
+	static void deinit();
 
-private:
-	static API api;
+	static void begin_scene();
+	static void end_scene();
 
-public:
-	static API get_api() { return api; }
+	static RendererAPI::API get_api_type() { return RendererAPI::get_type(); }
+
+	static void submit(const Shader &shader, VertexArray &vao);
 };
-
 } // namespace sol

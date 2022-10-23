@@ -15,7 +15,7 @@ public:
 	       const std::string &fragment_source);
 	~Shader();
 
-	void bind();
-	void unbind();
+	void bind() const;
+	void unbind() const;
 };
 } // namespace sol

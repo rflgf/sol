@@ -1,7 +1,7 @@
 #include "Buffers.h"
 
 #include "Platform/OpenGL/OpenGLBuffers.h"
-#include "Renderer.h"
+#include "RendererAPI.h"
 
 namespace sol
 {
@@ -10,17 +10,17 @@ namespace sol
 
 VertexBuffer *VertexBuffer::create(float *vertices, size_t size)
 {
-	switch (Renderer::get_api())
+	switch (RendererAPI::get_type())
 	{
-	case Renderer::API::NONE:
+	case RendererAPI::API::NONE:
 	{
-		SOL_CORE_ASSERT(0, "sol does not support Renderer::API::NONE yet");
+		SOL_CORE_ASSERT(0, "sol does not support RendererAPI::API::NONE yet");
 		return nullptr;
-	case Renderer::API::OPEN_GL:
+	case RendererAPI::API::OPEN_GL:
 		return new OpenGLVertexBuffer(vertices, size);
 	}
 	}
-	SOL_CORE_ASSERT(0, "Renderer::API not found");
+	SOL_CORE_ASSERT(0, "RendererAPI::API not found");
 	return nullptr;
 }
 
@@ -28,17 +28,17 @@ VertexBuffer *VertexBuffer::create(float *vertices, size_t size)
 
 IndexBuffer *IndexBuffer::create(uint32_t *indices, size_t count)
 {
-	switch (Renderer::get_api())
+	switch (RendererAPI::get_type())
 	{
-	case Renderer::API::NONE:
+	case RendererAPI::API::NONE:
 	{
-		SOL_CORE_ASSERT(0, "sol does not support Renderer::API::NONE yet");
+		SOL_CORE_ASSERT(0, "sol does not support RendererAPI::API::NONE yet");
 		return nullptr;
-	case Renderer::API::OPEN_GL:
+	case RendererAPI::API::OPEN_GL:
 		return new OpenGLIndexBuffer(indices, count);
 	}
 	}
-	SOL_CORE_ASSERT(0, "Renderer::API not found");
+	SOL_CORE_ASSERT(0, "RendererAPI::API not found");
 	return nullptr;
 }
 
@@ -48,7 +48,7 @@ size_t BufferElement::size_from_type(BufferElement::Type t)
 {
 	switch (t)
 	{
-	// clang-format off
+		// clang-format off
 		case BufferElement::Type::BOOL:    return sizeof(bool);
 
 		case BufferElement::Type::INT:     return sizeof(int) * 1;
@@ -78,7 +78,7 @@ size_t BufferElement::component_count(BufferElement::Type t)
 {
 	switch (t)
 	{
-	// clang-format off
+		// clang-format off
 		case BufferElement::Type::BOOL:    return 1;
 
 		case BufferElement::Type::INT:     return 1;
@@ -108,17 +108,17 @@ size_t BufferElement::component_count(BufferElement::Type t)
 
 VertexArray *VertexArray::create()
 {
-	switch (Renderer::get_api())
+	switch (RendererAPI::get_type())
 	{
-	case Renderer::API::NONE:
+	case RendererAPI::API::NONE:
 	{
-		SOL_CORE_ASSERT(0, "sol does not support Renderer::API::NONE yet");
+		SOL_CORE_ASSERT(0, "sol does not support RendererAPI::API::NONE yet");
 		return nullptr;
-	case Renderer::API::OPEN_GL:
+	case RendererAPI::API::OPEN_GL:
 		return new OpenGLVertexArray();
 	}
 	}
-	SOL_CORE_ASSERT(0, "Renderer::API not found");
+	SOL_CORE_ASSERT(0, "RendererAPI::API not found");
 	return nullptr;
 }
 

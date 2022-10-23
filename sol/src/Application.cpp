@@ -69,13 +69,14 @@ void Application::run()
 {
 	while (running)
 	{
-		glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		RenderCommand::set_clear_color({0.3f, 0.6f, 0.9f, 1.0f});
+		RenderCommand::clear();
 
-		shader->bind();
-		vao->bind();
-		glDrawElements(GL_TRIANGLES, vao->get_index_buffer()->get_count(),
-		               GL_UNSIGNED_INT, nullptr);
+		Renderer::begin_scene();
+
+		Renderer::submit(*shader, *vao);
+
+		Renderer::end_scene();
 
 		for (Layer *layer : layer_stack)
 			if (layer->is_enabled())

@@ -10,16 +10,23 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/glad)
 set(sol_src
 	"Application.cpp"
     "Input.cpp"
-    "ImGui/ImGuiLayer.cpp"
     "Layer.cpp"
     "LayerStack.cpp"
 	"Log.cpp"
+    
+    "ImGui/ImGuiLayer.cpp"
+
     "Platform/OpenGL/OpenGLBuffers.cpp"
     "Platform/OpenGL/OpenGLContext.cpp"
+    "Platform/OpenGL/OpenGLRendererAPI.cpp"
+
     "Platform/Windows/WindowsInput.cpp"
     "Platform/Windows/WindowsWindow.cpp"
+
     "Renderer/Buffers.cpp"
+    "Renderer/RenderCommand.cpp"
     "Renderer/Renderer.cpp"
+    "Renderer/RendererAPI.cpp"
     "Renderer/Shader.cpp"
 )
 
