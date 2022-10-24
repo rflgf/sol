@@ -4,6 +4,7 @@
 #include "Layer.h"
 #include "LayerStack.h"
 #include "Renderer/Buffers.h"
+#include "Renderer/OrthographicCamera.h"
 #include "Renderer/Renderer.h"
 #include "Renderer/Shader.h"
 #include "Window.h"
@@ -27,6 +28,7 @@ protected:
 
 	std::unique_ptr<VertexArray> vao;
 	std::unique_ptr<Shader> shader;
+	OrthographicCamera camera;
 
 public:
 	Application();

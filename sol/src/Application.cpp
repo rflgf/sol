@@ -9,6 +9,7 @@
 namespace sol
 {
 Application::Application()
+    : camera(-0.9f, 1.6f, 0.9f, -1.6f)
 {
 	SOL_CORE_ASSERT(!application_instance,
 	                "attempt to instantiate multiple Application");
@@ -26,8 +27,9 @@ Application::Application()
 	const std::string vert_src = R"(
 		#version 330 core
 		layout(location = 0) in vec3 a_Position;
+		uniform mat4 view_projection;
 		out vec3 position;
-		void main() { gl_Position = vec4(a_Position, 1.0); 
+		void main() { gl_Position = view_projection * vec4(a_Position, 1.0); 
 		position = a_Position; }
 	)";
 	const std::string frag_src = R"(
@@ -67,13 +69,16 @@ Application::~Application() { imgui_layer.end(); }
 
 void Application::run()
 {
+	float i = 0.0f;
 	while (running)
 	{
 		RenderCommand::set_clear_color({0.3f, 0.6f, 0.9f, 1.0f});
 		RenderCommand::clear();
 
-		Renderer::begin_scene();
+		Renderer::begin_scene(camera);
 
+		camera.set_rotation(i += 0.2f);
+	
 		Renderer::submit(*shader, *vao);
 
 		Renderer::end_scene();

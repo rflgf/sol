@@ -10,13 +10,18 @@ namespace sol
 
 void OpenGLContext::init()
 {
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,
+	                    SDL_GL_CONTEXT_PROFILE_CORE);
+
 	gl_context = SDL_GL_CreateContext(window);
 	SOL_CORE_ASSERT(gl_context, "failed to create GL context");
 
 	int status = gladLoadGLLoader(SDL_GL_GetProcAddress);
 	SOL_CORE_ASSERT(status, "failed to initialize OpenGL context with glad");
 
-	SDL_GL_MakeCurrent(window, gl_context);
+	status = SDL_GL_MakeCurrent(window, gl_context);
 	SDL_GL_SetSwapInterval(1);
 }
 

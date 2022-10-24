@@ -2,6 +2,8 @@
 
 #include "Core.h"
 
+#include <glm/glm.hpp>
+
 namespace sol
 {
 
@@ -17,5 +19,7 @@ public:
 
 	void bind() const;
 	void unbind() const;
+
+	void upload_uniform_mat4(std::string name, const glm::mat4 &matrix) const;
 };
 } // namespace sol
