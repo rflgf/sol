@@ -24,6 +24,7 @@ set(sol_src
     "Platform/Windows/WindowsWindow.cpp"
 
     "Renderer/Buffers.cpp"
+    "Renderer/OrthographicCamera.cpp"
     "Renderer/RenderCommand.cpp"
     "Renderer/Renderer.cpp"
     "Renderer/RendererAPI.cpp"
