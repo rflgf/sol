@@ -1,25 +1,23 @@
 #pragma once
 
-#include "Core.h"
-
 #include <glm/glm.hpp>
+#include <string>
 
 namespace sol
 {
 
 class Shader
 {
-private:
-	uint32_t id;
-
 public:
-	Shader(const std::string &vertex_source,
-	       const std::string &fragment_source);
-	~Shader();
+	virtual ~Shader() = default;
 
-	void bind() const;
-	void unbind() const;
+	static Shader *create(const std::string &vertex_source,
+	                      const std::string &fragment_source);
 
-	void upload_uniform_mat4(std::string name, const glm::mat4 &matrix) const;
+	virtual void bind() const   = 0;
+	virtual void unbind() const = 0;
+
+	virtual void upload_uniform_mat4(std::string name,
+	                                 const glm::mat4 &matrix) const = 0;
 };
 } // namespace sol

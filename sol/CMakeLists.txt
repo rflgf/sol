@@ -13,14 +13,15 @@ set(sol_src
     "Layer.cpp"
     "LayerStack.cpp"
 	"Log.cpp"
-	"Timestep.h"
     "Platform.cpp"
+	"Timestep.h"
     
     "ImGui/ImGuiLayer.cpp"
 
     "Platform/OpenGL/OpenGLBuffers.cpp"
     "Platform/OpenGL/OpenGLContext.cpp"
     "Platform/OpenGL/OpenGLRendererAPI.cpp"
+    "Platform/OpenGL/OpenGLShader.cpp"
 
     "Platform/Windows/WindowsInput.cpp"
     "Platform/Windows/WindowsPlatform.cpp"

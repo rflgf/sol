@@ -3,9 +3,10 @@
 #include "Core.h"
 
 #ifdef SOL_PLATFORM_WINDOWS
-#	include "Platform/Windows/WindowsPlatform.h"
+#include "Platform/Windows/WindowsPlatform.h"
 #else
-#	error "only Windows is supported by sol at the moment. define -DSOL_PLATFORM_WINDOWS"
+#error                                                                         \
+    "only Windows is supported by sol at the moment. define -DSOL_PLATFORM_WINDOWS"
 #endif
 
 namespace sol
@@ -13,7 +14,7 @@ namespace sol
 namespace platform
 {
 
-Clock Clock::clock = Clock{};
+Clock Clock::clock = Clock {};
 
 } // namespace platform
 } // namespace sol

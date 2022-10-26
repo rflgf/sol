@@ -59,7 +59,8 @@ public:
 		vao->add_vertex_buffer(std::shared_ptr<sol::VertexBuffer>(vbo));
 		vao->set_index_buffer(std::shared_ptr<sol::IndexBuffer>(ibo));
 
-		shader = std::make_unique<sol::Shader>(vert_src, frag_src);
+		shader = std::unique_ptr<sol::Shader>(
+		    sol::Shader::create(vert_src, frag_src));
 	}
 
 	void on_attach() override {}

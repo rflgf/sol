@@ -13,7 +13,7 @@ GLenum OpenGL_base_type_from(BufferElement::Type t)
 {
 	switch (t)
 	{
-	// clang-format off
+		// clang-format off
 		case BufferElement::Type::BOOL:    return GL_BOOL;
 
 		case BufferElement::Type::INT:     return GL_INT;
