@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Event/Event.h"
+#include "Timestep.h"
 
 #include <string>
 
@@ -19,7 +20,7 @@ public:
 
 	virtual void on_attach()            = 0;
 	virtual void on_detatch()           = 0;
-	virtual void on_update()            = 0;
+	virtual void on_update(Timestep dt) = 0;
 	virtual void on_imgui_update()      = 0;
 	virtual void on_event(Event &event) = 0;
 	virtual void enable() { enabled = true; }

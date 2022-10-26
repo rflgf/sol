@@ -13,6 +13,8 @@ set(sol_src
     "Layer.cpp"
     "LayerStack.cpp"
 	"Log.cpp"
+	"Timestep.h"
+    "Platform.cpp"
     
     "ImGui/ImGuiLayer.cpp"
 
@@ -21,6 +23,7 @@ set(sol_src
     "Platform/OpenGL/OpenGLRendererAPI.cpp"
 
     "Platform/Windows/WindowsInput.cpp"
+    "Platform/Windows/WindowsPlatform.cpp"
     "Platform/Windows/WindowsWindow.cpp"
 
     "Renderer/Buffers.cpp"
@@ -68,5 +71,7 @@ target_compile_definitions(sol PRIVATE
                             $<$<CONFIG:Debug>:SOL_DEBUG>
                             $<$<CONFIG:Release>:SOL_RELEASE>
                             $<$<CONFIG:Dist>:SOL_DIST>
+                            
+                            SOL_PLATFORM_WINDOWS
 )
 # /sol #

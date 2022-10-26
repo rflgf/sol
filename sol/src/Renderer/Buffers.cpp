@@ -48,7 +48,7 @@ size_t BufferElement::size_from_type(BufferElement::Type t)
 {
 	switch (t)
 	{
-	// clang-format off
+		// clang-format off
 		case BufferElement::Type::BOOL:    return sizeof(bool);
 
 		case BufferElement::Type::INT:     return sizeof(int) * 1;
@@ -78,7 +78,7 @@ size_t BufferElement::component_count(BufferElement::Type t)
 {
 	switch (t)
 	{
-	// clang-format off
+		// clang-format off
 		case BufferElement::Type::BOOL:    return 1;
 
 		case BufferElement::Type::INT:     return 1;

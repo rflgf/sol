@@ -21,7 +21,7 @@ public:
 	void update_projection_view_matrix();
 
 	void set_rotation(float rotation);
-	void set_position(glm:: vec3 position);
+	void set_position(glm::vec3 position);
 };
 
 } // namespace sol

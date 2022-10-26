@@ -26,10 +26,6 @@ protected:
 	LayerStack layer_stack;
 	ImGuiLayer imgui_layer;
 
-	std::unique_ptr<VertexArray> vao;
-	std::unique_ptr<Shader> shader;
-	OrthographicCamera camera;
-
 public:
 	Application();
 	virtual ~Application();
