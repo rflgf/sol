@@ -1,4 +1,4 @@
-#include "WindowsPlatform.h
+#include "WindowsPlatform.h"
 
 #ifdef SOL_PLATFORM_WINDOWS
 

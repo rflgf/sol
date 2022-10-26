@@ -25,8 +25,9 @@ public:
 		#version 330 core
 		layout(location = 0) in vec3 a_Position;
 		uniform mat4 view_projection;
+		uniform mat4 transform;
 		out vec3 position;
-		void main() { gl_Position = view_projection * vec4(a_Position, 1.0); 
+		void main() { gl_Position = view_projection * transform * vec4(a_Position, 1.0); 
 		position = a_Position; }
 	)";
 		const std::string frag_src = R"(
