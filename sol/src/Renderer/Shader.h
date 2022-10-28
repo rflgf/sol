@@ -17,7 +17,22 @@ public:
 	virtual void bind() const   = 0;
 	virtual void unbind() const = 0;
 
-	virtual void upload_uniform_mat4(std::string name,
-	                                 const glm::mat4 &matrix) const = 0;
+	virtual void upload_uniform_int(std::string name,
+	                                const int32_t value) const           = 0;
+	virtual void upload_uniform_int_array(const std::string &name,
+	                                      int32_t *value,
+	                                      size_t count) const            = 0;
+	virtual void upload_uniform_unsigned_int(std::string name,
+	                                         const uint32_t value) const = 0;
+	virtual void upload_uniform_float(std::string name,
+	                                  const float_t value) const         = 0;
+	virtual void upload_uniform_float_2(std::string name,
+	                                    const glm::vec2 value) const     = 0;
+	virtual void upload_uniform_float_3(std::string name,
+	                                    const glm::vec3 &value) const    = 0;
+	virtual void upload_uniform_float_4(std::string name,
+	                                    const glm::vec4 &value) const    = 0;
+	virtual void upload_uniform_matrix_4(std::string name,
+	                                     const glm::mat4 &value) const   = 0;
 };
 } // namespace sol

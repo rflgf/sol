@@ -26,8 +26,22 @@ public:
 	void bind() const override;
 	void unbind() const override;
 
-	void upload_uniform_mat4(std::string name,
-	                         const glm::mat4 &matrix) const override;
+	void upload_uniform_int(std::string name,
+	                        const int32_t value) const override;
+	void upload_uniform_int_array(const std::string &name, int32_t *value,
+	                              size_t count) const override;
+	void upload_uniform_unsigned_int(std::string name,
+	                                 const uint32_t value) const override;
+	void upload_uniform_float(std::string name,
+	                          const float_t value) const override;
+	void upload_uniform_float_2(std::string name,
+	                            const glm::vec2 value) const override;
+	void upload_uniform_float_3(std::string name,
+	                            const glm::vec3 &value) const override;
+	void upload_uniform_float_4(std::string name,
+	                            const glm::vec4 &value) const override;
+	void upload_uniform_matrix_4(std::string name,
+	                             const glm::mat4 &value) const override;
 
 	// see comment in Shader::locations.
 	int get_uniform_location(const std::string &name) const;

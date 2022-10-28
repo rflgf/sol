@@ -13,7 +13,7 @@ GLenum OpenGL_base_type_from(BufferElement::Type t)
 {
 	switch (t)
 	{
-	// clang-format off
+		// clang-format off
 		case BufferElement::Type::BOOL:    return GL_BOOL;
 
 		case BufferElement::Type::INT:     return GL_INT;
@@ -35,7 +35,7 @@ GLenum OpenGL_base_type_from(BufferElement::Type t)
 		case BufferElement::Type::MAT_4:   return GL_FLOAT;
 
 		default: { SOL_CORE_ERROR("unkown BufferElement::Type"); return 0; }
-	// clang-format on
+		// clang-format on
 	}
 }
 

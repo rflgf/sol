@@ -23,10 +23,10 @@ void Renderer::submit(const Shader &shader, VertexArray &vao,
 {
 	shader.bind();
 
-	shader.upload_uniform_mat4("view_projection",
-	                           Renderer::data->view_projection_matrix);
+	shader.upload_uniform_matrix_4("view_projection",
+	                               Renderer::data->view_projection_matrix);
 
-	shader.upload_uniform_mat4("transform", transform);
+	shader.upload_uniform_matrix_4("transform", transform);
 
 	vao.bind();
 	RenderCommand::draw_indexed(vao);
