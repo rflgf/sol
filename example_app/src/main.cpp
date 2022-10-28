@@ -23,18 +23,18 @@ public:
 	{
 		const std::string vert_src = R"(
 		#version 330 core
-		layout(location = 0) in vec3 a_Position;
+		layout(location = 0) in vec3 position;
 		uniform mat4 view_projection;
 		uniform mat4 transform;
-		out vec3 position;
-		void main() { gl_Position = view_projection * transform * vec4(a_Position, 1.0); 
-		position = a_Position; }
+		out vec3 color_parameter;
+		void main() { gl_Position = view_projection * transform * vec4(position, 1.0); 
+		color_parameter = position; }
 	)";
 		const std::string frag_src = R"(
 		#version 330 core
 		layout(location = 0) out vec4 color;
-		in vec3 position;
-		void main() { color = vec4(position * 0.5 + 0.5, 1); }
+		in vec3 color_parameter;
+		void main() { color = vec4(color_parameter * 0.5 + 0.5, 1); }
 	)";
 
 		vao = std::unique_ptr<sol::VertexArray>(sol::VertexArray::create());
