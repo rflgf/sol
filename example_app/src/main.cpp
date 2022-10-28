@@ -1,3 +1,4 @@
+#include <glm/gtc/type_ptr.hpp>
 #include <sol.h>
 
 namespace example_app
@@ -12,6 +13,7 @@ private:
 	float speed;
 	float rotation;
 	glm::vec3 position;
+	glm::vec3 color;
 
 public:
 	ExampleLayer()
@@ -26,15 +28,17 @@ public:
 		layout(location = 0) in vec3 position;
 		uniform mat4 view_projection;
 		uniform mat4 transform;
-		out vec3 color_parameter;
+		// out vec3 color_parameter;
 		void main() { gl_Position = view_projection * transform * vec4(position, 1.0); 
-		color_parameter = position; }
+		// color_parameter = position;
+		}
 	)";
 		const std::string frag_src = R"(
 		#version 330 core
-		layout(location = 0) out vec4 color;
-		in vec3 color_parameter;
-		void main() { color = vec4(color_parameter * 0.5 + 0.5, 1); }
+		layout(location = 0) out vec4 color_out;
+		// in vec3 color_parameter;
+		uniform vec3 color;
+		void main() { color_out = vec4(color, 1); }
 	)";
 
 		vao = std::unique_ptr<sol::VertexArray>(sol::VertexArray::create());
@@ -107,7 +111,9 @@ public:
 	void on_imgui_update() override
 	{
 		ImGui::Begin("example app");
-		ImGui::ShowDemoWindow();
+		ImGui::ColorEdit3("square color", glm::value_ptr(color));
+		shader->upload_uniform_float_3("color", color);
+		// ImGui::ShowDemoWindow();
 		ImGui::End();
 	}
 };
