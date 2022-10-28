@@ -95,8 +95,20 @@ void OpenGLShader::unbind() const { glUseProgram(0); }
 void OpenGLShader::upload_uniform_mat4(std::string name,
                                        const glm::mat4 &matrix) const
 {
-	GLint location = glGetUniformLocation(id, name.c_str());
+	GLint location = get_uniform_location(name);
 	glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
+}
+
+int OpenGLShader::get_uniform_location(const std::string &name) const
+{
+	if (locations.find(name) != locations.end())
+		return locations[name];
+
+	GLint location = glGetUniformLocation(id, name.c_str());
+	SOL_CORE_ASSERT(location != -1, "could not find uniform location: {}",
+	                name);
+	locations[name] = location;
+	return location;
 }
 
 } // namespace sol
