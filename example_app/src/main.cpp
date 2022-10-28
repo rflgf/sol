@@ -74,38 +74,39 @@ public:
 	{
 		SOL_CORE_INFO("{}ms", dt.in_seconds());
 
-		if (sol::Input::is_mouse_button_pressed(
-		        sol::MouseButtonCode::SOL_MB_LEFT))
-			SOL_INFO("Left mouse button pressed!");
+		// if (sol::Input::is_mouse_button_pressed(
+		//         sol::MouseButtonCode::SOL_MB_LEFT))
+		// 	SOL_INFO("Left mouse button pressed!");
 
 		if (sol::Input::is_key_pressed(sol::KeyCode::SOL_a))
 			position.x -= speed * dt.in_seconds();
 		if (sol::Input::is_key_pressed(sol::KeyCode::SOL_w))
-			position.y += speed * dt.in_seconds();
+			position.y -= speed * dt.in_seconds();
 		if (sol::Input::is_key_pressed(sol::KeyCode::SOL_d))
 			position.x += speed * dt.in_seconds();
 		if (sol::Input::is_key_pressed(sol::KeyCode::SOL_s))
-			position.y -= speed * dt.in_seconds();
+			position.y += speed * dt.in_seconds();
 
 		if (sol::Input::is_key_pressed(sol::KeyCode::SOL_q))
 			rotation -= speed * dt.in_seconds();
 		if (sol::Input::is_key_pressed(sol::KeyCode::SOL_e))
 			rotation += speed * dt.in_seconds();
 
-		camera.set_rotation(rotation);
-		camera.set_position(position);
+		glm::mat4 transform =
+		    glm::translate(glm::mat4(1.0f), position) *
+		    glm::rotate(glm::mat4(1.0f), rotation, glm::vec3(0.0f, 0.0f, 1.0f));
 
 		sol::Renderer::begin_scene(camera);
 
-		sol::Renderer::submit(*shader, *vao);
+		sol::Renderer::submit(*shader, *vao, transform);
 
 		sol::Renderer::end_scene();
 	}
 
 	void on_event(sol::Event &e) override
 	{
-		if (e.get_event_type() == sol::Event::Type::KEY_PRESSED)
-			SOL_INFO("{}", e);
+		// if (e.get_event_type() == sol::Event::Type::KEY_PRESSED)
+		// 	SOL_INFO("{}", e);
 	}
 
 	void on_imgui_update() override
