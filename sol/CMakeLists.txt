@@ -3,9 +3,11 @@ cmake_minimum_required(VERSION 3.20)
 # sol #
 project(sol CXX)
 
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/spdlog)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/SDL)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/debug-trap)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/glad)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/SDL)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/spdlog)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/stb)
 
 set(sol_src
 	"Application.cpp"
@@ -22,6 +24,7 @@ set(sol_src
     "Platform/OpenGL/OpenGLContext.cpp"
     "Platform/OpenGL/OpenGLRendererAPI.cpp"
     "Platform/OpenGL/OpenGLShader.cpp"
+    "Platform/OpenGL/OpenGLTexture.cpp"
 
     "Platform/Windows/WindowsInput.cpp"
     "Platform/Windows/WindowsPlatform.cpp"
@@ -33,19 +36,19 @@ set(sol_src
     "Renderer/Renderer.cpp"
     "Renderer/RendererAPI.cpp"
     "Renderer/Shader.cpp"
+    "Renderer/Texture.cpp"
 )
 
 list(TRANSFORM sol_src PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/src/")
 
 add_library(sol STATIC ${sol_src})
 
-target_link_libraries(sol SDL2-static SDL2main glad glm imgui spdlog)
+target_link_libraries(sol debug-trap glad glm imgui SDL2-static SDL2main spdlog stb_image)
 
 target_include_directories(sol
 PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}/src
 	${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/vendor/debug_trap
 )
 
 set_target_properties(sol PROPERTIES

@@ -5,6 +5,10 @@
 #include "Event/KeyboardEvent.h"
 #include "Event/MouseEvent.h"
 
+#include <backends/imgui_impl_opengl3.h>
+#include <backends/imgui_impl_sdl.h>
+#include <imgui.h>
+
 void CherryTheme();
 
 namespace sol
@@ -24,7 +28,7 @@ void ImGuiLayer::begin()
 	void *native_rendering_context = window_abstraction->get_rendering_context()
 	                                     ->get_native_rendering_context();
 	ImGui_ImplSDL2_InitForOpenGL(native_window, native_rendering_context);
-	ImGui_ImplOpenGL3_Init("#version 410");
+	ImGui_ImplOpenGL3_Init("#version 420");
 }
 
 void ImGuiLayer::end()

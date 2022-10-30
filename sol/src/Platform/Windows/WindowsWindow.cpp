@@ -121,7 +121,6 @@ void WindowsWindow::poll_events()
 			MouseMovedEvent event {static_cast<float>(e.motion.x),
 			                       static_cast<float>(e.motion.y)};
 			event.underlying_event = static_cast<void *>(&e);
-			SOL_TRACE(event);
 			data.callback(event);
 			break;
 		}

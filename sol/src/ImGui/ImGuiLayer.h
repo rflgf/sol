@@ -5,11 +5,6 @@
 #include "Event/MouseEvent.h"
 #include "Layer.h"
 
-#include <backends/imgui_impl_opengl3.h>
-#include <backends/imgui_impl_sdl.h>
-#include <glad/glad.h>
-#include <imgui.h>
-
 namespace sol
 {
 

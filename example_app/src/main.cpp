@@ -1,4 +1,5 @@
 #include <glm/gtc/type_ptr.hpp>
+#include <imgui.h>
 #include <sol.h>
 
 namespace example_app
@@ -9,6 +10,7 @@ class ExampleLayer : public sol::Layer
 private:
 	std::unique_ptr<sol::VertexArray> vao;
 	std::unique_ptr<sol::Shader> shader;
+	std::shared_ptr<sol::Texture> texture;
 	sol::OrthographicCamera camera;
 	float speed;
 	float rotation;
@@ -24,36 +26,52 @@ public:
 	    , position(0.0f)
 	{
 		const std::string vert_src = R"(
-		#version 330 core
+		#version 420 core
+
 		layout(location = 0) in vec3 position;
+		layout(location = 1) in vec2 tex_coord;
+
 		uniform mat4 view_projection;
 		uniform mat4 transform;
-		// out vec3 color_parameter;
-		void main() { gl_Position = view_projection * transform * vec4(position, 1.0); 
-		// color_parameter = position;
-		}
-	)";
+		
+		out vec2 tex_coord_out;
+
+		void main() {
+			gl_Position = view_projection * transform * vec4(position, 1.0);
+			tex_coord_out = tex_coord;
+		})";
+
 		const std::string frag_src = R"(
-		#version 330 core
+		#version 420 core
+
 		layout(location = 0) out vec4 color_out;
-		// in vec3 color_parameter;
-		uniform vec3 color;
-		void main() { color_out = vec4(color, 1); }
-	)";
+
+		in vec2 tex_coord_out;
+
+		uniform sampler2D tex_id;
+
+		void main() {
+			color_out = texture(tex_id, tex_coord_out);
+		}
+		)";
 
 		vao = std::unique_ptr<sol::VertexArray>(sol::VertexArray::create());
 
-		float vertices[4 * 3] = {
-		    -0.5f, 0.5f,  0.0f, // bottom-left
-		    0.5f,  0.5f,  0.0f, // bottom-right
-		    -0.5f, -0.5f, 0.0f, // top-left
-		    0.5f,  -0.5f, 0.0f, // top-right
+		float vertices[4 * (3 + 2)] = {
+		    // clang-format off
+			/* world coord. */   /* texture coord. */
+		    -0.5f,  0.5f, 0.0f,    0.0f, 0.0f,         // bottom-left
+		     0.5f,  0.5f, 0.0f,    1.0f, 0.0f,         // bottom-right
+		    -0.5f, -0.5f, 0.0f,    0.0f, 1.0f,         // top-left
+		     0.5f, -0.5f, 0.0f,    1.0f, 1.0f,         // top-right
+		    // clang-format on
 		};
 		sol::VertexBuffer *vbo =
 		    sol::VertexBuffer::create(vertices, sizeof(vertices));
 
 		using ElementType = sol::BufferElement::Type;
-		sol::BufferLayout layout({{ElementType::FLOAT_3, "position"}});
+		sol::BufferLayout layout({{ElementType::FLOAT_3, "position"},
+		                          {ElementType::FLOAT_2, "tex_coord"}});
 		vbo->set_layout(layout);
 
 		uint32_t indices[6]   = {2, 0, 3, 0, 3, 1};
@@ -65,14 +83,18 @@ public:
 
 		shader = std::unique_ptr<sol::Shader>(
 		    sol::Shader::create(vert_src, frag_src));
+		texture = sol::Texture2D::create("assets/test.png");
+		shader->bind();
+		shader->upload_uniform_int("tex_id", 0);
 	}
 
 	void on_attach() override {}
 	void on_detatch() override {}
+	void on_event(sol::Event &e) override {}
 
 	void on_update(sol::Timestep dt) override
 	{
-		SOL_CORE_INFO("{}ms", dt.in_seconds());
+		// SOL_CORE_INFO("{}ms", dt.in_seconds());
 
 		// if (sol::Input::is_mouse_button_pressed(
 		//         sol::MouseButtonCode::SOL_MB_LEFT))
@@ -98,23 +120,15 @@ public:
 
 		sol::Renderer::begin_scene(camera);
 
+		texture->bind();
 		sol::Renderer::submit(*shader, *vao, transform);
 
 		sol::Renderer::end_scene();
 	}
 
-	void on_event(sol::Event &e) override
-	{
-		// if (e.get_event_type() == sol::Event::Type::KEY_PRESSED)
-		// 	SOL_INFO("{}", e);
-	}
-
 	void on_imgui_update() override
 	{
 		ImGui::Begin("example app");
-		ImGui::ColorEdit3("square color", glm::value_ptr(color));
-		shader->upload_uniform_float_3("color", color);
-		// ImGui::ShowDemoWindow();
 		ImGui::End();
 	}
 };

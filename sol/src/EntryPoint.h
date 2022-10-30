@@ -11,7 +11,6 @@ extern Application *GetApplication();
 int main(int argc, char **argv)
 {
 	sol::Log::init();
-	SOL_CORE_ERROR("why hello world!");
 
 	sol::Application *app = sol::GetApplication();
 	app->run();

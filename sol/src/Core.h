@@ -9,7 +9,7 @@
 	{                                                                          \
 		if (!(x))                                                              \
 		{                                                                      \
-			SOL_ERROR("assertion failed: {}", __VA_ARGS__);                    \
+			SOL_ERROR(__VA_ARGS__);                                            \
 			psnip_trap();                                                      \
 		}                                                                      \
 	}
@@ -18,7 +18,7 @@
 	{                                                                          \
 		if (!(x))                                                              \
 		{                                                                      \
-			SOL_CORE_ERROR("assertion failed: {}", __VA_ARGS__);               \
+			SOL_CORE_ERROR(__VA_ARGS__);                                       \
 			psnip_trap();                                                      \
 		}                                                                      \
 	}
