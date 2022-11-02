@@ -24,6 +24,8 @@ Application::Application()
 		    return true;
 	    });
 
+	Renderer::init();
+
 	imgui_layer.begin();
 }
 
