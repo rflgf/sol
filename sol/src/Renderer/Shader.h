@@ -24,7 +24,11 @@ public:
 	static Shader *create(const std::string &vertex_source,
 	                      const std::string &fragment_source);
 
+	static Shader *
+	compile(const std::unordered_map<Type, std::string> &sources);
+
 	static Type type_from_string(std::string_view text);
+	static std::string type_to_string(Type value);
 
 	virtual void bind() const   = 0;
 	virtual void unbind() const = 0;

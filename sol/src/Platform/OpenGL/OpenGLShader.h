@@ -2,6 +2,7 @@
 
 #include "Renderer/Shader.h"
 
+#include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <unordered_map>
 
@@ -19,8 +20,11 @@ private:
 	mutable std::unordered_map<std::string, int> locations;
 
 public:
-	OpenGLShader(const std::string &vertex_source,
-	             const std::string &fragment_source);
+	static OpenGLShader *
+	compile(const std::unordered_map<Type, std::string> &sources);
+
+	static GLenum gl_type_from_sol_internal_type(Shader::Type type);
+
 	~OpenGLShader();
 
 	void bind() const override;

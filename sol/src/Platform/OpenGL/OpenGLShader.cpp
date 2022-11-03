@@ -8,82 +8,89 @@
 namespace sol
 {
 
-OpenGLShader::OpenGLShader(const std::string &vertex_source,
-                           const std::string &fragment_source)
+OpenGLShader *OpenGLShader::compile(
+    const std::unordered_map<Shader::Type, std::string> &sources)
 {
-	GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+	OpenGLShader *sol_shader = new OpenGLShader;
+	std::vector<GLuint> ids;
 
-	const GLchar *source = static_cast<const GLchar *>(vertex_source.c_str());
-	glShaderSource(vertex_shader, 1, &source, 0);
-
-	glCompileShader(vertex_shader);
-
-	GLint compiled = 0;
-	glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &compiled);
-	if (compiled == GL_FALSE)
+	for (auto [type, source] : sources)
 	{
-		GLint max_length = 0;
-		glGetShaderiv(vertex_shader, GL_INFO_LOG_LENGTH, &max_length);
+		GLuint shader = glCreateShader(gl_type_from_sol_internal_type(type));
 
-		std::vector<GLchar> error(max_length);
-		glGetShaderInfoLog(vertex_shader, max_length, &max_length, &error[0]);
+		const GLchar *gl_compliant_source =
+		    static_cast<const GLchar *>(source.c_str());
+		glShaderSource(shader, 1, &gl_compliant_source, 0);
 
-		glDeleteShader(vertex_shader);
+		glCompileShader(shader);
 
-		SOL_CORE_ERROR("{}", error);
-		SOL_CORE_ASSERT(false, "vertex shader compilation error");
+		GLint compiled = 0;
+		glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled);
+		if (compiled == GL_FALSE)
+		{
+			GLint max_length = 0;
+			glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &max_length);
+
+			std::vector<GLchar> error(max_length);
+			glGetShaderInfoLog(shader, max_length, &max_length, &error[0]);
+
+			glDeleteShader(shader);
+
+			delete sol_shader;
+
+			SOL_CORE_ERROR("{}", error);
+			SOL_CORE_ASSERT(false,
+			                "shader compilation error on shader of type {}",
+			                Shader::type_to_string(type));
+		}
+
+		ids.push_back(shader);
 	}
 
-	GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+	sol_shader->id = glCreateProgram();
 
-	source = static_cast<const GLchar *>(fragment_source.c_str());
-	glShaderSource(fragment_shader, 1, &source, 0);
+	for (GLuint shader_id : ids)
+		glAttachShader(sol_shader->id, shader_id);
 
-	glCompileShader(fragment_shader);
-
-	glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &compiled);
-	if (compiled == GL_FALSE)
-	{
-		GLint max_length = 0;
-		glGetShaderiv(fragment_shader, GL_INFO_LOG_LENGTH, &max_length);
-
-		std::vector<GLchar> error(max_length);
-		glGetShaderInfoLog(fragment_shader, max_length, &max_length, &error[0]);
-
-		glDeleteShader(fragment_shader);
-		glDeleteShader(vertex_shader);
-
-		SOL_CORE_ERROR("{}", error);
-		SOL_CORE_ASSERT(false, "fragment shader compilation error");
-	}
-
-	id = glCreateProgram();
-
-	glAttachShader(id, vertex_shader);
-	glAttachShader(id, fragment_shader);
-
-	glLinkProgram(id);
+	glLinkProgram(sol_shader->id);
 
 	GLint linked = 0;
-	glGetProgramiv(id, GL_LINK_STATUS, static_cast<int *>(&linked));
+	glGetProgramiv(sol_shader->id, GL_LINK_STATUS, static_cast<int *>(&linked));
 	if (linked == GL_FALSE)
 	{
 		GLint max_length = 0;
-		glGetProgramiv(id, GL_INFO_LOG_LENGTH, &max_length);
+		glGetProgramiv(sol_shader->id, GL_INFO_LOG_LENGTH, &max_length);
 
 		std::vector<GLchar> error(max_length);
-		glGetProgramInfoLog(id, max_length, &max_length, &error[0]);
+		glGetProgramInfoLog(sol_shader->id, max_length, &max_length, &error[0]);
 
-		glDeleteProgram(id);
-		glDeleteShader(vertex_shader);
-		glDeleteShader(fragment_shader);
+		glDeleteProgram(sol_shader->id);
+		for (GLuint shader_id : ids)
+			glDeleteShader(shader_id);
+
+		delete sol_shader;
 
 		SOL_CORE_ERROR("{}", error);
 		SOL_CORE_ASSERT(false, "shader linking error");
 	}
 
-	glDetachShader(id, vertex_shader);
-	glDetachShader(id, fragment_shader);
+	for (GLuint shader_id : ids)
+		glDetachShader(sol_shader->id, shader_id);
+
+	return sol_shader;
+}
+
+GLenum OpenGLShader::gl_type_from_sol_internal_type(Shader::Type type)
+{
+	switch (type)
+	{
+		// clang-format off
+		case Type::FRAGMENT:      return GL_FRAGMENT_SHADER;
+		case Type::VERTEX:        return GL_VERTEX_SHADER;
+		
+		case Type::NONE: default: return 0;
+		// clang-format on
+	}
 }
 
 OpenGLShader::~OpenGLShader() { glDeleteProgram(id); }

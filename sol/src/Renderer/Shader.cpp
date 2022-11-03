@@ -20,7 +20,8 @@ Shader *Shader::create(const std::string &vertex_source,
 		return nullptr;
 	}
 	case RendererAPI::API::OPEN_GL:
-		return new OpenGLShader(vertex_source, fragment_source);
+		return OpenGLShader::compile(
+		    {{Type::FRAGMENT, fragment_source}, {Type::VERTEX, vertex_source}});
 	}
 	SOL_CORE_ASSERT(0, "RendererAPI::API not found");
 	return nullptr;
@@ -64,7 +65,7 @@ Shader *Shader::create(const char *filepath)
 		SOL_CORE_ASSERT(shaders.contains(Type::VERTEX) &&
 		                    shaders.contains(Type::FRAGMENT),
 		                "missing required shader step in {}", filepath);
-		return new OpenGLShader(shaders[Type::VERTEX], shaders[Type::FRAGMENT]);
+		return OpenGLShader::compile(shaders);
 	}
 	}
 	SOL_CORE_ASSERT(0, "RendererAPI::API not found");
@@ -79,6 +80,19 @@ Shader::Type Shader::type_from_string(std::string_view text)
 		return Type::FRAGMENT;
 	else
 		return Type::NONE;
+}
+
+std::string Shader::type_to_string(Shader::Type value)
+{
+	switch (value)
+	{
+		// clang-format off
+		case Type::FRAGMENT:      return "fragment";
+		case Type::VERTEX:        return "vertex";
+
+		case Type::NONE: default: return "none";
+		// clang-format on
+	}
 }
 
 } // namespace sol
