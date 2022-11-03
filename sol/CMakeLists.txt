@@ -17,6 +17,7 @@ set(sol_src
 	"Log.cpp"
     "Platform.cpp"
 	"Timestep.h"
+    "Utils.cpp"
     
     "ImGui/ImGuiLayer.cpp"
 

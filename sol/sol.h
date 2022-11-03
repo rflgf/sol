@@ -16,4 +16,5 @@
 #include "Renderer/Renderer.h"
 #include "Renderer/Shader.h"
 #include "Renderer/Texture.h"
+#include "Utils.h"
 #include "Window.h"

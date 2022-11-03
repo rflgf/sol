@@ -2,6 +2,7 @@
 
 #include <glm/glm.hpp>
 #include <string>
+#include <unordered_map>
 
 namespace sol
 {
@@ -9,10 +10,21 @@ namespace sol
 class Shader
 {
 public:
+	enum class Type
+	{
+		NONE = 0,
+		VERTEX,
+		FRAGMENT
+	};
+
 	virtual ~Shader() = default;
+
+	static Shader *create(const char *filepath);
 
 	static Shader *create(const std::string &vertex_source,
 	                      const std::string &fragment_source);
+
+	static Type type_from_string(std::string_view text);
 
 	virtual void bind() const   = 0;
 	virtual void unbind() const = 0;
