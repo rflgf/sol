@@ -1,4 +1,4 @@
-#type vertex
+#step vertex
 #version 420 core
 
 layout(location = 0) in vec3 position;
@@ -15,7 +15,7 @@ void main()
 	tex_coord_out = tex_coord;
 }
 
-#type fragment
+#step fragment
 #version 420 core
 
 layout(location = 0) out vec4 color_out;

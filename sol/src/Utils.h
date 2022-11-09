@@ -6,6 +6,6 @@ namespace sol
 {
 namespace utils
 {
-std::string read_from_file(const char *filepath);
+std::string read_from_file(const std::string &filepath);
 }
 } // namespace sol

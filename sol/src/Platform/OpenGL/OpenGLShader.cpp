@@ -2,21 +2,75 @@
 
 #include "Core.h"
 #include "Platform/OpenGL/OpenGLContext.h"
+#include "Utils.h"
 
 #include <glm/gtc/type_ptr.hpp>
 
 namespace sol
 {
 
-OpenGLShader *OpenGLShader::compile(
-    const std::unordered_map<Shader::Type, std::string> &sources)
+OpenGLShader::OpenGLShader(const std::string &filepath)
 {
-	OpenGLShader *sol_shader = new OpenGLShader;
+	size_t last_slash = filepath.find_last_of("/\\");
+	last_slash        = last_slash == std::string::npos ? 0 : last_slash + 1;
+	size_t last_dot   = filepath.rfind('.');
+	size_t count = last_dot == std::string::npos ? filepath.size() - last_slash
+	                                             : last_dot - last_slash;
+	name         = filepath.substr(last_slash, count);
+
+	std::string source = utils::read_from_file(filepath);
+	std::unordered_map<Shader::Step, std::string> steps = parse(source);
+	SOL_CORE_ASSERT(steps.contains(Step::VERTEX) &&
+	                    steps.contains(Step::FRAGMENT),
+	                "missing required shader step in {}", filepath);
+	compile(steps);
+}
+
+OpenGLShader::OpenGLShader(const std::string &name,
+                           const std::string &vertex_source,
+                           const std::string &fragment_source)
+    : name(name)
+{
+	compile({{Step::FRAGMENT, fragment_source}, {Step::VERTEX, vertex_source}});
+}
+
+std::unordered_map<Shader::Step, std::string>
+OpenGLShader::parse(const std::string &source)
+{
+	std::unordered_map<Shader::Step, std::string> steps;
+	const char step_token[] = "#step";
+	size_t cursor           = 0;
+	while ((cursor = source.find(step_token, cursor)) != std::string::npos)
+	{
+		cursor += strlen(step_token);
+		while (source[cursor] == ' ' || source[cursor] == '\t' ||
+		       source[cursor] == '\n')
+			++cursor;
+		size_t end_of_step_value = source.find('\n', cursor);
+		std::string step_value_string =
+		    source.substr(cursor, end_of_step_value - cursor);
+		Step step = step_from_string(step_value_string);
+		// next "#step", i.e., next shader source.
+		size_t end_of_current_shader = source.find("#step", cursor);
+		// case last shader source.
+		if (end_of_current_shader == std::string::npos)
+			end_of_current_shader = source.size();
+		std::string current_shader_source = source.substr(
+		    end_of_step_value, end_of_current_shader - end_of_step_value);
+		steps[step] = current_shader_source;
+		cursor      = end_of_current_shader;
+	}
+	return steps;
+}
+
+void OpenGLShader::compile(
+    const std::unordered_map<Shader::Step, std::string> &sources)
+{
 	std::vector<GLuint> ids;
 
-	for (auto [type, source] : sources)
+	for (auto [step, source] : sources)
 	{
-		GLuint shader = glCreateShader(gl_type_from_sol_internal_type(type));
+		GLuint shader = glCreateShader(gl_step_from_sol_internal_step(step));
 
 		const GLchar *gl_compliant_source =
 		    static_cast<const GLchar *>(source.c_str());
@@ -36,59 +90,53 @@ OpenGLShader *OpenGLShader::compile(
 
 			glDeleteShader(shader);
 
-			delete sol_shader;
-
 			SOL_CORE_ERROR("{}", error);
 			SOL_CORE_ASSERT(false,
-			                "shader compilation error on shader of type {}",
-			                Shader::type_to_string(type));
+			                "shader compilation error on shader of step {}",
+			                Shader::step_to_string(step));
 		}
 
 		ids.push_back(shader);
 	}
 
-	sol_shader->id = glCreateProgram();
+	id = glCreateProgram();
 
 	for (GLuint shader_id : ids)
-		glAttachShader(sol_shader->id, shader_id);
+		glAttachShader(id, shader_id);
 
-	glLinkProgram(sol_shader->id);
+	glLinkProgram(id);
 
 	GLint linked = 0;
-	glGetProgramiv(sol_shader->id, GL_LINK_STATUS, static_cast<int *>(&linked));
+	glGetProgramiv(id, GL_LINK_STATUS, static_cast<int *>(&linked));
 	if (linked == GL_FALSE)
 	{
 		GLint max_length = 0;
-		glGetProgramiv(sol_shader->id, GL_INFO_LOG_LENGTH, &max_length);
+		glGetProgramiv(id, GL_INFO_LOG_LENGTH, &max_length);
 
 		std::vector<GLchar> error(max_length);
-		glGetProgramInfoLog(sol_shader->id, max_length, &max_length, &error[0]);
+		glGetProgramInfoLog(id, max_length, &max_length, &error[0]);
 
-		glDeleteProgram(sol_shader->id);
+		glDeleteProgram(id);
 		for (GLuint shader_id : ids)
 			glDeleteShader(shader_id);
-
-		delete sol_shader;
 
 		SOL_CORE_ERROR("{}", error);
 		SOL_CORE_ASSERT(false, "shader linking error");
 	}
 
 	for (GLuint shader_id : ids)
-		glDetachShader(sol_shader->id, shader_id);
-
-	return sol_shader;
+		glDetachShader(id, shader_id);
 }
 
-GLenum OpenGLShader::gl_type_from_sol_internal_type(Shader::Type type)
+GLenum OpenGLShader::gl_step_from_sol_internal_step(Shader::Step step)
 {
-	switch (type)
+	switch (step)
 	{
 		// clang-format off
-		case Type::FRAGMENT:      return GL_FRAGMENT_SHADER;
-		case Type::VERTEX:        return GL_VERTEX_SHADER;
+		case Step::FRAGMENT:      return GL_FRAGMENT_SHADER;
+		case Step::VERTEX:        return GL_VERTEX_SHADER;
 		
-		case Type::NONE: default: return 0;
+		case Step::NONE: default: return 0;
 		// clang-format on
 	}
 }

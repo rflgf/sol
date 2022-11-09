@@ -10,7 +10,7 @@ namespace sol
 class Shader
 {
 public:
-	enum class Type
+	enum class Step
 	{
 		NONE = 0,
 		VERTEX,
@@ -19,16 +19,19 @@ public:
 
 	virtual ~Shader() = default;
 
-	static Shader *create(const char *filepath);
+	static Shader *create(const std::string &filepath);
 
-	static Shader *create(const std::string &vertex_source,
+	static Shader *create(const std::string name,
+	                      const std::string &vertex_source,
 	                      const std::string &fragment_source);
 
 	static Shader *
-	compile(const std::unordered_map<Type, std::string> &sources);
+	compile(const std::unordered_map<Step, std::string> &shader_steps);
 
-	static Type type_from_string(std::string_view text);
-	static std::string type_to_string(Type value);
+	static Step step_from_string(std::string_view text);
+	static std::string step_to_string(Step value);
+
+	virtual const std::string &get_name() const = 0;
 
 	virtual void bind() const   = 0;
 	virtual void unbind() const = 0;

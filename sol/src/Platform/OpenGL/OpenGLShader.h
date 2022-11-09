@@ -13,6 +13,7 @@ class OpenGLShader : public Shader
 {
 private:
 	uint32_t id;
+	std::string name;
 
 	// FIXME(rafael): this, alongside get_uniform_location(string), is a dirty
 	// little trick to get uniform locations faster. optimally, all uniform
@@ -20,15 +21,22 @@ private:
 	mutable std::unordered_map<std::string, int> locations;
 
 public:
-	static OpenGLShader *
-	compile(const std::unordered_map<Type, std::string> &sources);
-
-	static GLenum gl_type_from_sol_internal_type(Shader::Type type);
-
+	OpenGLShader(const std::string &filepath);
+	OpenGLShader(const std::string &name, const std::string &vertex_source,
+	             const std::string &fragment_source);
 	~OpenGLShader();
+
+	void compile(const std::unordered_map<Step, std::string> &sources);
+
+	static std::unordered_map<Step, std::string>
+	parse(const std::string &source);
+
+	static GLenum gl_step_from_sol_internal_step(Shader::Step step);
 
 	void bind() const override;
 	void unbind() const override;
+
+	const std::string &get_name() const override { return name; }
 
 	void upload_uniform_int(std::string name,
 	                        const int32_t value) const override;
