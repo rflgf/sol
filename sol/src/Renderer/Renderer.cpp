@@ -1,13 +1,18 @@
 #include "Renderer.h"
 
 #include "RendererAPI.h"
+#include "Shader.h"
 
 namespace sol
 {
 
 Renderer::SceneData *Renderer::data = new Renderer::SceneData;
 
-void Renderer::init() { RenderCommand::init(); }
+void Renderer::init()
+{
+	RenderCommand::init();
+	Shader::Library::init();
+}
 
 void Renderer::deinit() {}
 

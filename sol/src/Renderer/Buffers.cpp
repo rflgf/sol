@@ -6,7 +6,9 @@
 namespace sol
 {
 
-// VertexBuffer
+///////////////////////
+// VertexBuffer ///////
+///////////////////////
 
 VertexBuffer *VertexBuffer::create(float *vertices, size_t size)
 {
@@ -24,7 +26,9 @@ VertexBuffer *VertexBuffer::create(float *vertices, size_t size)
 	return nullptr;
 }
 
-// IndexBuffer
+///////////////////////
+// IndexBuffer ////////
+///////////////////////
 
 IndexBuffer *IndexBuffer::create(uint32_t *indices, size_t count)
 {
@@ -42,7 +46,9 @@ IndexBuffer *IndexBuffer::create(uint32_t *indices, size_t count)
 	return nullptr;
 }
 
-// BufferComponent
+///////////////////////
+// BufferComponent ////
+///////////////////////
 
 size_t BufferElement::size_from_type(BufferElement::Type t)
 {
@@ -104,7 +110,9 @@ size_t BufferElement::component_count(BufferElement::Type t)
 	}
 }
 
-// VertexArray
+///////////////////////
+// VertexArray ////////
+///////////////////////
 
 VertexArray *VertexArray::create()
 {

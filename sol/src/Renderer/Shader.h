@@ -17,10 +17,25 @@ public:
 		FRAGMENT
 	};
 
+	class Library
+	{
+	private:
+		Library() = default;
+		static Library *self;
+		std::unordered_map<std::string, const Shader *> shaders;
+
+	public:
+		static void init();
+
+		static const Shader *get(const std::string &name);
+		static void add(const Shader *shader);
+		static void load(const std::string &filepath);
+		static void load(const std::string &name, const std::string &filepath);
+	};
+
 	virtual ~Shader() = default;
 
 	static Shader *create(const std::string &filepath);
-
 	static Shader *create(const std::string name,
 	                      const std::string &vertex_source,
 	                      const std::string &fragment_source);
@@ -54,4 +69,5 @@ public:
 	virtual void upload_uniform_matrix_4(std::string name,
 	                                     const glm::mat4 &value) const   = 0;
 };
+
 } // namespace sol

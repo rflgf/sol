@@ -9,7 +9,6 @@ class ExampleLayer : public sol::Layer
 {
 private:
 	std::unique_ptr<sol::VertexArray> vao;
-	std::unique_ptr<sol::Shader> shader;
 	std::shared_ptr<sol::Texture> texture;
 	sol::OrthographicCamera camera;
 	float speed;
@@ -51,8 +50,9 @@ public:
 		vao->add_vertex_buffer(std::shared_ptr<sol::VertexBuffer>(vbo));
 		vao->set_index_buffer(std::shared_ptr<sol::IndexBuffer>(ibo));
 
-		shader = std::unique_ptr<sol::Shader>(
-		    sol::Shader::create("assets/shaders/texture.shader"));
+		sol::Shader *shader =
+		    sol::Shader::create("assets/shaders/texture.shader");
+		sol::Shader::Library::add(shader);
 		texture = sol::Texture2D::create("assets/test.png");
 		shader->bind();
 		shader->upload_uniform_int("tex_id", 0);
@@ -91,7 +91,8 @@ public:
 		sol::Renderer::begin_scene(camera);
 
 		texture->bind();
-		sol::Renderer::submit(*shader, *vao, transform);
+		sol::Renderer::submit(*sol::Shader::Library::get("texture"), *vao,
+		                      transform);
 
 		sol::Renderer::end_scene();
 	}
