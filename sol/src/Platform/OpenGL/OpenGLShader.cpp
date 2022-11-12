@@ -132,12 +132,14 @@ GLenum OpenGLShader::gl_step_from_sol_internal_step(Shader::Step step)
 {
 	switch (step)
 	{
-		// clang-format off
-		case Step::FRAGMENT:      return GL_FRAGMENT_SHADER;
-		case Step::VERTEX:        return GL_VERTEX_SHADER;
-		
-		case Step::NONE: default: return 0;
-		// clang-format on
+	case Step::FRAGMENT:
+		return GL_FRAGMENT_SHADER;
+	case Step::VERTEX:
+		return GL_VERTEX_SHADER;
+
+	case Step::NONE:
+	default:
+		return 0;
 	}
 }
 

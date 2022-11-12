@@ -58,12 +58,14 @@ std::string Shader::step_to_string(Shader::Step value)
 {
 	switch (value)
 	{
-		// clang-format off
-		case Step::FRAGMENT:      return "fragment";
-		case Step::VERTEX:        return "vertex";
+	case Step::FRAGMENT:
+		return "fragment";
+	case Step::VERTEX:
+		return "vertex";
 
-		case Step::NONE: default: return "none";
-		// clang-format on
+	case Step::NONE:
+	default:
+		return "none";
 	}
 }
 

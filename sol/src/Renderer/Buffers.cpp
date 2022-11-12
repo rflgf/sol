@@ -54,29 +54,46 @@ size_t BufferElement::size_from_type(BufferElement::Type t)
 {
 	switch (t)
 	{
-		// clang-format off
-		case BufferElement::Type::BOOL:    return sizeof(bool);
+	case BufferElement::Type::BOOL:
+		return sizeof(bool);
 
-		case BufferElement::Type::INT:     return sizeof(int) * 1;
-		case BufferElement::Type::INT_2:   return sizeof(int) * 2;
-		case BufferElement::Type::INT_3:   return sizeof(int) * 3;
-		case BufferElement::Type::INT_4:   return sizeof(int) * 4;
+	case BufferElement::Type::INT:
+		return sizeof(int) * 1;
+	case BufferElement::Type::INT_2:
+		return sizeof(int) * 2;
+	case BufferElement::Type::INT_3:
+		return sizeof(int) * 3;
+	case BufferElement::Type::INT_4:
+		return sizeof(int) * 4;
 
-		case BufferElement::Type::UINT:    return sizeof(unsigned int) * 1;
-		case BufferElement::Type::UINT_2:  return sizeof(unsigned int) * 2;
-		case BufferElement::Type::UINT_3:  return sizeof(unsigned int) * 3;
-		case BufferElement::Type::UINT_4:  return sizeof(unsigned int) * 4;
+	case BufferElement::Type::UINT:
+		return sizeof(unsigned int) * 1;
+	case BufferElement::Type::UINT_2:
+		return sizeof(unsigned int) * 2;
+	case BufferElement::Type::UINT_3:
+		return sizeof(unsigned int) * 3;
+	case BufferElement::Type::UINT_4:
+		return sizeof(unsigned int) * 4;
 
-		case BufferElement::Type::FLOAT:   return sizeof(float) * 1;
-		case BufferElement::Type::FLOAT_2: return sizeof(float) * 2;
-		case BufferElement::Type::FLOAT_3: return sizeof(float) * 3;
-		case BufferElement::Type::FLOAT_4: return sizeof(float) * 4;
+	case BufferElement::Type::FLOAT:
+		return sizeof(float) * 1;
+	case BufferElement::Type::FLOAT_2:
+		return sizeof(float) * 2;
+	case BufferElement::Type::FLOAT_3:
+		return sizeof(float) * 3;
+	case BufferElement::Type::FLOAT_4:
+		return sizeof(float) * 4;
 
-		case BufferElement::Type::MAT_3:   return sizeof(float) * 3 * 3;
-		case BufferElement::Type::MAT_4:   return sizeof(float) * 4 * 4;
+	case BufferElement::Type::MAT_3:
+		return sizeof(float) * 3 * 3;
+	case BufferElement::Type::MAT_4:
+		return sizeof(float) * 4 * 4;
 
-		default: { SOL_CORE_ERROR("unkown BufferElement::Type"); return 0; }
-		// clang-format on
+	default:
+	{
+		SOL_CORE_ERROR("unkown BufferElement::Type");
+		return 0;
+	}
 	}
 }
 
