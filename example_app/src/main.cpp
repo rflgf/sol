@@ -10,7 +10,7 @@ class ExampleLayer : public sol::Layer
 private:
 	std::unique_ptr<sol::VertexArray> vao;
 	std::shared_ptr<sol::Texture> texture;
-	sol::OrthographicCamera camera;
+	sol::CameraController camera_controller;
 	float speed;
 	float rotation;
 	glm::vec3 position;
@@ -19,7 +19,7 @@ private:
 public:
 	ExampleLayer()
 	    : Layer("example layer")
-	    , camera(-0.9f, 1.6f, 0.9f, -1.6f)
+	    , camera_controller(1280.0f / 720.0f)
 	    , speed(3.0f)
 	    , rotation(0.0f)
 	    , position(0.0f)
@@ -60,37 +60,28 @@ public:
 
 	void on_attach() override {}
 	void on_detatch() override {}
-	void on_event(sol::Event &e) override {}
+
+	void on_event(sol::Event &e) override
+	{
+		if (!e.handled)
+			camera_controller.on_event(e);
+	}
 
 	void on_update(sol::Timestep dt) override
 	{
+		camera_controller.on_update(dt);
 		// SOL_CORE_INFO("{}ms", dt.in_seconds());
 
 		// if (sol::Input::is_mouse_button_pressed(
 		//         sol::MouseButtonCode::SOL_MB_LEFT))
 		// 	SOL_INFO("Left mouse button pressed!");
 
-		if (sol::Input::is_key_pressed(sol::KeyCode::SOL_a))
-			position.x -= speed * dt.in_seconds();
-		if (sol::Input::is_key_pressed(sol::KeyCode::SOL_w))
-			position.y -= speed * dt.in_seconds();
-		if (sol::Input::is_key_pressed(sol::KeyCode::SOL_d))
-			position.x += speed * dt.in_seconds();
-		if (sol::Input::is_key_pressed(sol::KeyCode::SOL_s))
-			position.y += speed * dt.in_seconds();
+		sol::Renderer::begin_scene(camera_controller.get_camera());
 
-		if (sol::Input::is_key_pressed(sol::KeyCode::SOL_q))
-			rotation -= speed * dt.in_seconds();
-		if (sol::Input::is_key_pressed(sol::KeyCode::SOL_e))
-			rotation += speed * dt.in_seconds();
-
+		texture->bind();
 		glm::mat4 transform =
 		    glm::translate(glm::mat4(1.0f), position) *
 		    glm::rotate(glm::mat4(1.0f), rotation, glm::vec3(0.0f, 0.0f, 1.0f));
-
-		sol::Renderer::begin_scene(camera);
-
-		texture->bind();
 		sol::Renderer::submit(*sol::Shader::Library::get("texture"), *vao,
 		                      transform);
 

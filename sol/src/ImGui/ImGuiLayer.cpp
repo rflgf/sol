@@ -54,7 +54,9 @@ void ImGuiLayer::on_update_end()
 
 void ImGuiLayer::on_event(Event &event)
 {
-	event.handled = ImGui_ImplSDL2_ProcessEvent(
+	// FIXME(rafael): event.handled should be changed based on whether the imgui
+	// layer actually handled the event.
+	ImGui_ImplSDL2_ProcessEvent(
 	    static_cast<const SDL_Event *>(event.underlying_event));
 }
 

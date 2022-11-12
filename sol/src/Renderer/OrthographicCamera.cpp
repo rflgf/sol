@@ -36,4 +36,11 @@ void OrthographicCamera::set_position(glm::vec3 position)
 	update_projection_view_matrix();
 }
 
+void OrthographicCamera::set_projection(float top, float right, float bottom,
+                                        float left, float near, float far)
+{
+	this->projection_matrix = glm::ortho(left, right, bottom, top, near, far);
+	update_projection_view_matrix();
+}
+
 } // namespace sol

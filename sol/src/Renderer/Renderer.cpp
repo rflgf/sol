@@ -16,7 +16,7 @@ void Renderer::init()
 
 void Renderer::deinit() {}
 
-void Renderer::begin_scene(OrthographicCamera &camera)
+void Renderer::begin_scene(const OrthographicCamera &camera)
 {
 	data->view_projection_matrix = camera.projection_view_matrix;
 }

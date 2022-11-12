@@ -64,6 +64,7 @@ void Application::on_event(Event &event)
 	imgui_layer.on_event(event);
 	if (event.handled)
 		return;
+
 	Event::Dispatcher dispatcher(event);
 
 	dispatcher.dispatch<WindowCloseEvent>(

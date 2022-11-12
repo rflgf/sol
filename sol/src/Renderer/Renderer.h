@@ -24,7 +24,7 @@ public:
 	static void init();
 	static void deinit();
 
-	static void begin_scene(OrthographicCamera &camera);
+	static void begin_scene(const OrthographicCamera &camera);
 	static void end_scene();
 
 	static RendererAPI::API get_api_type() { return RendererAPI::get_type(); }

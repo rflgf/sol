@@ -20,6 +20,8 @@ public:
 
 	void update_projection_view_matrix();
 
+	void set_projection(float top, float right, float bottom, float left,
+	                    float near = -1.0f, float far = 1.0f);
 	void set_rotation(float rotation);
 	void set_position(glm::vec3 position);
 };

@@ -4,6 +4,7 @@
 // needs to define GetApplication (see EntryPoint.h for more details).
 
 #include "Application.h"
+#include "CameraController.h"
 #include "Core.h"
 #include "EntryPoint.h"
 #include "Input.h"

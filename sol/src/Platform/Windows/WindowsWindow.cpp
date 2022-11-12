@@ -81,7 +81,7 @@ void WindowsWindow::poll_events()
 		}
 		case SDL_WINDOWEVENT:
 		{
-			if (e.window.event == SDL_WINDOWEVENT_RESIZED)
+			if (e.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
 			{
 				WindowResizeEvent event {static_cast<uint16_t>(e.window.data1),
 				                         static_cast<uint16_t>(e.window.data2)};

@@ -10,7 +10,8 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/spdlog)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/stb)
 
 set(sol_src
-	"Application.cpp"
+    "Application.cpp"
+    "CameraController.cpp"
     "Input.cpp"
     "Layer.cpp"
     "LayerStack.cpp"
