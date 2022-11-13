@@ -1,8 +1,10 @@
 #include "CameraController.h"
 
+#include "Application.h"
 #include "Event/ApplicationEvent.h"
 #include "Event/MouseEvent.h"
 #include "Input.h"
+#include "Renderer/RenderCommand.h"
 
 namespace sol
 {
@@ -30,6 +32,9 @@ void CameraController::on_event(Event &event)
 
 		    camera.set_projection(-zoom, aspect_ratio * zoom, zoom,
 		                          -aspect_ratio * zoom);
+
+		    RenderCommand::set_viewport(0, 0, e.get_width(), e.get_height());
+
 		    return false;
 	    });
 

@@ -5,14 +5,11 @@
 #include <SDL.h>
 #undef main
 
-namespace sol
-{
-namespace platform
+namespace sol::platform
 {
 
 Timestep Clock::tick() const { return SDL_GetTicks64(); }
 
-} // namespace platform
-} // namespace sol
+} // namespace sol::platform
 
 #endif

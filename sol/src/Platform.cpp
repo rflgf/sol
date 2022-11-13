@@ -9,12 +9,9 @@
     "only Windows is supported by sol at the moment. define -DSOL_PLATFORM_WINDOWS"
 #endif
 
-namespace sol
-{
-namespace platform
+namespace sol::platform
 {
 
 Clock Clock::clock = Clock {};
 
-} // namespace platform
-} // namespace sol
+} // namespace sol::platform

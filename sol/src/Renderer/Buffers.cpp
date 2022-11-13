@@ -101,29 +101,46 @@ size_t BufferElement::component_count(BufferElement::Type t)
 {
 	switch (t)
 	{
-		// clang-format off
-		case BufferElement::Type::BOOL:    return 1;
+	case BufferElement::Type::BOOL:
+		return 1;
 
-		case BufferElement::Type::INT:     return 1;
-		case BufferElement::Type::INT_2:   return 2;
-		case BufferElement::Type::INT_3:   return 3;
-		case BufferElement::Type::INT_4:   return 4;
+	case BufferElement::Type::INT:
+		return 1;
+	case BufferElement::Type::INT_2:
+		return 2;
+	case BufferElement::Type::INT_3:
+		return 3;
+	case BufferElement::Type::INT_4:
+		return 4;
 
-		case BufferElement::Type::UINT:    return 1;
-		case BufferElement::Type::UINT_2:  return 2;
-		case BufferElement::Type::UINT_3:  return 3;
-		case BufferElement::Type::UINT_4:  return 4;
+	case BufferElement::Type::UINT:
+		return 1;
+	case BufferElement::Type::UINT_2:
+		return 2;
+	case BufferElement::Type::UINT_3:
+		return 3;
+	case BufferElement::Type::UINT_4:
+		return 4;
 
-		case BufferElement::Type::FLOAT:   return 1;
-		case BufferElement::Type::FLOAT_2: return 2;
-		case BufferElement::Type::FLOAT_3: return 3;
-		case BufferElement::Type::FLOAT_4: return 4;
+	case BufferElement::Type::FLOAT:
+		return 1;
+	case BufferElement::Type::FLOAT_2:
+		return 2;
+	case BufferElement::Type::FLOAT_3:
+		return 3;
+	case BufferElement::Type::FLOAT_4:
+		return 4;
 
-		case BufferElement::Type::MAT_3:   return 3 * 3;
-		case BufferElement::Type::MAT_4:   return 4 * 4;
+	case BufferElement::Type::MAT_3:
+		return 3 * 3;
+	case BufferElement::Type::MAT_4:
+		return 4 * 4;
 
-		default: { SOL_CORE_ERROR("unkown BufferElement::Type"); return 0; }
-		// clang-format on
+	default:
+	{
+		SOL_CORE_ERROR("unkown BufferElement::Type");
+		return 0;
+	}
 	}
 }
 

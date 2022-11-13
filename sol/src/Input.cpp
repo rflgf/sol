@@ -2,5 +2,7 @@
 
 namespace sol
 {
+
 Input *Input::instance = nullptr;
+
 }

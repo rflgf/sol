@@ -2,9 +2,7 @@
 
 #include "Timestep.h"
 
-namespace sol
-{
-namespace platform
+namespace sol::platform
 {
 
 struct Clock
@@ -13,5 +11,4 @@ struct Clock
 	static Clock clock;
 };
 
-} // namespace platform
-} // namespace sol
+} // namespace sol::platform
