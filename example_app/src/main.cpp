@@ -1,5 +1,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <imgui.h>
+
+#define SOL_ENTRY_POINT_SOURCE_FILE
 #include <sol.h>
 
 namespace example_app

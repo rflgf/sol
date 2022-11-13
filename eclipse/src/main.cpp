@@ -1,3 +1,4 @@
+#define SOL_ENTRY_POINT_SOURCE_FILE
 #include <sol.h>
 
 namespace ecl
