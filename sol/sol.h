@@ -5,7 +5,7 @@
 
 // NOTE: define this exactly once before including this file.
 #ifdef SOL_ENTRY_POINT_SOURCE_FILE
-#	include "EntryPoint.h"
+#include "EntryPoint.h"
 #endif
 
 #include "Application.h"
@@ -19,6 +19,7 @@
 #include "Renderer/OrthographicCamera.h"
 #include "Renderer/RenderCommand.h"
 #include "Renderer/Renderer.h"
+#include "Renderer/Renderer2D.h"
 #include "Renderer/Shader.h"
 #include "Renderer/Texture.h"
 #include "Utils.h"

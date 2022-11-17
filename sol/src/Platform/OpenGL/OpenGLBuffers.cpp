@@ -60,7 +60,7 @@ GLenum OpenGL_base_type_from(BufferElement::Type t)
 // OpenGLVertexBuffer /
 ///////////////////////
 
-OpenGLVertexBuffer::OpenGLVertexBuffer(float *vertices, size_t size)
+OpenGLVertexBuffer::OpenGLVertexBuffer(const float *vertices, const size_t size)
 {
 	glGenBuffers(1, &id);
 	glBindBuffer(GL_ARRAY_BUFFER, id);

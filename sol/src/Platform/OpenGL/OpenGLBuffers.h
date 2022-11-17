@@ -11,7 +11,7 @@ private:
 	BufferLayout layout;
 
 public:
-	OpenGLVertexBuffer(float *vertices, size_t size);
+	OpenGLVertexBuffer(const float *vertices, const size_t size);
 	~OpenGLVertexBuffer();
 
 	void bind() const override;

@@ -2,19 +2,35 @@
 
 #include "Core.h"
 
-#include <glad/glad.h>
 #include <stb_image.h>
 
 namespace sol
 {
 
+OpenGLTexture2D::OpenGLTexture2D(const uint32_t width, const uint32_t height)
+    : width(width)
+    , height(height)
+    , id(0)
+    , internal_format(GL_RGBA8)
+    , data_format(GL_RGBA)
+{
+	glCreateTextures(GL_TEXTURE_2D, 1, &id);
+	glTextureStorage2D(id, 1, internal_format, width, height);
+
+	glTextureParameteri(id, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTextureParameteri(id, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTextureParameteri(id, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTextureParameteri(id, GL_TEXTURE_WRAP_T, GL_REPEAT);
+}
+
 OpenGLTexture2D::OpenGLTexture2D(const std::string &path)
     : width(0)
     , height(0)
     , id(0)
+    , internal_format(0)
+    , data_format(0)
 {
 	int width, height, channels;
-	GLenum internal_format = 0, data_format = 0;
 	stbi_set_flip_vertically_on_load(1);
 	stbi_uc *data = stbi_load(path.c_str(), &width, &height, &channels, 0);
 
@@ -56,6 +72,15 @@ OpenGLTexture2D::~OpenGLTexture2D() { glDeleteTextures(1, &id); }
 void OpenGLTexture2D::bind(const uint32_t slot) const
 {
 	glBindTextureUnit(slot, id);
+}
+
+void OpenGLTexture2D::set_data(const void *data, const uint32_t size) const
+{
+	uint32_t bytes_per_pixel = data_format == GL_RGBA ? 4 : 3;
+	SOL_CORE_ASSERT(size == width * height * bytes_per_pixel,
+	                "data must be entire texture!");
+	glTextureSubImage2D(id, 0, 0, 0, width, height, data_format,
+	                    GL_UNSIGNED_BYTE, data);
 }
 
 } // namespace sol

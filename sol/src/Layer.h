@@ -18,11 +18,11 @@ public:
 	Layer(const std::string name = "Layer", bool enabled = true);
 	virtual ~Layer();
 
-	virtual void on_attach()            = 0;
-	virtual void on_detatch()           = 0;
-	virtual void on_update(Timestep dt) = 0;
-	virtual void on_imgui_update()      = 0;
-	virtual void on_event(Event &event) = 0;
+	virtual void on_attach() {}
+	virtual void on_detatch() {}
+	virtual void on_update(Timestep dt) {}
+	virtual void on_imgui_update() {}
+	virtual void on_event(Event &event) {}
 	virtual void enable() { enabled = true; }
 	virtual void disable() { enabled = false; }
 	bool is_enabled() const { return enabled; }

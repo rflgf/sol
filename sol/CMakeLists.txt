@@ -36,6 +36,7 @@ set(sol_src
     "Renderer/OrthographicCamera.cpp"
     "Renderer/RenderCommand.cpp"
     "Renderer/Renderer.cpp"
+    "Renderer/Renderer2D.cpp"
     "Renderer/RendererAPI.cpp"
     "Renderer/Shader.cpp"
     "Renderer/Texture.cpp"

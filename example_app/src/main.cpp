@@ -52,16 +52,13 @@ public:
 		vao->add_vertex_buffer(std::shared_ptr<sol::VertexBuffer>(vbo));
 		vao->set_index_buffer(std::shared_ptr<sol::IndexBuffer>(ibo));
 
-		sol::Shader *shader =
+		std::shared_ptr<const sol::Shader> shader =
 		    sol::Shader::create("assets/shaders/texture.shader");
 		sol::Shader::Library::add(shader);
-		texture = sol::Texture2D::create("assets/test.png");
+		texture = sol::Texture2D::create("assets/textures/logo.png");
 		shader->bind();
-		shader->upload_uniform_int("tex_id", 0);
+		shader->set_int("tex_id", 0);
 	}
-
-	void on_attach() override {}
-	void on_detatch() override {}
 
 	void on_event(sol::Event &e) override
 	{
@@ -97,6 +94,50 @@ public:
 	}
 };
 
+class Layer2D : public sol::Layer
+{
+public:
+	sol::CameraController camera_controller;
+	glm::vec4 square_color;
+	std::shared_ptr<sol::Texture> texture;
+
+	Layer2D()
+	    : camera_controller(1280.0f / 720.0f)
+	    , square_color {0.3f, 0.4f, 0.5f, 1.0f}
+	    , texture(sol::Texture2D::create("assets/textures/logo.png"))
+	{
+	}
+
+	void on_update(sol::Timestep dt) override
+	{
+		camera_controller.on_update(dt);
+		// SOL_CORE_INFO("{}ms", dt.in_seconds());
+
+		// if (sol::Input::is_mouse_button_pressed(
+		//         sol::MouseButtonCode::SOL_MB_LEFT))
+		// 	SOL_INFO("Left mouse button pressed!");
+
+		sol::Renderer2D::begin_scene(camera_controller.get_camera());
+
+		sol::Renderer2D::draw_quad({0.0f, 0.0f}, {1.0f, 1.0f},
+		                           {0.3f, 0.7f, 0.6f, 1.0f});
+		sol::Renderer2D::draw_quad({0.3f, 0.4f}, {2.0f, 1.0f}, square_color,
+		                           2.0f);
+		sol::Renderer2D::draw_quad({0.6f, 0.3f, 0.1f}, {1.0f, 1.0f}, *texture);
+
+		sol::Renderer2D::end_scene();
+	}
+
+	void on_imgui_update() override
+	{
+		ImGui::Begin("Renderer2D");
+		ImGui::ColorEdit4("flat shader", glm::value_ptr(square_color));
+		ImGui::End();
+	}
+
+	void on_event(sol::Event &event) override {}
+};
+
 class ExampleApp : public sol::Application
 {
 
@@ -104,7 +145,8 @@ public:
 	ExampleApp()
 	    : Application()
 	{
-		layer_stack.push(new ExampleLayer());
+		// layer_stack.push(new ExampleLayer());
+		layer_stack.push(new Layer2D());
 	}
 	~ExampleApp() {}
 };

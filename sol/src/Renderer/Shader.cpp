@@ -11,8 +11,9 @@ namespace sol
 ///////////////////////
 // Shader /////////////
 ///////////////////////
-Shader *Shader::create(const std::string name, const std::string &vertex_source,
-                       const std::string &fragment_source)
+std::shared_ptr<const Shader> Shader::create(const std::string name,
+                                             const std::string &vertex_source,
+                                             const std::string &fragment_source)
 {
 	switch (RendererAPI::get_type())
 	{
@@ -22,13 +23,14 @@ Shader *Shader::create(const std::string name, const std::string &vertex_source,
 		return nullptr;
 	}
 	case RendererAPI::API::OPEN_GL:
-		return new OpenGLShader(name, fragment_source, vertex_source);
+		return std::make_shared<OpenGLShader>(name, fragment_source,
+		                                      vertex_source);
 	}
 	SOL_CORE_ASSERT(0, "RendererAPI::API not found");
 	return nullptr;
 }
 
-Shader *Shader::create(const std::string &filepath)
+std::shared_ptr<const Shader> Shader::create(const std::string &filepath)
 {
 	switch (RendererAPI::get_type())
 	{
@@ -38,7 +40,7 @@ Shader *Shader::create(const std::string &filepath)
 		return nullptr;
 	}
 	case RendererAPI::API::OPEN_GL:
-		return new OpenGLShader(filepath);
+		return std::make_shared<OpenGLShader>(filepath);
 	}
 	SOL_CORE_ASSERT(0, "RendererAPI::API not found");
 	return nullptr;
@@ -82,37 +84,29 @@ void Shader::Library::init()
 	self = new Library();
 }
 
-const Shader *Shader::Library::get(const std::string &name)
+std::shared_ptr<const Shader> Shader::Library::get(const std::string &name)
 {
 	SOL_CORE_ASSERT(self->shaders.contains(name),
 	                "shader '{}' not in shader library.", name);
 	return self->shaders[name];
 }
 
-void Shader::Library::add(const Shader *shader)
+void Shader::Library::add(std::shared_ptr<const Shader> shader)
 {
 	const std::string &name = shader->get_name();
-
-	if (self->shaders.contains(name))
-		delete self->shaders[name];
-
-	self->shaders[name] = shader;
+	self->shaders.insert_or_assign(name, shader);
 }
 
 void Shader::Library::load(const std::string &filepath)
 {
-	Shader *shader = Shader::create(filepath);
+	std::shared_ptr<const Shader> shader = Shader::create(filepath);
 	add(shader);
 }
 
 void Shader::Library::load(const std::string &name, const std::string &filepath)
 {
-	Shader *shader = Shader::create(filepath);
-
-	if (self->shaders.contains(name))
-		delete self->shaders[name];
-
-	self->shaders[name] = shader;
+	std::shared_ptr<const Shader> shader = Shader::create(filepath);
+	add(shader);
 }
 
 } // namespace sol

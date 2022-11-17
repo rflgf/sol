@@ -10,7 +10,7 @@ namespace sol
 // VertexBuffer ///////
 ///////////////////////
 
-VertexBuffer *VertexBuffer::create(float *vertices, size_t size)
+VertexBuffer *VertexBuffer::create(const float *vertices, const size_t size)
 {
 	switch (RendererAPI::get_type())
 	{

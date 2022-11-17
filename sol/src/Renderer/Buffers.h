@@ -101,7 +101,7 @@ public:
 	VertexBuffer(BufferLayout layout);
 	virtual ~VertexBuffer() = default;
 
-	static VertexBuffer *create(float *vertices, size_t size);
+	static VertexBuffer *create(const float *vertices, const size_t size);
 	virtual void bind() const                     = 0;
 	virtual void unbind() const                   = 0;
 	virtual void set_layout(BufferLayout &layout) = 0;

@@ -6,7 +6,7 @@ import os
 if __name__ == '__main__':
 	src = 'assets'
 	modes = ['Debug']
-	projects = ['eclipse', 'example_app']
+	projects = ['example_app']
 	for m in modes:
 		for p in projects:
-			copy_tree(src, os.path.join('bin', m, p, 'assets'))
+			copy_tree(os.path.join(p, src), os.path.join('bin', m, p, src))

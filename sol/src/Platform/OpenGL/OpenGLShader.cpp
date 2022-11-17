@@ -205,6 +205,48 @@ void OpenGLShader::upload_uniform_matrix_4(std::string name,
 	glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
 }
 
+void OpenGLShader::set_int(std::string name, const int32_t value) const
+{
+	upload_uniform_int(name, value);
+}
+
+void OpenGLShader::set_int_array(const std::string &name, int32_t *value,
+                                 size_t count) const
+{
+	upload_uniform_int_array(name, value, count);
+}
+
+void OpenGLShader::set_unsigned_int(std::string name,
+                                    const uint32_t value) const
+{
+	upload_uniform_unsigned_int(name, value);
+}
+
+void OpenGLShader::set_float(std::string name, const float_t value) const
+{
+	upload_uniform_float(name, value);
+}
+
+void OpenGLShader::set_float_2(std::string name, const glm::vec2 value) const
+{
+	upload_uniform_float_2(name, value);
+}
+
+void OpenGLShader::set_float_3(std::string name, const glm::vec3 &value) const
+{
+	upload_uniform_float_3(name, value);
+}
+
+void OpenGLShader::set_float_4(std::string name, const glm::vec4 &value) const
+{
+	upload_uniform_float_4(name, value);
+}
+
+void OpenGLShader::set_matrix_4(std::string name, const glm::mat4 &value) const
+{
+	upload_uniform_matrix_4(name, value);
+}
+
 int OpenGLShader::get_uniform_location(const std::string &name) const
 {
 	if (locations.find(name) != locations.end())
