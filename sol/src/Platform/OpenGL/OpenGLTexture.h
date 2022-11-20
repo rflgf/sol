@@ -24,8 +24,10 @@ public:
 	uint32_t get_width() const override { return width; };
 	uint32_t get_height() const override { return height; };
 
-	void bind(const uint32_t slot) const override;
+	void bind(const uint8_t slot) const override;
 	void set_data(const void *data, const uint32_t size) const override;
+
+	bool operator==(const Texture &other) const override;
 };
 
 } // namespace sol

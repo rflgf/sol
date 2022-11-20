@@ -97,15 +97,16 @@ protected:
 	uint32_t id;
 
 public:
-	VertexBuffer() = default;
-	VertexBuffer(BufferLayout layout);
 	virtual ~VertexBuffer() = default;
 
-	static VertexBuffer *create(const float *vertices, const size_t size);
-	virtual void bind() const                     = 0;
-	virtual void unbind() const                   = 0;
-	virtual void set_layout(BufferLayout &layout) = 0;
-	virtual BufferLayout &get_layout()            = 0;
+	static std::shared_ptr<VertexBuffer> create(const size_t size);
+	static std::shared_ptr<VertexBuffer> create(const float *vertices,
+	                                            const size_t size);
+	virtual void bind() const                            = 0;
+	virtual void unbind() const                          = 0;
+	virtual void set_layout(BufferLayout &layout)        = 0;
+	virtual BufferLayout &get_layout()                   = 0;
+	virtual void set_data(const void *data, size_t size) = 0;
 };
 
 class IndexBuffer
@@ -121,7 +122,7 @@ public:
 	}
 	virtual ~IndexBuffer() = default;
 
-	static IndexBuffer *create(uint32_t *indices, size_t count);
+	static std::shared_ptr<IndexBuffer> create(uint32_t *indices, size_t count);
 	virtual void bind() const   = 0;
 	virtual void unbind() const = 0;
 	size_t get_count() const { return count; }

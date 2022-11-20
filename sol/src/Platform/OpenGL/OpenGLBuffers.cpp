@@ -60,6 +60,13 @@ GLenum OpenGL_base_type_from(BufferElement::Type t)
 // OpenGLVertexBuffer /
 ///////////////////////
 
+OpenGLVertexBuffer::OpenGLVertexBuffer(const size_t size)
+{
+	glCreateBuffers(1, &id);
+	glBindBuffer(GL_ARRAY_BUFFER, id);
+	glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
+}
+
 OpenGLVertexBuffer::OpenGLVertexBuffer(const float *vertices, const size_t size)
 {
 	glGenBuffers(1, &id);
@@ -76,6 +83,12 @@ void OpenGLVertexBuffer::unbind() const { glBindBuffer(GL_ARRAY_BUFFER, 0); }
 void OpenGLVertexBuffer::set_layout(BufferLayout &layout)
 {
 	this->layout = layout;
+}
+
+void OpenGLVertexBuffer::set_data(const void *data, size_t size)
+{
+	glBindBuffer(GL_ARRAY_BUFFER, id);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
 }
 
 ///////////////////////

@@ -19,10 +19,10 @@ void OpenGLRendererAPI::set_viewport(uint32_t x, uint32_t y, uint32_t width,
 	glViewport(x, y, width, height);
 }
 
-void OpenGLRendererAPI::draw_indexed(VertexArray &vao)
+void OpenGLRendererAPI::draw_indexed(VertexArray &vao, size_t count)
 {
-	glDrawElements(GL_TRIANGLES, vao.get_index_buffer()->get_count(),
-	               GL_UNSIGNED_INT, nullptr);
+	count = count ? count : vao.get_index_buffer()->get_count();
+	glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
 }
 void OpenGLRendererAPI::set_clear_color(const glm::vec4 &color)
 {

@@ -69,7 +69,7 @@ OpenGLTexture2D::OpenGLTexture2D(const std::string &path)
 
 OpenGLTexture2D::~OpenGLTexture2D() { glDeleteTextures(1, &id); }
 
-void OpenGLTexture2D::bind(const uint32_t slot) const
+void OpenGLTexture2D::bind(const uint8_t slot) const
 {
 	glBindTextureUnit(slot, id);
 }
@@ -81,6 +81,11 @@ void OpenGLTexture2D::set_data(const void *data, const uint32_t size) const
 	                "data must be entire texture!");
 	glTextureSubImage2D(id, 0, 0, 0, width, height, data_format,
 	                    GL_UNSIGNED_BYTE, data);
+}
+
+bool OpenGLTexture2D::operator==(const Texture &other) const
+{
+	return id == static_cast<const OpenGLTexture2D &>(other).id;
 }
 
 } // namespace sol

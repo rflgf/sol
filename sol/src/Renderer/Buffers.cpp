@@ -10,7 +10,7 @@ namespace sol
 // VertexBuffer ///////
 ///////////////////////
 
-VertexBuffer *VertexBuffer::create(const float *vertices, const size_t size)
+std::shared_ptr<VertexBuffer> VertexBuffer::create(const size_t size)
 {
 	switch (RendererAPI::get_type())
 	{
@@ -20,7 +20,24 @@ VertexBuffer *VertexBuffer::create(const float *vertices, const size_t size)
 		return nullptr;
 	}
 	case RendererAPI::API::OPEN_GL:
-		return new OpenGLVertexBuffer(vertices, size);
+		return std::make_shared<OpenGLVertexBuffer>(size);
+	}
+	SOL_CORE_ASSERT(0, "RendererAPI::API not found");
+	return nullptr;
+}
+
+std::shared_ptr<VertexBuffer> VertexBuffer::create(const float *vertices,
+                                                   const size_t size)
+{
+	switch (RendererAPI::get_type())
+	{
+	case RendererAPI::API::NONE:
+	{
+		SOL_CORE_ASSERT(0, "sol does not support RendererAPI::API::NONE yet");
+		return nullptr;
+	}
+	case RendererAPI::API::OPEN_GL:
+		return std::make_shared<OpenGLVertexBuffer>(vertices, size);
 	}
 	SOL_CORE_ASSERT(0, "RendererAPI::API not found");
 	return nullptr;
@@ -30,7 +47,8 @@ VertexBuffer *VertexBuffer::create(const float *vertices, const size_t size)
 // IndexBuffer ////////
 ///////////////////////
 
-IndexBuffer *IndexBuffer::create(uint32_t *indices, size_t count)
+std::shared_ptr<IndexBuffer> IndexBuffer::create(uint32_t *indices,
+                                                 size_t count)
 {
 	switch (RendererAPI::get_type())
 	{
@@ -40,7 +58,7 @@ IndexBuffer *IndexBuffer::create(uint32_t *indices, size_t count)
 		return nullptr;
 	}
 	case RendererAPI::API::OPEN_GL:
-		return new OpenGLIndexBuffer(indices, count);
+		return std::make_shared<OpenGLIndexBuffer>(indices, count);
 	}
 	SOL_CORE_ASSERT(0, "RendererAPI::API not found");
 	return nullptr;

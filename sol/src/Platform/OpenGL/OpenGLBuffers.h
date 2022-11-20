@@ -11,6 +11,7 @@ private:
 	BufferLayout layout;
 
 public:
+	OpenGLVertexBuffer(const size_t size);
 	OpenGLVertexBuffer(const float *vertices, const size_t size);
 	~OpenGLVertexBuffer();
 
@@ -18,6 +19,7 @@ public:
 	void unbind() const override;
 	void set_layout(BufferLayout &layout) override;
 	BufferLayout &get_layout() override { return layout; }
+	void set_data(const void *data, size_t size) override;
 };
 
 class OpenGLIndexBuffer : public IndexBuffer

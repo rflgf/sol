@@ -37,7 +37,7 @@ public:
 		     0.5f, -0.5f, 0.0f,    1.0f, 1.0f,         // top-right
 		    // clang-format on
 		};
-		sol::VertexBuffer *vbo =
+		std::shared_ptr<sol::VertexBuffer> vbo =
 		    sol::VertexBuffer::create(vertices, sizeof(vertices));
 
 		using ElementType = sol::BufferElement::Type;
@@ -45,8 +45,8 @@ public:
 		                          {ElementType::FLOAT_2, "tex_coord"}});
 		vbo->set_layout(layout);
 
-		uint32_t indices[6]   = {2, 0, 3, 0, 3, 1};
-		sol::IndexBuffer *ibo = sol::IndexBuffer::create(
+		uint32_t indices[6]                   = {2, 0, 3, 0, 3, 1};
+		std::shared_ptr<sol::IndexBuffer> ibo = sol::IndexBuffer::create(
 		    indices, sizeof(indices) / sizeof(uint32_t));
 
 		vao->add_vertex_buffer(std::shared_ptr<sol::VertexBuffer>(vbo));
@@ -119,11 +119,15 @@ public:
 
 		sol::Renderer2D::begin_scene(camera_controller.get_camera());
 
-		sol::Renderer2D::draw_quad({0.0f, 0.0f}, {1.0f, 1.0f},
-		                           {0.3f, 0.7f, 0.6f, 1.0f});
-		sol::Renderer2D::draw_quad({0.3f, 0.4f}, {2.0f, 1.0f}, square_color,
+		// sol::Renderer2D::draw_quad({0.0f, 0.0f}, {1.0f, 1.0f},
+		//                            {0.3f, 0.7f, 0.6f, 1.0f});
+		sol::Renderer2D::draw_quad({-0.5f, -0.5f}, {2.0f, 1.0f}, square_color,
 		                           2.0f);
-		sol::Renderer2D::draw_quad({0.6f, 0.3f, 0.1f}, {1.0f, 1.0f}, *texture);
+
+		sol::Renderer2D::draw_quad({0.5f, 0.5f}, {1.0f, 1.0f},
+		                           {0.2, 0.3, 0.4, 1.0}, 2.0f);
+		sol::Renderer2D::draw_quad({0.6f, 0.3f, 0.1f}, {1.0f, 1.0f}, texture,
+		                           0.0f, 3.0f);
 
 		sol::Renderer2D::end_scene();
 	}
