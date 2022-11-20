@@ -122,10 +122,10 @@ public:
 		// sol::Renderer2D::draw_quad({0.0f, 0.0f}, {1.0f, 1.0f},
 		//                            {0.3f, 0.7f, 0.6f, 1.0f});
 		sol::Renderer2D::draw_quad({-0.5f, -0.5f}, {2.0f, 1.0f}, square_color,
-		                           2.0f);
+		                           0.4f);
 
 		sol::Renderer2D::draw_quad({0.5f, 0.5f}, {1.0f, 1.0f},
-		                           {0.2, 0.3, 0.4, 1.0}, 2.0f);
+		                           {0.2, 0.3, 0.4, 1.0});
 		sol::Renderer2D::draw_quad({0.6f, 0.3f, 0.1f}, {1.0f, 1.0f}, texture,
 		                           0.0f, 3.0f);
 

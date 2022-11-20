@@ -187,8 +187,20 @@ void Renderer2D::draw_quad(const glm::vec3 position, const glm::vec2 size,
 
 	data->textures[index] = texture;
 
+	static const std::array<const glm::vec4, 4> vertices {
+	    glm::vec4 {-0.5f, 0.5f, 0.0f, 1.0f},  // bottom left
+	    glm::vec4 {0.5f, 0.5f, 0.0f, 1.0f},   // bottom right
+	    glm::vec4 {0.5f, -0.5f, 0.0f, 1.0f},  // top right
+	    glm::vec4 {-0.5f, -0.5f, 0.0f, 1.0f}, // top left
+	};
+
+	glm::mat4 transform =
+	    glm::translate(glm::mat4(1.0f), position) *
+	    glm::rotate(glm::mat4(1.0f), rotation, glm::vec3(0.0f, 0.0f, 1.0f)) *
+	    glm::scale(glm::mat4(1.0f), {size.x, size.y, 1.0f});
+
 	// bottom left vertex.
-	data->offset_from_base->position = {position.x, position.y, position.z};
+	data->offset_from_base->position            = transform * vertices[0];
 	data->offset_from_base->texture_coordinates = {0.0f, 0.0f};
 	data->offset_from_base->color               = tint;
 	data->offset_from_base->tiling_factor       = tiling_factor;
@@ -196,8 +208,7 @@ void Renderer2D::draw_quad(const glm::vec3 position, const glm::vec2 size,
 	++data->offset_from_base;
 
 	// bottom right vertex.
-	data->offset_from_base->position = {position.x + size.x, position.y,
-	                                    position.z};
+	data->offset_from_base->position            = transform * vertices[1];
 	data->offset_from_base->texture_coordinates = {1.0f, 0.0f};
 	data->offset_from_base->color               = tint;
 	data->offset_from_base->tiling_factor       = tiling_factor;
@@ -205,8 +216,7 @@ void Renderer2D::draw_quad(const glm::vec3 position, const glm::vec2 size,
 	++data->offset_from_base;
 
 	// top right vertex.
-	data->offset_from_base->position            = {position.x + size.x,
-	                                               position.y + size.y, position.z};
+	data->offset_from_base->position            = transform * vertices[2];
 	data->offset_from_base->texture_coordinates = {1.0f, 1.0f};
 	data->offset_from_base->color               = tint;
 	data->offset_from_base->tiling_factor       = tiling_factor;
@@ -214,8 +224,7 @@ void Renderer2D::draw_quad(const glm::vec3 position, const glm::vec2 size,
 	++data->offset_from_base;
 
 	// top left vertex.
-	data->offset_from_base->position = {position.x, position.y + size.y,
-	                                    position.z};
+	data->offset_from_base->position            = transform * vertices[3];
 	data->offset_from_base->texture_coordinates = {0.0f, 1.0f};
 	data->offset_from_base->color               = tint;
 	data->offset_from_base->tiling_factor       = tiling_factor;
