@@ -23,12 +23,26 @@ public:
 		float texture_slot;
 	};
 
+	struct Statistics
+	{
+		uint32_t draw_calls = 0;
+		uint32_t quad_count = 0;
+
+		uint32_t total_vertex_count() const;
+		uint32_t total_index_count() const;
+		void reset();
+	};
+
 	struct Data
 	{
-		static const size_t MAX_QUADS_PER_BATCH    = 10000;
-		static const size_t MAX_VERTICES_PER_BATCH = MAX_QUADS_PER_BATCH * 4;
-		static const size_t MAX_INDICES_PER_BATCH  = MAX_QUADS_PER_BATCH * 6;
-		static const size_t MAX_TEXTURE_SLOTS      = 16;
+		static const size_t MAX_QUADS_PER_BATCH = 10000;
+		static const size_t INDICES_PER_QUAD    = 6;
+		static const size_t VERTICES_PER_QUAD   = 4;
+		static const size_t MAX_VERTICES_PER_BATCH =
+		    MAX_QUADS_PER_BATCH * VERTICES_PER_QUAD;
+		static const size_t MAX_INDICES_PER_BATCH =
+		    MAX_QUADS_PER_BATCH * INDICES_PER_QUAD;
+		static const size_t MAX_TEXTURE_SLOTS = 16;
 
 		size_t quad_index_count      = 0;
 		QuadVertex *base             = nullptr;
@@ -42,6 +56,8 @@ public:
 		std::shared_ptr<IndexBuffer> ibo;
 		std::shared_ptr<const Shader> tinted_texture_shader;
 		std::shared_ptr<const Texture> white_texture;
+
+		Statistics statistics;
 	};
 
 	static Data *data;
@@ -51,7 +67,8 @@ public:
 
 	static void begin_scene(const OrthographicCamera &camera);
 	static void end_scene();
-	static void flush();
+	static void start_batch();
+	static void flush_batch();
 
 	static void draw_quad(const glm::vec2 position, const glm::vec2 size,
 	                      const glm::vec4 color, const float rotation = 0.0f,

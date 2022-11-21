@@ -136,6 +136,23 @@ public:
 	{
 		ImGui::Begin("Renderer2D");
 		ImGui::ColorEdit4("flat shader", glm::value_ptr(square_color));
+
+		{
+			ImGui::Begin("statistics");
+
+			ImGui::Text("draw calls: %d",
+			            sol::Renderer2D::data->statistics.draw_calls);
+			ImGui::Text("quad count: %d",
+			            sol::Renderer2D::data->statistics.quad_count);
+			ImGui::Text("index count: %d",
+			            sol::Renderer2D::data->statistics.total_index_count());
+			ImGui::Text("vertex count: %d",
+			            sol::Renderer2D::data->statistics.total_vertex_count());
+
+			ImGui::End();
+			sol::Renderer2D::data->statistics.reset();
+		}
+
 		ImGui::End();
 	}
 
