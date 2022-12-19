@@ -5,6 +5,7 @@
 #include "Utils.h"
 
 #include <glm/gtc/type_ptr.hpp>
+#include <regex>
 
 namespace sol
 {
@@ -44,19 +45,24 @@ OpenGLShader::parse(const std::string &source)
 	{
 		cursor += strlen(step_token);
 		while (source[cursor] == ' ' || source[cursor] == '\t' ||
-		       source[cursor] == '\n')
+		       source[cursor] == '\n' || source[cursor] == '\r')
 			++cursor;
-		size_t end_of_step_value = source.find('\n', cursor);
+		std::regex new_line_chars("\\s");
+		std::cmatch match;
+		size_t end_of_step_value = 0;
+		if (std::regex_search(&source[cursor], match, new_line_chars))
+			end_of_step_value = match.prefix().length();
 		std::string step_value_string =
-		    source.substr(cursor, end_of_step_value - cursor);
+		    source.substr(cursor, end_of_step_value);
 		Step step = step_from_string(step_value_string);
 		// next "#step", i.e., next shader source.
+		cursor += end_of_step_value;
 		size_t end_of_current_shader = source.find("#step", cursor);
 		// case last shader source.
 		if (end_of_current_shader == std::string::npos)
 			end_of_current_shader = source.size();
 		std::string current_shader_source = source.substr(
-		    end_of_step_value, end_of_current_shader - end_of_step_value);
+		    cursor, end_of_current_shader - cursor);
 		steps[step] = current_shader_source;
 		cursor      = end_of_current_shader;
 	}
