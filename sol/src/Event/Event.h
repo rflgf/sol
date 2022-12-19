@@ -53,8 +53,8 @@ public:
 		}
 
 		template <typename T>
-		requires std::is_base_of_v<Event, T>
-		bool dispatch(EventFn<T> func)
+		    requires std::is_base_of_v<Event, T> bool
+		dispatch(EventFn<T> func)
 		{
 			if (event.get_event_type() == T::get_static_type())
 			{
@@ -82,11 +82,23 @@ inline std::ostream &operator<<(std::ostream &os, const Event &e)
 }
 
 #define EVENT_CLASS_TYPE(type)                                                 \
-	static Type get_static_type() { return Type::type; }                       \
-	virtual Type get_event_type() const override { return get_static_type(); } \
-	virtual const char *get_name() const override { return #type; }
+	static Type get_static_type()                                              \
+	{                                                                          \
+		return Type::type;                                                     \
+	}                                                                          \
+	virtual Type get_event_type() const override                               \
+	{                                                                          \
+		return get_static_type();                                              \
+	}                                                                          \
+	virtual const char *get_name() const override                              \
+	{                                                                          \
+		return #type;                                                          \
+	}
 
 #define EVENT_CLASS_CATEGORY(category)                                         \
-	virtual uint16_t get_category_flags() const override { return category; }
+	virtual uint16_t get_category_flags() const override                       \
+	{                                                                          \
+		return category;                                                       \
+	}
 
 } // namespace sol

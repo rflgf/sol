@@ -61,8 +61,8 @@ OpenGLShader::parse(const std::string &source)
 		// case last shader source.
 		if (end_of_current_shader == std::string::npos)
 			end_of_current_shader = source.size();
-		std::string current_shader_source = source.substr(
-		    cursor, end_of_current_shader - cursor);
+		std::string current_shader_source =
+		    source.substr(cursor, end_of_current_shader - cursor);
 		steps[step] = current_shader_source;
 		cursor      = end_of_current_shader;
 	}
