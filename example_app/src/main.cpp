@@ -100,11 +100,16 @@ public:
 	sol::CameraController camera_controller;
 	glm::vec4 square_color;
 	std::shared_ptr<sol::Texture> texture;
+	std::shared_ptr<sol::Subtexture2D> subtexture;
 
 	Layer2D()
 	    : camera_controller(1280.0f / 720.0f)
 	    , square_color {0.3f, 0.4f, 0.5f, 1.0f}
 	    , texture(sol::Texture2D::create("assets/textures/logo.png"))
+	    , subtexture(sol::Subtexture2D::from_coordinates(
+	          sol::Texture2D::create("assets/textures/kenney_tinydungeon/"
+	                                 "Tilemap/tilemap_packed.png"),
+	          glm::vec2 {0, 3}, glm::vec2 {16, 16}))
 	{
 	}
 
@@ -128,6 +133,9 @@ public:
 		                           {0.2, 0.3, 0.4, 1.0});
 		sol::Renderer2D::draw_quad({0.6f, 0.3f, 0.1f}, {1.0f, 1.0f}, texture,
 		                           0.0f, 3.0f);
+		sol::Renderer2D::draw_quad({0.6f, 0.3f, 0.2f}, {0.2f, 0.20f}, subtexture,
+		                           glm::vec4 {1.0f, 1.0f, 1.0f, 1.0f}, 0.0f,
+		                           1.0f);
 
 		sol::Renderer2D::end_scene();
 	}

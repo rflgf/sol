@@ -3,6 +3,7 @@
 #include "Buffers.h"
 #include "OrthographicCamera.h"
 #include "Shader.h"
+#include "Subtexture2D.h"
 #include "Texture.h"
 
 #include <glm/glm.hpp>
@@ -98,6 +99,31 @@ public:
 	                      const float tiling_factor = 1.0f);
 	static void draw_quad(const glm::vec3 position, const glm::vec2 size,
 	                      std::shared_ptr<const Texture> texture,
+	                      const glm::vec4 tint, const float rotation = 0.0f,
+	                      const float tiling_factor = 1.0f);
+
+	static void draw_quad(const glm::vec2 position, const glm::vec2 size,
+	                      std::shared_ptr<const Subtexture2D> subtexture,
+	                      const float rotation      = 0.0f,
+	                      const float tiling_factor = 1.0f);
+	static void draw_quad(const glm::vec3 position, const glm::vec2 size,
+	                      std::shared_ptr<const Subtexture2D> subtexture,
+	                      const float rotation      = 0.0f,
+	                      const float tiling_factor = 1.0f);
+	static void draw_quad(const glm::vec2 position, const glm::vec2 size,
+	                      std::shared_ptr<const Subtexture2D> subtexture,
+	                      const glm::vec3 tint, const float rotation = 0.0f,
+	                      const float tiling_factor = 1.0f);
+	static void draw_quad(const glm::vec3 position, const glm::vec2 size,
+	                      std::shared_ptr<const Subtexture2D> subtexture,
+	                      const glm::vec3 tint, const float rotation = 0.0f,
+	                      const float tiling_factor = 1.0f);
+	static void draw_quad(const glm::vec2 position, const glm::vec2 size,
+	                      std::shared_ptr<const Subtexture2D> subtexture,
+	                      const glm::vec4 tint, const float rotation = 0.0f,
+	                      const float tiling_factor = 1.0f);
+	static void draw_quad(const glm::vec3 position, const glm::vec2 size,
+	                      std::shared_ptr<const Subtexture2D> subtexture,
 	                      const glm::vec4 tint, const float rotation = 0.0f,
 	                      const float tiling_factor = 1.0f);
 };

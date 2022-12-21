@@ -21,6 +21,7 @@
 #include "Renderer/Renderer.h"
 #include "Renderer/Renderer2D.h"
 #include "Renderer/Shader.h"
+#include "Renderer/Subtexture2D.h"
 #include "Renderer/Texture.h"
 #include "Utils.h"
 #include "Window.h"

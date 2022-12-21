@@ -256,6 +256,142 @@ void Renderer2D::draw_quad(const glm::vec2 position, const glm::vec2 size,
 	          tiling_factor);
 }
 
+void Renderer2D::draw_quad(const glm::vec2 position, const glm::vec2 size,
+                           std::shared_ptr<const Subtexture2D> subtexture,
+                           const float rotation, const float tiling_factor)
+{
+	draw_quad({position.x, position.y, 0.0f}, size, subtexture, rotation,
+	          tiling_factor);
+}
+
+void Renderer2D::draw_quad(const glm::vec3 position, const glm::vec2 size,
+                           std::shared_ptr<const Subtexture2D> subtexture,
+                           const float rotation, const float tiling_factor)
+{
+	draw_quad(position, size, subtexture, {1.0f, 1.0f, 1.0f, 1.0f}, rotation,
+	          tiling_factor);
+}
+
+void Renderer2D::draw_quad(const glm::vec2 position, const glm::vec2 size,
+                           std::shared_ptr<const Subtexture2D> subtexture,
+                           const glm::vec3 tint, const float rotation,
+                           const float tiling_factor)
+{
+	draw_quad({position.x, position.y, 0.0f}, size, subtexture, tint, rotation,
+	          tiling_factor);
+}
+
+void Renderer2D::draw_quad(const glm::vec3 position, const glm::vec2 size,
+                           std::shared_ptr<const Subtexture2D> subtexture,
+                           const glm::vec3 tint, const float rotation,
+                           const float tiling_factor)
+{
+	draw_quad(position, size, subtexture, {tint.r, tint.g, tint.b, 1.0f},
+	          rotation, tiling_factor);
+}
+
+void Renderer2D::draw_quad(const glm::vec2 position, const glm::vec2 size,
+                           std::shared_ptr<const Subtexture2D> subtexture,
+                           const glm::vec4 tint, const float rotation,
+                           const float tiling_factor)
+{
+	draw_quad({position.x, position.y, 0.0f}, size, subtexture, tint, rotation,
+	          tiling_factor);
+}
+
+void Renderer2D::draw_quad(const glm::vec3 position, const glm::vec2 size,
+                           std::shared_ptr<const Subtexture2D> subtexture,
+                           const glm::vec4 tint, const float rotation,
+                           const float tiling_factor)
+{
+	if (data->texture_slot_index >= Data::MAX_TEXTURE_SLOTS ||
+	    data->quad_index_count >= Data::MAX_INDICES_PER_BATCH)
+	{
+		flush_batch();
+		start_batch();
+	}
+
+	size_t index = data->texture_slot_index;
+	for (size_t i = 0; i < data->texture_slot_index; ++i)
+		if (*data->textures[i].get() == *subtexture.get()->get_atlas().get())
+		{
+			index = i;
+			break;
+		}
+
+	if (index == data->texture_slot_index)
+		++data->texture_slot_index;
+
+	if (index != 0)
+		data->textures[index] = subtexture.get()->get_atlas();
+
+	static const std::array<const glm::vec4, Data::VERTICES_PER_QUAD> vertices {
+	    glm::vec4 {-0.5f, 0.5f, 0.0f, 1.0f},  // bottom left
+	    glm::vec4 {0.5f, 0.5f, 0.0f, 1.0f},   // bottom right
+	    glm::vec4 {0.5f, -0.5f, 0.0f, 1.0f},  // top right
+	    glm::vec4 {-0.5f, -0.5f, 0.0f, 1.0f}, // top left
+	};
+
+	glm::mat4 transform =
+	    glm::translate(glm::mat4(1.0f), position) *
+	    glm::rotate(glm::mat4(1.0f), rotation, glm::vec3(0.0f, 0.0f, 1.0f)) *
+	    glm::scale(glm::mat4(1.0f), {size.x, size.y, 1.0f});
+
+	// bottom left vertex.
+	data->offset_from_base->position = transform * vertices[0];
+	data->offset_from_base->texture_coordinates =
+	    subtexture.get()->get_texture_coordinates()[0];
+	data->offset_from_base->color         = tint;
+	data->offset_from_base->tiling_factor = tiling_factor;
+	data->offset_from_base->texture_slot  = index;
+	++data->offset_from_base;
+
+	// bottom right vertex.
+	data->offset_from_base->position = transform * vertices[1];
+	data->offset_from_base->texture_coordinates =
+	    subtexture.get()->get_texture_coordinates()[1];
+	data->offset_from_base->color         = tint;
+	data->offset_from_base->tiling_factor = tiling_factor;
+	data->offset_from_base->texture_slot  = index;
+	++data->offset_from_base;
+
+	// top right vertex.
+	data->offset_from_base->position = transform * vertices[2];
+	data->offset_from_base->texture_coordinates =
+	    subtexture.get()->get_texture_coordinates()[2];
+	data->offset_from_base->color         = tint;
+	data->offset_from_base->tiling_factor = tiling_factor;
+	data->offset_from_base->texture_slot  = index;
+	++data->offset_from_base;
+
+	// top left vertex.
+	data->offset_from_base->position = transform * vertices[3];
+	data->offset_from_base->texture_coordinates =
+	    subtexture.get()->get_texture_coordinates()[3];
+	data->offset_from_base->color         = tint;
+	data->offset_from_base->tiling_factor = tiling_factor;
+	data->offset_from_base->texture_slot  = index;
+	++data->offset_from_base;
+
+	data->quad_index_count += Data::INDICES_PER_QUAD;
+
+	++data->statistics.quad_count;
+
+	// glm::mat4 transform =
+	//     glm::translate(glm::mat4(1.0f), position) *
+	//     glm::rotate(glm::mat4(1.0f), rotation, glm::vec3(0.0f, 0.0f, 1.0f)) *
+	//     glm::scale(glm::mat4(1.0f), {size.x, size.y, 1.0f});
+
+	// data->tinted_texture_shader->bind();
+
+	// data->tinted_texture_shader->set_matrix_4("transform", transform);
+	// data->tinted_texture_shader->set_float_4("tint", tint);
+	// texture.bind();
+
+	// data->vao->bind();
+	// RenderCommand::draw_indexed(*data->vao);
+}
+
 uint32_t Renderer2D::Statistics::total_vertex_count() const
 {
 	return quad_count * Renderer2D::Data::VERTICES_PER_QUAD;

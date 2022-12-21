@@ -39,6 +39,7 @@ set(sol_src
     "Renderer/Renderer2D.cpp"
     "Renderer/RendererAPI.cpp"
     "Renderer/Shader.cpp"
+    "Renderer/Subtexture2D.cpp"
     "Renderer/Texture.cpp"
 )
 
