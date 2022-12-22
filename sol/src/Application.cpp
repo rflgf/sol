@@ -59,6 +59,8 @@ void Application::run()
 	layer_stack = LayerStack();
 }
 
+void Application::close() { running = false; }
+
 void Application::on_event(Event &event)
 {
 	imgui_layer.on_event(event);

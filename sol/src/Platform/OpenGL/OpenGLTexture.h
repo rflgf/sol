@@ -23,6 +23,7 @@ public:
 
 	uint32_t get_width() const override { return width; };
 	uint32_t get_height() const override { return height; };
+	uint32_t get_texture_api_id() const override { return id; }
 
 	void bind(const uint8_t slot) const override;
 	void set_data(const void *data, const uint32_t size) const override;

@@ -133,9 +133,9 @@ public:
 		                           {0.2, 0.3, 0.4, 1.0});
 		sol::Renderer2D::draw_quad({0.6f, 0.3f, 0.1f}, {1.0f, 1.0f}, texture,
 		                           0.0f, 3.0f);
-		sol::Renderer2D::draw_quad({0.6f, 0.3f, 0.2f}, {0.2f, 0.20f}, subtexture,
-		                           glm::vec4 {1.0f, 1.0f, 1.0f, 1.0f}, 0.0f,
-		                           1.0f);
+		sol::Renderer2D::draw_quad(
+		    {0.6f, 0.3f, 0.2f}, {0.2f, 0.20f}, subtexture,
+		    glm::vec4 {1.0f, 1.0f, 1.0f, 1.0f}, 0.0f, 1.0f);
 
 		sol::Renderer2D::end_scene();
 	}
@@ -164,7 +164,11 @@ public:
 		ImGui::End();
 	}
 
-	void on_event(sol::Event &event) override {}
+	void on_event(sol::Event &event) override
+	{
+		if (!event.handled)
+			camera_controller.on_event(event);
+	}
 };
 
 class ExampleApp : public sol::Application

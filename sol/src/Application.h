@@ -32,6 +32,7 @@ public:
 
 	void on_event(Event &event);
 	void run();
+	void close();
 
 	void push_layer(Layer *layer);
 	void push_overlay(Layer *overlay);

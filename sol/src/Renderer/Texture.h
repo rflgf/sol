@@ -14,6 +14,7 @@ public:
 
 	virtual void bind(const uint8_t slot = 0) const                    = 0;
 	virtual void set_data(const void *data, const uint32_t size) const = 0;
+	virtual uint32_t get_texture_api_id() const                        = 0;
 
 	virtual bool operator==(const Texture &other) const = 0;
 };
