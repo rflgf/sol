@@ -23,6 +23,7 @@ set(sol_src
     "ImGui/ImGuiLayer.cpp"
 
     "Platform/OpenGL/OpenGLBuffers.cpp"
+    "Platform/OpenGL/OpenGLFramebuffer.cpp"
     "Platform/OpenGL/OpenGLContext.cpp"
     "Platform/OpenGL/OpenGLRendererAPI.cpp"
     "Platform/OpenGL/OpenGLShader.cpp"
@@ -33,6 +34,7 @@ set(sol_src
     "Platform/Windows/WindowsWindow.cpp"
 
     "Renderer/Buffers.cpp"
+    "Renderer/Framebuffer.cpp"
     "Renderer/OrthographicCamera.cpp"
     "Renderer/RenderCommand.cpp"
     "Renderer/Renderer.cpp"

@@ -27,12 +27,7 @@ void CameraController::on_event(Event &event)
 	dispatcher.dispatch<WindowResizeEvent>(
 	    [this](WindowResizeEvent &e) -> bool
 	    {
-		    aspect_ratio = static_cast<float>(e.get_width()) /
-		                   static_cast<float>(e.get_height());
-
-		    camera.set_projection(-zoom, aspect_ratio * zoom, zoom,
-		                          -aspect_ratio * zoom);
-
+		    on_resize(e.get_width(), e.get_height());
 		    RenderCommand::set_viewport(0, 0, e.get_width(), e.get_height());
 
 		    return false;
@@ -69,6 +64,13 @@ void CameraController::on_update(Timestep dt)
 	camera.set_position(position);
 
 	translation_speed = zoom;
+}
+
+void CameraController::on_resize(uint32_t width, uint32_t height)
+{
+	aspect_ratio = static_cast<float>(width) / static_cast<float>(height);
+	camera.set_projection(-zoom, aspect_ratio * zoom, zoom,
+	                      -aspect_ratio * zoom);
 }
 
 } // namespace sol

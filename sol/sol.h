@@ -16,6 +16,7 @@
 #include "Layer.h"
 #include "Log.h"
 #include "Renderer/Buffers.h"
+#include "Renderer/Framebuffer.h"
 #include "Renderer/OrthographicCamera.h"
 #include "Renderer/RenderCommand.h"
 #include "Renderer/Renderer.h"

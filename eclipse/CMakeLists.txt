@@ -3,6 +3,7 @@ project(eclipse CXX)
 
 set(eclipse_src
 	main.cpp
+    DockspaceLayer.cpp
 )
 
 list(TRANSFORM eclipse_src PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/src/")

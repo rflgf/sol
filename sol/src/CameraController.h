@@ -26,6 +26,7 @@ public:
 
 	void on_event(Event &e);
 	void on_update(Timestep dt);
+	void on_resize(uint32_t width, uint32_t height);
 
 	const OrthographicCamera &get_camera() { return camera; }
 };
