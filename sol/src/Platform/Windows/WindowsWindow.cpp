@@ -8,7 +8,6 @@
 #include "Input.h"
 #include "Log.h"
 #include "Platform/OpenGL/OpenGLContext.h"
-#include "WindowsInput.h"
 
 #include <backends/imgui_impl_sdl.h>
 #include <imgui.h>
@@ -18,7 +17,6 @@ namespace sol
 
 Window *Window::create(const WindowProps &props)
 {
-	Input::instance = new WindowsInput;
 	return new WindowsWindow(props);
 }
 

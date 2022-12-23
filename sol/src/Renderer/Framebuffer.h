@@ -18,7 +18,7 @@ public:
 	};
 
 public:
-	virtual ~Framebuffer();
+	virtual ~Framebuffer() {}
 	static std::shared_ptr<Framebuffer> create(Specification specification);
 
 	virtual const Specification &get_specification() const    = 0;
