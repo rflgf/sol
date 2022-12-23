@@ -19,7 +19,8 @@ DockspaceLayer::DockspaceLayer()
 
 void DockspaceLayer::on_update(Timestep dt)
 {
-	camera_controller.on_update(dt);
+	if (viewport_focused)
+		camera_controller.on_update(dt);
 
 	framebuffer.get()->bind();
 	RenderCommand::set_clear_color({0.1f, 0.1f, 0.1f, 1});
@@ -166,11 +167,18 @@ void DockspaceLayer::on_imgui_update()
 	}
 
 	{
-		ImGui::Begin("scene view");
+		ImGui::Begin("scene viewport");
+
+		viewport_focused = ImGui::IsWindowFocused();
+		viewport_hovered = ImGui::IsWindowHovered();
+
+		Application::get().imgui_layer.block_events =
+		    !viewport_focused || !viewport_hovered;
 
 		ImVec2 available_size = ImGui::GetContentRegionAvail();
 		glm::vec2 as {available_size.x, available_size.y};
-		if (scene_view_size != as)
+		if (scene_view_size != as && scene_view_size.x > 0 &&
+		    scene_view_size.y > 0)
 		{
 			scene_view_size = as;
 			framebuffer.get()->resize(scene_view_size);

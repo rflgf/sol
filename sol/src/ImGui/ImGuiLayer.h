@@ -11,6 +11,8 @@ namespace sol
 class ImGuiLayer
 {
 public:
+	bool block_events = true;
+
 	void begin();
 	void end();
 

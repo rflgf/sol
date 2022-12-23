@@ -24,9 +24,10 @@ protected:
 	bool running = true;
 	std::unique_ptr<Window> window;
 	LayerStack layer_stack;
-	ImGuiLayer imgui_layer;
 
 public:
+	ImGuiLayer imgui_layer;
+
 	Application();
 	virtual ~Application();
 

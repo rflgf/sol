@@ -58,6 +58,8 @@ void ImGuiLayer::on_event(Event &event)
 	// layer actually handled the event.
 	ImGui_ImplSDL2_ProcessEvent(
 	    static_cast<const SDL_Event *>(event.underlying_event));
+	if (block_events && event.get_event_type() != Event::Type::WINDOW_CLOSE)
+		event.handled = true;
 }
 
 } // namespace sol

@@ -68,6 +68,19 @@ void OpenGLFramebuffer::unbind() const { glBindFramebuffer(GL_FRAMEBUFFER, 0); }
 
 void OpenGLFramebuffer::resize(glm::vec2 new_size)
 {
+	// this limit is to prevent windows from being resized to negative signed
+	// values interpreted as unsigned values, for example when a vendor
+	// windowing library informs a bogus window size.
+	constexpr uint32_t maximum_size = 8192;
+
+	if (new_size.x == 0 || new_size.y == 0 || new_size.x > maximum_size ||
+	    new_size.y > maximum_size)
+	{
+		SOL_CORE_WARN("attempt to resize framebuffer to weird value: ({}, {})",
+		              new_size.x, new_size.y);
+		return;
+	}
+
 	specification.width  = new_size.x;
 	specification.height = new_size.y;
 	invalidate();
