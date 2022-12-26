@@ -24,5 +24,8 @@
 #include "Renderer/Shader.h"
 #include "Renderer/Subtexture2D.h"
 #include "Renderer/Texture.h"
+#include "Scene/Components.h"
+#include "Scene/Entity.h"
+#include "Scene/Scene.h"
 #include "Utils.h"
 #include "Window.h"

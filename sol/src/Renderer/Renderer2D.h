@@ -71,6 +71,22 @@ public:
 	static void start_batch();
 	static void flush_batch();
 
+	static void draw_quad(const glm::mat4 transform, const glm::vec3 color,
+	                      const float tiling_factor = 1.0f);
+	static void draw_quad(const glm::mat4 transform, const glm::vec4 color,
+	                      const float tiling_factor = 1.0f);
+	static void draw_quad(const glm::mat4 transform,
+	                      std::shared_ptr<const Texture> texture,
+	                      const float tiling_factor = 1.0f);
+	static void draw_quad(const glm::mat4 transform,
+	                      std::shared_ptr<const Texture> texture,
+	                      const glm::vec3 tint,
+	                      const float tiling_factor = 1.0f);
+	static void draw_quad(const glm::mat4 transform,
+	                      std::shared_ptr<const Texture> texture,
+	                      const glm::vec4 tint,
+	                      const float tiling_factor = 1.0f);
+
 	static void draw_quad(const glm::vec2 position, const glm::vec2 size,
 	                      const glm::vec4 color, const float rotation = 0.0f,
 	                      const float tiling_factor = 1.0f);
@@ -100,6 +116,18 @@ public:
 	static void draw_quad(const glm::vec3 position, const glm::vec2 size,
 	                      std::shared_ptr<const Texture> texture,
 	                      const glm::vec4 tint, const float rotation = 0.0f,
+	                      const float tiling_factor = 1.0f);
+
+	static void draw_quad(const glm::mat4 transform,
+	                      std::shared_ptr<const Subtexture2D> texture,
+	                      const float tiling_factor = 1.0f);
+	static void draw_quad(const glm::mat4 transform,
+	                      std::shared_ptr<const Subtexture2D> texture,
+	                      const glm::vec3 tint,
+	                      const float tiling_factor = 1.0f);
+	static void draw_quad(const glm::mat4 transform,
+	                      std::shared_ptr<const Subtexture2D> texture,
+	                      const glm::vec4 tint,
 	                      const float tiling_factor = 1.0f);
 
 	static void draw_quad(const glm::vec2 position, const glm::vec2 size,

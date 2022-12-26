@@ -39,6 +39,7 @@ target_link_libraries(imgui SDL2main SDL2-static glad)
 #### /imgui ####
 
 add_subdirectory(vendor/glm)
+add_subdirectory(vendor/entt)
 
 add_subdirectory(sol)
 add_subdirectory(eclipse)

@@ -1,5 +1,7 @@
 #include "DockspaceLayer.h"
 
+#include <glm/gtc/matrix_transform.hpp>
+
 namespace sol::ecl
 {
 
@@ -15,6 +17,14 @@ DockspaceLayer::DockspaceLayer()
 	specification.width  = 1280;
 	specification.height = 720;
 	framebuffer          = Framebuffer::create(specification);
+
+	Entity mage = Application::get().active_scene.create("mage");
+	mage.add<cmp::SpriteRenderer>(Subtexture2D::from_coordinates(
+	    Texture2D::create("assets/textures/kenney_tinydungeon/"
+	                      "Tilemap/tilemap_packed.png"),
+	    glm::vec2 {0, 3}, glm::vec2 {16, 16}));
+	mage.replace<cmp::Transform>(
+	    glm::scale(glm::mat4(1.0f), {0.2f, 0.20f, 1.0f}));
 }
 
 void DockspaceLayer::on_update(Timestep dt)
@@ -23,12 +33,25 @@ void DockspaceLayer::on_update(Timestep dt)
 		camera_controller.on_update(dt);
 
 	framebuffer.get()->bind();
+
 	RenderCommand::set_clear_color({0.1f, 0.1f, 0.1f, 1});
 	RenderCommand::clear();
 	Renderer2D::begin_scene(camera_controller.get_camera());
 
-	Renderer2D::draw_quad({0.6f, 0.3f, 0.2f}, {0.2f, 0.20f}, subtexture,
-	                      glm::vec4 {1.0f, 1.0f, 1.0f, 1.0f}, 0.0f, 1.0f);
+	Application::get().active_scene.on_update(dt);
+
+	auto group = Application::get().active_scene.registry.group<cmp::Transform>(
+	    entt::get<cmp::SpriteRenderer>);
+
+	for (auto entity : group)
+	{
+		auto [transform, sprite] =
+		    group.get<cmp::Transform, cmp::SpriteRenderer>(entity);
+		Renderer2D::draw_quad(transform, sprite);
+	}
+
+	// Renderer2D::draw_quad({0.6f, 0.3f, 0.2f}, {0.2f, 0.20f}, subtexture,
+	//                       glm::vec4 {1.0f, 1.0f, 1.0f, 1.0f}, 0.0f, 1.0f);
 
 	Renderer2D::end_scene();
 	framebuffer.get()->unbind();
@@ -177,8 +200,7 @@ void DockspaceLayer::on_imgui_update()
 
 		ImVec2 available_size = ImGui::GetContentRegionAvail();
 		glm::vec2 as {available_size.x, available_size.y};
-		if (scene_view_size != as && scene_view_size.x > 0 &&
-		    scene_view_size.y > 0)
+		if (scene_view_size != as && as.x > 0 && as.y > 0)
 		{
 			scene_view_size = as;
 			framebuffer.get()->resize(scene_view_size);

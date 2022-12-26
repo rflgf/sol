@@ -108,10 +108,29 @@ void Renderer2D::flush_batch()
 	++data->statistics.draw_calls;
 }
 
-void Renderer2D::draw_quad(const glm::vec3 position, const glm::vec2 size,
-                           std::shared_ptr<const Texture> texture,
-                           const glm::vec4 tint, const float rotation,
+void Renderer2D::draw_quad(const glm::mat4 transform, const glm::vec4 color,
                            const float tiling_factor)
+{
+	draw_quad(transform, data->white_texture, color, tiling_factor);
+}
+
+void Renderer2D::draw_quad(const glm::mat4 transform,
+                           std::shared_ptr<const Texture> texture,
+                           const float tiling_factor)
+{
+	draw_quad(transform, texture, {1, 1, 1, 1}, tiling_factor);
+}
+
+void Renderer2D::draw_quad(const glm::mat4 transform,
+                           std::shared_ptr<const Texture> texture,
+                           const glm::vec3 tint, const float tiling_factor)
+{
+	draw_quad(transform, texture, {tint.r, tint.g, tint.b, 1}, tiling_factor);
+}
+
+void Renderer2D::draw_quad(const glm::mat4 transform,
+                           std::shared_ptr<const Texture> texture,
+                           const glm::vec4 tint, const float tiling_factor)
 {
 	if (data->texture_slot_index >= Data::MAX_TEXTURE_SLOTS ||
 	    data->quad_index_count >= Data::MAX_INDICES_PER_BATCH)
@@ -140,11 +159,6 @@ void Renderer2D::draw_quad(const glm::vec3 position, const glm::vec2 size,
 	    glm::vec4 {0.5f, -0.5f, 0.0f, 1.0f},  // top right
 	    glm::vec4 {-0.5f, -0.5f, 0.0f, 1.0f}, // top left
 	};
-
-	glm::mat4 transform =
-	    glm::translate(glm::mat4(1.0f), position) *
-	    glm::rotate(glm::mat4(1.0f), rotation, glm::vec3(0.0f, 0.0f, 1.0f)) *
-	    glm::scale(glm::mat4(1.0f), {size.x, size.y, 1.0f});
 
 	// bottom left vertex.
 	data->offset_from_base->position            = transform * vertices[0];
@@ -195,6 +209,19 @@ void Renderer2D::draw_quad(const glm::vec3 position, const glm::vec2 size,
 
 	// data->vao->bind();
 	// RenderCommand::draw_indexed(*data->vao);
+}
+
+void Renderer2D::draw_quad(const glm::vec3 position, const glm::vec2 size,
+                           std::shared_ptr<const Texture> texture,
+                           const glm::vec4 tint, const float rotation,
+                           const float tiling_factor)
+{
+
+	glm::mat4 transform =
+	    glm::translate(glm::mat4(1.0f), position) *
+	    glm::rotate(glm::mat4(1.0f), rotation, glm::vec3(0.0f, 0.0f, 1.0f)) *
+	    glm::scale(glm::mat4(1.0f), {size.x, size.y, 1.0f});
+	draw_quad(transform, texture, tint, tiling_factor);
 }
 
 void Renderer2D::draw_quad(const glm::vec2 position, const glm::vec2 size,
@@ -299,10 +326,36 @@ void Renderer2D::draw_quad(const glm::vec2 position, const glm::vec2 size,
 	          tiling_factor);
 }
 
+void Renderer2D::draw_quad(const glm::mat4 transform,
+                           std::shared_ptr<const Subtexture2D> subtexture,
+                           const float tiling_factor)
+{
+	draw_quad(transform, subtexture, {1, 1, 1, 1}, tiling_factor);
+}
+
 void Renderer2D::draw_quad(const glm::vec3 position, const glm::vec2 size,
                            std::shared_ptr<const Subtexture2D> subtexture,
                            const glm::vec4 tint, const float rotation,
                            const float tiling_factor)
+{
+
+	glm::mat4 transform =
+	    glm::translate(glm::mat4(1.0f), position) *
+	    glm::rotate(glm::mat4(1.0f), rotation, glm::vec3(0.0f, 0.0f, 1.0f)) *
+	    glm::scale(glm::mat4(1.0f), {size.x, size.y, 1.0f});
+	draw_quad(transform, subtexture, tint, tiling_factor);
+}
+
+void Renderer2D::draw_quad(const glm::mat4 transform,
+                           std::shared_ptr<const Subtexture2D> texture,
+                           const glm::vec3 tint, const float tiling_factor)
+{
+	draw_quad(transform, texture, {tint.r, tint.g, tint.b, 1}, tiling_factor);
+}
+
+void Renderer2D::draw_quad(const glm::mat4 transform,
+                           std::shared_ptr<const Subtexture2D> subtexture,
+                           const glm::vec4 tint, const float tiling_factor)
 {
 	if (data->texture_slot_index >= Data::MAX_TEXTURE_SLOTS ||
 	    data->quad_index_count >= Data::MAX_INDICES_PER_BATCH)
@@ -331,11 +384,6 @@ void Renderer2D::draw_quad(const glm::vec3 position, const glm::vec2 size,
 	    glm::vec4 {0.5f, -0.5f, 0.0f, 1.0f},  // top right
 	    glm::vec4 {-0.5f, -0.5f, 0.0f, 1.0f}, // top left
 	};
-
-	glm::mat4 transform =
-	    glm::translate(glm::mat4(1.0f), position) *
-	    glm::rotate(glm::mat4(1.0f), rotation, glm::vec3(0.0f, 0.0f, 1.0f)) *
-	    glm::scale(glm::mat4(1.0f), {size.x, size.y, 1.0f});
 
 	// bottom left vertex.
 	data->offset_from_base->position = transform * vertices[0];

@@ -7,6 +7,7 @@
 #include "Renderer/OrthographicCamera.h"
 #include "Renderer/Renderer.h"
 #include "Renderer/Shader.h"
+#include "Scene/Scene.h"
 #include "Window.h"
 
 #include <memory>
@@ -27,6 +28,7 @@ protected:
 
 public:
 	ImGuiLayer imgui_layer;
+	Scene active_scene;
 
 	Application();
 	virtual ~Application();

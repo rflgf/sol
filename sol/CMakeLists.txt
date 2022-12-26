@@ -42,13 +42,15 @@ set(sol_src
     "Renderer/Shader.cpp"
     "Renderer/Subtexture2D.cpp"
     "Renderer/Texture.cpp"
+
+    "Scene/Scene.cpp"
 )
 
 list(TRANSFORM sol_src PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/src/")
 
 add_library(sol STATIC ${sol_src})
 
-target_link_libraries(sol debug-trap glad glm imgui SDL2-static SDL2main spdlog stb_image)
+target_link_libraries(sol debug-trap glad glm EnTT imgui SDL2-static SDL2main spdlog stb_image)
 
 target_include_directories(sol
 PUBLIC
