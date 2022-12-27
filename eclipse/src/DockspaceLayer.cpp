@@ -18,7 +18,7 @@ DockspaceLayer::DockspaceLayer()
 	specification.height = 720;
 	framebuffer          = Framebuffer::create(specification);
 
-	Entity mage = Application::get().active_scene.create("mage");
+	Entity mage = active_scene.create("mage");
 	mage.add<cmp::SpriteRenderer>(Subtexture2D::from_coordinates(
 	    Texture2D::create("assets/textures/kenney_tinydungeon/"
 	                      "Tilemap/tilemap_packed.png"),
@@ -38,9 +38,9 @@ void DockspaceLayer::on_update(Timestep dt)
 	RenderCommand::clear();
 	Renderer2D::begin_scene(camera_controller.get_camera());
 
-	Application::get().active_scene.on_update(dt);
+	active_scene.on_update(dt);
 
-	auto group = Application::get().active_scene.registry.group<cmp::Transform>(
+	auto group = active_scene.registry.group<cmp::Transform>(
 	    entt::get<cmp::SpriteRenderer>);
 
 	for (auto entity : group)

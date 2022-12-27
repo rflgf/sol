@@ -28,7 +28,6 @@ protected:
 
 public:
 	ImGuiLayer imgui_layer;
-	Scene active_scene;
 
 	Application();
 	virtual ~Application();
