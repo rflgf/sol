@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Buffers.h"
+#include "Camera.h"
 #include "OrthographicCamera.h"
 #include "Shader.h"
 #include "Subtexture2D.h"
@@ -67,6 +68,7 @@ public:
 	static void deinit();
 
 	static void begin_scene(const OrthographicCamera &camera);
+	static void begin_scene(const Camera &camera, glm::mat4 &transform);
 	static void end_scene();
 	static void start_batch();
 	static void flush_batch();

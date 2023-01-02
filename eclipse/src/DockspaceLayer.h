@@ -12,6 +12,8 @@ class DockspaceLayer : public Layer
 	std::shared_ptr<Subtexture2D> subtexture;
 	std::shared_ptr<Framebuffer> framebuffer;
 	Scene active_scene;
+	Entity camera_A;
+	Entity camera_B;
 	glm::vec2 scene_view_size;
 	bool viewport_focused = false;
 	bool viewport_hovered = false;

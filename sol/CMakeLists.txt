@@ -44,6 +44,7 @@ set(sol_src
     "Renderer/Texture.cpp"
 
     "Scene/Scene.cpp"
+    "Scene/SceneCamera.cpp"
 )
 
 list(TRANSFORM sol_src PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/src/")

@@ -22,46 +22,125 @@ private:
 	}
 
 public:
-	template <cmp::ComponentType T, typename... Args> T &add(Args &&...args)
+	Entity() = default;
+
+	template <cmp::ComponentType T, typename... Args>
+	T &add(Args &&...args)
 	{
-		SOL_CORE_ASSERT(!has<T>(), "entity already has component.");
+		SOL_CORE_ASSERT(!has<T>(), "entity already has component: {}.",
+		                typeid(T).name());
 
 		return owning_scene->registry.emplace<T>(handle,
 		                                         std::forward<Args>(args)...);
 	}
 
-	template <cmp::ComponentType T, typename... Args> T &replace(Args &&...args)
+	template <cmp::ComponentType T, typename... Args>
+	T &replace(Args &&...args)
 	{
 		SOL_CORE_ASSERT(has<T>(),
-		                "entity does not have the queried component.");
+		                "entity does not have the queried component: {}.",
+		                typeid(T).name());
 
 		return owning_scene->registry.replace<T>(handle,
 		                                         std::forward<Args>(args)...);
 	}
 
-	template <cmp::ComponentType T> bool has()
+	template <cmp::ComponentType T>
+	bool has()
 	{
-		// return owning_scene->registry.has<T>(handle);
 		return owning_scene->registry.any_of<T>(handle);
 	}
 
-	template <cmp::ComponentType T> T &get()
+	template <cmp::ComponentType T>
+	T &get()
 	{
 		SOL_CORE_ASSERT(has<T>(),
-		                "entity does not have the queried component.");
+		                "entity does not have the queried component: {}.",
+		                typeid(T).name());
 
-		return owning_scene.registry.get<T>(handle);
+		return owning_scene->registry.get<T>(handle);
 	}
 
-	template <cmp::ComponentType T> void remove()
+	template <cmp::ComponentType T>
+	void remove()
 	{
 		SOL_CORE_ASSERT(has<T>(),
-		                "entity does not have the queried component.");
+		                "entity does not have the queried component: {}.",
+		                typeid(T).name());
 
-		owning_scene.registry.erase<T>(handle);
+		owning_scene->registry.erase<T>(handle);
 	}
+
+	// ---------- NativeScript-related -----------
+	template <cmp::NativeScriptDerived T, typename... Args>
+	cmp::NativeScript &add(Args &&...args)
+	{
+		std::unordered_map<std::type_index, cmp::NativeScript *> *scripts =
+		    nullptr;
+		if (!owning_scene->registry.any_of<cmp::NativeScriptContainer>(handle))
+			scripts = &owning_scene->registry
+			               .emplace<cmp::NativeScriptContainer>(handle)
+			               .scripts;
+		else
+			scripts =
+			    &owning_scene->registry.get<cmp::NativeScriptContainer>(handle)
+			         .scripts;
+
+		SOL_CORE_ASSERT(!scripts->contains(std::type_index(typeid(T))),
+		                "entity already has inserted component: {}.",
+		                typeid(T).name());
+
+		return *(*scripts
+		              ->emplace(
+		                  std::piecewise_construct,
+		                  std::forward_as_tuple(std::type_index(typeid(T))),
+		                  std::forward_as_tuple(
+		                      new T(std::forward<Args>(args)...)))
+		              .first)
+		            .second;
+	}
+
+	template <cmp::NativeScriptDerived T>
+	bool has()
+	{
+		return owning_scene->registry.any_of<cmp::NativeScriptContainer>(
+		           handle) &&
+		       owning_scene->registry.get<cmp::NativeScriptContainer>(handle)
+		           .scripts.contains(std::type_index(typeid(T)));
+	}
+
+	template <cmp::NativeScriptDerived T>
+	T &get()
+	{
+		SOL_CORE_ASSERT(
+		    owning_scene->registry.any_of<cmp::NativeScriptContainer>(handle) &&
+		        owning_scene->registry.get<cmp::NativeScriptContainer>(handle)
+		            .scripts.contains(std::type_index(typeid(T))),
+		    "entity does not have the queried component: {}.",
+		    typeid(T).name());
+
+		return owning_scene->registry.get<cmp::NativeScriptContainer>(handle)
+		    .scripts[std::type_index(typeid(T))];
+	}
+
+	template <cmp::NativeScriptDerived T>
+	void remove()
+	{
+		SOL_CORE_ASSERT(
+		    owning_scene->registry.any_of<cmp::NativeScriptContainer>(handle) &&
+		        owning_scene->registry.get<cmp::NativeScriptContainer>(handle)
+		            .scripts.contains(std::type_index(typeid(T))),
+		    "entity does not have the queried component: {}.",
+		    typeid(T).name());
+
+		owning_scene->registry.get<cmp::NativeScriptContainer>(handle)
+		    .scripts.erase(std::type_index(typeid(T)));
+	}
+	// ------ end of NativeScript-related --------
 
 	operator bool() const { return handle != entt::null; }
+	operator entt::entity() const { return handle; }
+	operator entt::entity &() { return handle; }
 
 	friend class Scene;
 };

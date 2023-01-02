@@ -1,6 +1,7 @@
 #include "Renderer2D.h"
 
 #include "Renderer.h"
+#include "Scene/Components.h"
 
 #include <glm/gtc/type_ptr.hpp>
 #include <imgui.h>
@@ -80,6 +81,17 @@ void Renderer2D::begin_scene(const OrthographicCamera &camera)
 	data->tinted_texture_shader->bind();
 	data->tinted_texture_shader->set_matrix_4("view_projection",
 	                                          camera.projection_view_matrix);
+
+	start_batch();
+}
+
+void Renderer2D::begin_scene(const Camera &camera, glm::mat4 &transform)
+{
+	data->tinted_texture_shader->bind();
+	glm::mat4 projection_view_matrix =
+	    camera.projection * glm::inverse(transform);
+	data->tinted_texture_shader->set_matrix_4("view_projection",
+	                                          projection_view_matrix);
 
 	start_batch();
 }

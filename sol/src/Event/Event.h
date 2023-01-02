@@ -41,7 +41,8 @@ public:
 
 	class Dispatcher
 	{
-		template <typename T> using EventFn = std::function<bool(T &)>;
+		template <typename T>
+		using EventFn = std::function<bool(T &)>;
 
 	private:
 		Event &event;

@@ -1,6 +1,7 @@
 ﻿---
 AccessModifierOffset: '-4'
 AlignConsecutiveAssignments: 'true'
+AlwaysBreakTemplateDeclarations: 'Yes'
 BreakBeforeBraces: Allman
 BreakConstructorInitializers: BeforeComma
 BreakStringLiterals: 'true'

@@ -1,9 +1,10 @@
 #pragma once
 
-#include "Components.h"
+// #include "Components.h"
 #include "Timestep.h"
 
 #include <entt/entt.hpp>
+#include <glm/glm.hpp>
 
 namespace sol
 {
@@ -19,6 +20,7 @@ public:
 	~Scene();
 
 	void on_update(Timestep dt);
+	void on_viewport_resize(glm::vec2 new_size);
 
 	Entity create(std::string name = "entity");
 
