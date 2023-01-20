@@ -1,10 +1,13 @@
 #include "DockspaceLayer.h"
 
+#include "ImGuiUtils.h"
 #include "KeyCodes.h"
 #include "Scene/Components.h"
+#include "Scene/SceneCamera.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <imgui.h>
 
 namespace sol::ecl
 {
@@ -14,7 +17,7 @@ DockspaceLayer::DockspaceLayer()
     , subtexture(Subtexture2D::from_coordinates(
           Texture2D::create("assets/textures/kenney_tinydungeon/"
                             "Tilemap/tilemap_packed.png"),
-          glm::vec2 {0, 3}, glm::vec2 {16, 16}))
+          glm::vec2 {0, 3}, glm::vec2 {16, 16}, {2, 2}))
     , scene_view_size(1, 1)
 {
 	Framebuffer::Specification specification;
@@ -24,42 +27,72 @@ DockspaceLayer::DockspaceLayer()
 
 	Entity mage = active_scene.create("mage");
 	mage.add<cmp::SpriteRenderer>(subtexture);
-	mage.replace<cmp::Transform>(
-	    glm::scale(glm::mat4(1.0f), {0.5f, 0.5f, 1.0f}));
+	mage.replace<cmp::Transform>(glm::vec3(0.0f), glm::vec3(0.0f),
+	                             glm::vec3(0.5f, 0.5f, 1.0f));
+
+	Entity logo = active_scene.create("logo");
+	logo.add<cmp::SpriteRenderer>(Subtexture2D::from_coordinates(
+	    Texture2D::create("assets/textures/logo.png"), glm::vec2 {0, 0},
+	    glm::vec2 {597, 604}, {1, 1}));
+	logo.replace<cmp::Transform>(glm::vec3(0.3f, 0.0f, 0.0f), glm::vec3(0.0f),
+	                             glm::vec3(1.0f));
+
+	Entity potion = active_scene.create("potion");
+	potion.add<cmp::SpriteRenderer>(Subtexture2D::from_coordinates(
+	    Texture2D::create(
+	        "assets/textures/kenney_tinydungeon/Tiles/tile_0115.png"),
+	    glm::vec2 {0, 0}, glm::vec2 {16, 16}, {1, 1}));
+	potion.replace<cmp::Transform>(glm::vec3(0.3f, 0.4f, 0.0f), glm::vec3(0.0f),
+	                               glm::vec3(1.0f));
 
 	camera_A = active_scene.create("main camera");
-	// camera_A.add<cmp::Camera>(
-	//     glm::ortho(-16.0f, 16.0f, -9.0f, 9.0f, -1.0f, 1.0f));
-	camera_A.add<cmp::Camera>();
+	camera_A.add<cmp::Camera>(
+	    /*primary camera*/ true,
+	    /*fixed aspect ratio*/ true,
+	    /*camera type*/ SceneCamera::Type::PERSPECTIVE);
 
 	camera_B = active_scene.create("clip-space camera");
-	// camera_B.add<cmp::Camera>(
-	//     glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f), false);
-	camera_B.add<cmp::Camera>(false);
+	camera_B.add<cmp::Camera>(/*primary camera*/ false,
+	                          /*fixed aspect ratio*/ true);
 
 	class ScriptedCameraController : public ScriptableEntity
 	{
 	public:
-		void on_create() override {}
+		void on_create() override
+		{
+			glm::vec3 &position = get<cmp::Transform>().translation;
+			position.z          = 1;
+		}
 
 		void on_destroy() override {}
 
 		void on_update(Timestep dt) override
 		{
-			glm::mat4 &transform = get<cmp::Transform>().transform;
-			float speed          = 0.01f;
+			glm::vec3 &position = get<cmp::Transform>().translation;
+			float speed         = 0.01f;
 			if (Input::is_key_pressed(KeyCode::SOL_a))
-				transform[3][0] -= speed * dt;
+				position.x -= speed * dt;
 			if (Input::is_key_pressed(KeyCode::SOL_d))
-				transform[3][0] += speed * dt;
+				position.x += speed * dt;
 			if (Input::is_key_pressed(KeyCode::SOL_s))
-				transform[3][1] -= speed * dt;
+				position.y -= speed * dt;
 			if (Input::is_key_pressed(KeyCode::SOL_w))
-				transform[3][1] += speed * dt;
+				position.y += speed * dt;
 		}
 	};
 
 	camera_A.add<cmp::NativeScript>().bind<ScriptedCameraController>();
+
+	scene_hierarchy.context = &active_scene;
+
+	ImGuiIO &io = ImGui::GetIO();
+
+	io.FontDefault = io.Fonts->AddFontFromFileTTF(
+	    "assets/fonts/OpenSans/static/OpenSans/OpenSans-Medium.ttf", 16.0f);
+	io.Fonts->AddFontFromFileTTF("assets/fonts/Early GameBoy/Early GameBoy.ttf",
+	                             10.0f);
+
+	io.IniFilename = "assets/settings/imgui.ini";
 }
 
 void DockspaceLayer::on_update(Timestep dt)
@@ -90,7 +123,6 @@ void DockspaceLayer::on_update(Timestep dt)
 void DockspaceLayer::on_imgui_update()
 {
 	static bool p_open                        = true;
-	static bool opt_padding                   = false;
 	static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 
 	ImGuiWindowFlags window_flags =
@@ -110,11 +142,7 @@ void DockspaceLayer::on_imgui_update()
 	if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
 		window_flags |= ImGuiWindowFlags_NoBackground;
 
-	if (!opt_padding)
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 	ImGui::Begin("Eclipse Editor", &p_open, window_flags);
-	if (!opt_padding)
-		ImGui::PopStyleVar();
 
 	ImGui::PopStyleVar(2);
 
@@ -127,49 +155,11 @@ void DockspaceLayer::on_imgui_update()
 
 	if (ImGui::BeginMenuBar())
 	{
-		if (ImGui::BeginMenu("Options"))
+		if (ImGui::BeginMenu("options"))
 		{
-			// Disabling fullscreen would allow the window to be moved to
-			// the front of other windows, which we can't undo at the moment
-			// without finer window depth/z control.
-			ImGui::MenuItem("Padding", NULL, &opt_padding);
 			ImGui::Separator();
 
-			if (ImGui::MenuItem(
-			        "Flag: NoSplit", "",
-			        (dockspace_flags & ImGuiDockNodeFlags_NoSplit) != 0))
-			{
-				dockspace_flags ^= ImGuiDockNodeFlags_NoSplit;
-			}
-			if (ImGui::MenuItem(
-			        "Flag: NoResize", "",
-			        (dockspace_flags & ImGuiDockNodeFlags_NoResize) != 0))
-			{
-				dockspace_flags ^= ImGuiDockNodeFlags_NoResize;
-			}
-			if (ImGui::MenuItem("Flag: NoDockingInCentralNode", "",
-			                    (dockspace_flags &
-			                     ImGuiDockNodeFlags_NoDockingInCentralNode) !=
-			                        0))
-			{
-				dockspace_flags ^= ImGuiDockNodeFlags_NoDockingInCentralNode;
-			}
-			if (ImGui::MenuItem(
-			        "Flag: AutoHideTabBar", "",
-			        (dockspace_flags & ImGuiDockNodeFlags_AutoHideTabBar) != 0))
-			{
-				dockspace_flags ^= ImGuiDockNodeFlags_AutoHideTabBar;
-			}
-			if (ImGui::MenuItem("Flag: PassthruCentralNode", "",
-			                    (dockspace_flags &
-			                     ImGuiDockNodeFlags_PassthruCentralNode) != 0,
-			                    true))
-			{
-				dockspace_flags ^= ImGuiDockNodeFlags_PassthruCentralNode;
-			}
-			ImGui::Separator();
-
-			if (ImGui::MenuItem("Close", NULL, false, p_open != NULL))
+			if (ImGui::MenuItem("close", NULL, false, p_open != NULL))
 			{
 				p_open = false;
 				Application::get().close();
@@ -181,18 +171,21 @@ void DockspaceLayer::on_imgui_update()
 		ImGui::EndMenuBar();
 	}
 
+	scene_hierarchy.on_imgui_update();
+
 	{
+		// ImGui::ShowDemoWindow();
 		ImGui::Begin("statistics");
 
-		ImGui::Text("draw calls: %d", Renderer2D::data->statistics.draw_calls);
-		ImGui::Text("quad count: %d", Renderer2D::data->statistics.quad_count);
+		ImGui::Text("draw calls: %d", Renderer2D::data.statistics.draw_calls);
+		ImGui::Text("quad count: %d", Renderer2D::data.statistics.quad_count);
 		ImGui::Text("index count: %d",
-		            Renderer2D::data->statistics.total_index_count());
+		            Renderer2D::data.statistics.total_index_count());
 		ImGui::Text("vertex count: %d",
-		            Renderer2D::data->statistics.total_vertex_count());
+		            Renderer2D::data.statistics.total_vertex_count());
 
 		ImGui::End();
-		Renderer2D::data->statistics.reset();
+		Renderer2D::data.statistics.reset();
 	}
 
 	{
@@ -209,37 +202,44 @@ void DockspaceLayer::on_imgui_update()
 		if (scene_view_size != as && as.x > 0 && as.y > 0)
 			scene_view_size = as;
 
-		uint32_t texture_id =
-		    framebuffer.get()->get_color_attachment_renderer_id();
-		ImGui::Image(reinterpret_cast<void *>(texture_id),
-		             {scene_view_size.x, scene_view_size.y}, {0, 1}, {1, 0});
+		void *texture_id = std::bit_cast<void *>(
+		    uintptr_t {framebuffer.get()->get_color_attachment_renderer_id()});
+		ImGui::Image(texture_id, {scene_view_size.x, scene_view_size.y}, {0, 1},
+		             {1, 0});
 
 		ImGui::End();
 	}
 
 	{
-		ImGui::Begin("Settings");
+		ImGui::Begin("settings");
 
 		static bool primary_camera = true;
-		if (ImGui::Checkbox("primary camera", &primary_camera))
+		ImGui::Text("primary camera");
+		if (ImGui::Checkbox("##primary camera", &primary_camera))
 		{
 			camera_A.get<cmp::Camera>().primary = primary_camera;
 			camera_B.get<cmp::Camera>().primary = !primary_camera;
 		}
 
 		if (primary_camera)
+		{
+			ImGui::Text("main camera's position");
 			ImGui::DragFloat3(
-			    "main camera's position",
-			    glm::value_ptr(camera_A.get<cmp::Transform>().transform[3]));
+			    "##main camera's position",
+			    glm::value_ptr(camera_A.get<cmp::Transform>().translation));
+		}
 		else
 		{
+			ImGui::Text("clip-space camera's position");
 			ImGui::DragFloat3(
-			    "clip-space camera's position",
-			    glm::value_ptr(camera_B.get<cmp::Transform>().transform[3]));
+			    "##clip-space camera's position",
+			    glm::value_ptr(camera_B.get<cmp::Transform>().translation));
 
 			SceneCamera &camera = camera_B.get<cmp::Camera>().camera;
 			float orthographic_projection_size = camera.orthographic_size;
-			if (ImGui::DragFloat("orthographic projection size",
+
+			ImGui::Text("orthographic projection size");
+			if (ImGui::DragFloat("##orthographic projection size",
 			                     &orthographic_projection_size))
 				camera.set_orthographic_size(orthographic_projection_size);
 		}

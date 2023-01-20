@@ -1,0 +1,2 @@
+Unknown author. If you have information on the author of this font, please open an issue in sol's GitHub repository!
+https://github.com/rflgf/sol

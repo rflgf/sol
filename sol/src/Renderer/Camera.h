@@ -7,7 +7,7 @@ namespace sol
 
 struct Camera
 {
-	glm::mat4 projection = glm::mat4(1);
+	glm::mat4 projection = glm::mat4(1.0f);
 
 	Camera() = default;
 	Camera(glm::mat4 projection)

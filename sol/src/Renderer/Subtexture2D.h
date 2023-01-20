@@ -10,14 +10,14 @@ namespace sol
 
 class Subtexture2D
 {
-	using Atlas = const std::shared_ptr<const Texture2D>;
+	using Atlas = const std::shared_ptr<Texture2D>;
 
 public:
 	Subtexture2D(Atlas atlas, const glm::vec2 top_left,
 	             const glm::vec2 bottom_right);
 
 	static std::shared_ptr<Subtexture2D> from_coordinates(
-	    Atlas atlas, const glm::vec2 index,
+	    Atlas atlas, const glm::vec2 coordinates,
 	    const glm::vec2 atlas_unit_dimensions,
 	    const glm::vec2 subtexture_dimensions = {1, 1} /* in atlas units */);
 

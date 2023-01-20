@@ -36,8 +36,8 @@ void Scene::on_update(Timestep dt)
 		    }
 	    });
 
-	Camera *main_camera         = nullptr;
-	glm::mat4 *camera_transform = nullptr;
+	Camera *main_camera = nullptr;
+	glm::mat4 camera_transform;
 	{
 		auto group = registry.group<cmp::Transform, cmp::Camera>();
 		for (entt::entity entity : group)
@@ -47,7 +47,7 @@ void Scene::on_update(Timestep dt)
 			if (camera.primary)
 			{
 				main_camera      = &camera.camera;
-				camera_transform = &transform.transform;
+				camera_transform = transform;
 				break;
 			}
 		}
@@ -55,7 +55,7 @@ void Scene::on_update(Timestep dt)
 
 	if (main_camera)
 	{
-		Renderer2D::begin_scene(main_camera->projection, *camera_transform);
+		Renderer2D::begin_scene(main_camera->projection, camera_transform);
 
 		auto view = registry.view<cmp::Transform, cmp::SpriteRenderer>();
 
@@ -63,7 +63,7 @@ void Scene::on_update(Timestep dt)
 		{
 			auto [transform, sprite] =
 			    view.get<cmp::Transform, cmp::SpriteRenderer>(entity);
-			Renderer2D::draw_quad(transform, sprite);
+			Renderer2D::draw_quad(transform, sprite, sprite.color);
 		}
 
 		Renderer2D::end_scene();
@@ -78,17 +78,15 @@ void Scene::on_viewport_resize(glm::vec2 new_size)
 	{
 		auto [transform, camera] =
 		    group.get<cmp::Transform, cmp::Camera>(entity);
-		if (!camera.fixed_aspect_ratio)
-		{
+		if (camera.fixed_aspect_ratio)
 			camera.camera.set_viewport_size(new_size);
-		}
 	}
 }
 
 Entity Scene::create(std::string name)
 {
 	Entity e(*this);
-	e.add<cmp::Transform>(glm::mat4 {1});
+	e.add<cmp::Transform>(glm::vec3 {0}, glm::vec3 {0}, glm::vec3 {1});
 	e.add<cmp::Tag>(name);
 	return e;
 }

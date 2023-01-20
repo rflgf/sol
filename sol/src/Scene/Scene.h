@@ -9,6 +9,10 @@
 namespace sol
 {
 
+namespace ecl::pnl
+{
+class SceneHierarchy;
+}
 class Entity;
 
 class Scene
@@ -24,7 +28,7 @@ public:
 
 	Entity create(std::string name = "entity");
 
-	// template <cmp::ComponentType T>
+	friend class ecl::pnl::SceneHierarchy;
 };
 
 } // namespace sol

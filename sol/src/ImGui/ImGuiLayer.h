@@ -19,6 +19,8 @@ public:
 	void on_update_begin();
 	void on_update_end();
 	void on_event(Event &event);
+
+	void load_style_settings();
 };
 
 } // namespace sol

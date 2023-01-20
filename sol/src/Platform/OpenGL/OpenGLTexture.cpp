@@ -18,7 +18,7 @@ OpenGLTexture2D::OpenGLTexture2D(const uint32_t width, const uint32_t height)
 	glTextureStorage2D(id, 1, internal_format, width, height);
 
 	glTextureParameteri(id, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTextureParameteri(id, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTextureParameteri(id, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTextureParameteri(id, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTextureParameteri(id, GL_TEXTURE_WRAP_T, GL_REPEAT);
 }
@@ -45,11 +45,10 @@ OpenGLTexture2D::OpenGLTexture2D(const std::string &path)
 		data_format     = GL_RGB;
 	}
 	else
-	{
 		SOL_CORE_ASSERT(0, "bad number of channels in texture");
-	}
 
 	SOL_CORE_ASSERT(data, "image could not be loaded: {}", path);
+
 	this->width  = width;
 	this->height = height;
 
@@ -57,7 +56,7 @@ OpenGLTexture2D::OpenGLTexture2D(const std::string &path)
 	glTextureStorage2D(id, 1, internal_format, width, height);
 
 	glTextureParameteri(id, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTextureParameteri(id, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTextureParameteri(id, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTextureParameteri(id, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTextureParameteri(id, GL_TEXTURE_WRAP_T, GL_REPEAT);
 

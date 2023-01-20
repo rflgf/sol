@@ -16,7 +16,7 @@ void Renderer::init()
 	Renderer2D::init();
 }
 
-void Renderer::deinit() {}
+void Renderer::deinit() { Renderer2D::deinit(); }
 
 void Renderer::begin_scene(const OrthographicCamera &camera)
 {

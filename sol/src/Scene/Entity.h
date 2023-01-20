@@ -5,9 +5,15 @@
 #include "Scene.h"
 
 #include <entt/entt.hpp>
+#include <stdint.h>
 
 namespace sol
 {
+
+namespace ecl::pnl
+{
+class SceneHierarchy;
+}
 
 struct Entity
 {
@@ -18,6 +24,12 @@ private:
 	Entity(Scene &owning_scene)
 	    : handle(owning_scene.registry.create())
 	    , owning_scene(&owning_scene)
+	{
+	}
+
+	Entity(Scene &scene, entt::entity handle)
+	    : owning_scene(&scene)
+	    , handle(handle)
 	{
 	}
 
@@ -138,11 +150,18 @@ public:
 	}
 	// ------ end of NativeScript-related --------
 
+	bool operator==(const Entity &rhs) const
+	{
+		return handle == rhs.handle && owning_scene == rhs.owning_scene;
+	}
+	bool operator!=(const Entity &rhs) const { return !(*this == rhs); }
 	operator bool() const { return handle != entt::null; }
 	operator entt::entity() const { return handle; }
 	operator entt::entity &() { return handle; }
+	operator uint32_t() const { return static_cast<uint32_t>(handle); }
 
 	friend class Scene;
+	friend class ecl::pnl::SceneHierarchy;
 };
 
 } // namespace sol

@@ -9,9 +9,6 @@
 #include "Log.h"
 #include "Platform/OpenGL/OpenGLContext.h"
 
-#include <backends/imgui_impl_sdl.h>
-#include <imgui.h>
-
 namespace sol
 {
 
@@ -41,8 +38,8 @@ void WindowsWindow::init(const WindowProps &props)
 
 	SOL_CORE_ASSERT(window, "could not create window: {}", SDL_GetError());
 
-	SOL_CORE_INFO("created window {} with dimensions ({}, {})", data.title,
-	              data.width, data.height);
+	SOL_CORE_TRACE("created window {} with dimensions ({}, {})", data.title,
+	               data.width, data.height);
 
 	rendering_context = std::make_unique<OpenGLContext>(window);
 	rendering_context->init();

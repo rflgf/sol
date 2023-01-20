@@ -50,19 +50,19 @@ public:
 		QuadVertex *base             = nullptr;
 		QuadVertex *offset_from_base = nullptr;
 
-		size_t texture_slot_index = 1; // index 0 is for white texture.
-		std::array<std::shared_ptr<const Texture>, MAX_TEXTURE_SLOTS> textures;
+		size_t texture_slot_index = 0;
+		std::array<std::shared_ptr<Texture>, MAX_TEXTURE_SLOTS> textures;
 
 		std::shared_ptr<VertexArray> vao;
 		std::shared_ptr<VertexBuffer> vbo;
 		std::shared_ptr<IndexBuffer> ibo;
 		std::shared_ptr<const Shader> tinted_texture_shader;
-		std::shared_ptr<const Texture> white_texture;
+		std::shared_ptr<Texture> white_texture;
 
 		Statistics statistics;
 	};
 
-	static Data *data;
+	static Data data;
 
 	static void init();
 	static void deinit();
@@ -78,14 +78,14 @@ public:
 	static void draw_quad(const glm::mat4 transform, const glm::vec4 color,
 	                      const float tiling_factor = 1.0f);
 	static void draw_quad(const glm::mat4 transform,
-	                      std::shared_ptr<const Texture> texture,
+	                      std::shared_ptr<Texture> texture,
 	                      const float tiling_factor = 1.0f);
 	static void draw_quad(const glm::mat4 transform,
-	                      std::shared_ptr<const Texture> texture,
+	                      std::shared_ptr<Texture> texture,
 	                      const glm::vec3 tint,
 	                      const float tiling_factor = 1.0f);
 	static void draw_quad(const glm::mat4 transform,
-	                      std::shared_ptr<const Texture> texture,
+	                      std::shared_ptr<Texture> texture,
 	                      const glm::vec4 tint,
 	                      const float tiling_factor = 1.0f);
 
@@ -96,66 +96,71 @@ public:
 	                      const glm::vec4 color, const float rotation = 0.0f,
 	                      const float tiling_factor = 1.0f);
 	static void draw_quad(const glm::vec2 position, const glm::vec2 size,
-	                      std::shared_ptr<const Texture> texture,
+	                      std::shared_ptr<Texture> texture,
 	                      const float rotation      = 0.0f,
 	                      const float tiling_factor = 1.0f);
 	static void draw_quad(const glm::vec3 position, const glm::vec2 size,
-	                      std::shared_ptr<const Texture> texture,
+	                      std::shared_ptr<Texture> texture,
 	                      const float rotation      = 0.0f,
 	                      const float tiling_factor = 1.0f);
 	static void draw_quad(const glm::vec2 position, const glm::vec2 size,
-	                      std::shared_ptr<const Texture> texture,
+	                      std::shared_ptr<Texture> texture,
 	                      const glm::vec3 tint, const float rotation = 0.0f,
 	                      const float tiling_factor = 1.0f);
 	static void draw_quad(const glm::vec3 position, const glm::vec2 size,
-	                      std::shared_ptr<const Texture> texture,
+	                      std::shared_ptr<Texture> texture,
 	                      const glm::vec3 tint, const float rotation = 0.0f,
 	                      const float tiling_factor = 1.0f);
 	static void draw_quad(const glm::vec2 position, const glm::vec2 size,
-	                      std::shared_ptr<const Texture> texture,
+	                      std::shared_ptr<Texture> texture,
 	                      const glm::vec4 tint, const float rotation = 0.0f,
 	                      const float tiling_factor = 1.0f);
 	static void draw_quad(const glm::vec3 position, const glm::vec2 size,
-	                      std::shared_ptr<const Texture> texture,
+	                      std::shared_ptr<Texture> texture,
 	                      const glm::vec4 tint, const float rotation = 0.0f,
 	                      const float tiling_factor = 1.0f);
 
 	static void draw_quad(const glm::mat4 transform,
-	                      std::shared_ptr<const Subtexture2D> texture,
+	                      std::shared_ptr<Subtexture2D> texture,
 	                      const float tiling_factor = 1.0f);
 	static void draw_quad(const glm::mat4 transform,
-	                      std::shared_ptr<const Subtexture2D> texture,
+	                      std::shared_ptr<Subtexture2D> texture,
 	                      const glm::vec3 tint,
 	                      const float tiling_factor = 1.0f);
 	static void draw_quad(const glm::mat4 transform,
-	                      std::shared_ptr<const Subtexture2D> texture,
+	                      std::shared_ptr<Subtexture2D> texture,
 	                      const glm::vec4 tint,
 	                      const float tiling_factor = 1.0f);
 
 	static void draw_quad(const glm::vec2 position, const glm::vec2 size,
-	                      std::shared_ptr<const Subtexture2D> subtexture,
+	                      std::shared_ptr<Subtexture2D> subtexture,
 	                      const float rotation      = 0.0f,
 	                      const float tiling_factor = 1.0f);
 	static void draw_quad(const glm::vec3 position, const glm::vec2 size,
-	                      std::shared_ptr<const Subtexture2D> subtexture,
+	                      std::shared_ptr<Subtexture2D> subtexture,
 	                      const float rotation      = 0.0f,
 	                      const float tiling_factor = 1.0f);
 	static void draw_quad(const glm::vec2 position, const glm::vec2 size,
-	                      std::shared_ptr<const Subtexture2D> subtexture,
+	                      std::shared_ptr<Subtexture2D> subtexture,
 	                      const glm::vec3 tint, const float rotation = 0.0f,
 	                      const float tiling_factor = 1.0f);
 	static void draw_quad(const glm::vec3 position, const glm::vec2 size,
-	                      std::shared_ptr<const Subtexture2D> subtexture,
+	                      std::shared_ptr<Subtexture2D> subtexture,
 	                      const glm::vec3 tint, const float rotation = 0.0f,
 	                      const float tiling_factor = 1.0f);
 	static void draw_quad(const glm::vec2 position, const glm::vec2 size,
-	                      std::shared_ptr<const Subtexture2D> subtexture,
+	                      std::shared_ptr<Subtexture2D> subtexture,
 	                      const glm::vec4 tint, const float rotation = 0.0f,
 	                      const float tiling_factor = 1.0f);
 	static void draw_quad(const glm::vec3 position, const glm::vec2 size,
-	                      std::shared_ptr<const Subtexture2D> subtexture,
+	                      std::shared_ptr<Subtexture2D> subtexture,
 	                      const glm::vec4 tint, const float rotation = 0.0f,
 	                      const float tiling_factor = 1.0f);
+
+	static void
+	draw_quad(const glm::mat4 transform, std::shared_ptr<Texture> texture,
+	          const std::array<const glm::vec2, 4> texture_coordinates,
+	          const glm::vec4 tint, const float tiling_factor = 1.0f);
 };
 
 } // namespace sol

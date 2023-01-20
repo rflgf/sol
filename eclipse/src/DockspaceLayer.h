@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Panels.h"
+
 #include <imgui.h>
 #include <sol.h>
 
@@ -17,6 +19,7 @@ class DockspaceLayer : public Layer
 	glm::vec2 scene_view_size;
 	bool viewport_focused = false;
 	bool viewport_hovered = false;
+	pnl::SceneHierarchy scene_hierarchy;
 
 public:
 	DockspaceLayer();

@@ -149,16 +149,16 @@ public:
 			ImGui::Begin("statistics");
 
 			ImGui::Text("draw calls: %d",
-			            sol::Renderer2D::data->statistics.draw_calls);
+			            sol::Renderer2D::data.statistics.draw_calls);
 			ImGui::Text("quad count: %d",
-			            sol::Renderer2D::data->statistics.quad_count);
+			            sol::Renderer2D::data.statistics.quad_count);
 			ImGui::Text("index count: %d",
-			            sol::Renderer2D::data->statistics.total_index_count());
+			            sol::Renderer2D::data.statistics.total_index_count());
 			ImGui::Text("vertex count: %d",
-			            sol::Renderer2D::data->statistics.total_vertex_count());
+			            sol::Renderer2D::data.statistics.total_vertex_count());
 
 			ImGui::End();
-			sol::Renderer2D::data->statistics.reset();
+			sol::Renderer2D::data.statistics.reset();
 		}
 
 		ImGui::End();
