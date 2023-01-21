@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Renderer/Renderer2D.h"
 #include "Renderer/Subtexture2D.h"
 #include "Scene/Components.h"
 #include "Scene/SceneCamera.h"
@@ -87,16 +88,21 @@ struct Tag : public Component
 
 struct SpriteRenderer : public Component
 {
-	std::shared_ptr<Subtexture2D> sprite;
+	Subtexture2D sprite;
 	glm::vec4 color = glm::vec4 {1};
 
-	SpriteRenderer(std::shared_ptr<Subtexture2D> sprite)
+	SpriteRenderer(Subtexture2D sprite)
 	    : sprite(sprite)
 	{
 	}
 
-	operator std::shared_ptr<Subtexture2D> &() { return sprite; }
-	operator const std::shared_ptr<Subtexture2D> &() const { return sprite; }
+	SpriteRenderer()
+	    : sprite({Renderer2D::data.white_texture, {0, 1}, {1, 0}})
+	{
+	}
+
+	operator Subtexture2D &() { return sprite; }
+	operator const Subtexture2D &() const { return sprite; }
 };
 
 struct Camera : public Component

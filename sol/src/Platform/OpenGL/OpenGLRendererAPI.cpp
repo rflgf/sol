@@ -21,7 +21,9 @@ void OpenGLRendererAPI::set_viewport(uint32_t x, uint32_t y, uint32_t width,
 
 void OpenGLRendererAPI::draw_indexed(VertexArray &vao, size_t count)
 {
-	count = count ? count : vao.get_index_buffer()->get_count();
+	// NOTE(rafael)> disabled the following line because it was getting in the
+	// way of clearing the screen:
+	// count = count ? count : vao.get_index_buffer()->get_count();
 	glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
 }
 void OpenGLRendererAPI::set_clear_color(const glm::vec4 &color)

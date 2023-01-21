@@ -27,6 +27,7 @@ public:
 	void on_viewport_resize(glm::vec2 new_size);
 
 	Entity create(std::string name = "entity");
+	void destroy(Entity entity);
 
 	friend class ecl::pnl::SceneHierarchy;
 };

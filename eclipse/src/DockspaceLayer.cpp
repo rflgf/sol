@@ -14,10 +14,6 @@ namespace sol::ecl
 
 DockspaceLayer::DockspaceLayer()
     : camera_controller(1280.0f / 720.0f)
-    , subtexture(Subtexture2D::from_coordinates(
-          Texture2D::create("assets/textures/kenney_tinydungeon/"
-                            "Tilemap/tilemap_packed.png"),
-          glm::vec2 {0, 3}, glm::vec2 {16, 16}, {2, 2}))
     , scene_view_size(1, 1)
 {
 	Framebuffer::Specification specification;
@@ -26,7 +22,10 @@ DockspaceLayer::DockspaceLayer()
 	framebuffer          = Framebuffer::create(specification);
 
 	Entity mage = active_scene.create("mage");
-	mage.add<cmp::SpriteRenderer>(subtexture);
+	mage.add<cmp::SpriteRenderer>(Subtexture2D::from_coordinates(
+	    Texture2D::create("assets/textures/kenney_tinydungeon/"
+	                      "Tilemap/tilemap_packed.png"),
+	    glm::vec2 {0, 3}, glm::vec2 {16, 16}, {2, 2}));
 	mage.replace<cmp::Transform>(glm::vec3(0.0f), glm::vec3(0.0f),
 	                             glm::vec3(0.5f, 0.5f, 1.0f));
 
@@ -97,12 +96,11 @@ DockspaceLayer::DockspaceLayer()
 
 void DockspaceLayer::on_update(Timestep dt)
 {
-	Framebuffer::Specification specification =
-	    framebuffer.get()->get_specification();
+	Framebuffer::Specification specification = framebuffer->get_specification();
 	if (specification.width != scene_view_size.x ||
 	    specification.height != scene_view_size.y)
 	{
-		framebuffer.get()->resize(scene_view_size);
+		framebuffer->resize(scene_view_size);
 		camera_controller.on_resize(scene_view_size.x, scene_view_size.y);
 		active_scene.on_viewport_resize(scene_view_size);
 	}
@@ -110,14 +108,14 @@ void DockspaceLayer::on_update(Timestep dt)
 	if (viewport_focused)
 		camera_controller.on_update(dt);
 
-	framebuffer.get()->bind();
+	framebuffer->bind();
 
-	RenderCommand::set_clear_color({0.1f, 0.1f, 0.1f, 1});
+	RenderCommand::set_clear_color({0.0f, 0.0f, 0.0f, 1});
 	RenderCommand::clear();
 
 	active_scene.on_update(dt);
 
-	framebuffer.get()->unbind();
+	framebuffer->unbind();
 }
 
 void DockspaceLayer::on_imgui_update()
@@ -203,7 +201,7 @@ void DockspaceLayer::on_imgui_update()
 			scene_view_size = as;
 
 		void *texture_id = std::bit_cast<void *>(
-		    uintptr_t {framebuffer.get()->get_color_attachment_renderer_id()});
+		    uintptr_t {framebuffer->get_color_attachment_renderer_id()});
 		ImGui::Image(texture_id, {scene_view_size.x, scene_view_size.y}, {0, 1},
 		             {1, 0});
 

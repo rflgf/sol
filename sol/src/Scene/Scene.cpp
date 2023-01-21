@@ -2,6 +2,7 @@
 
 #include "Components.h"
 #include "Entity.h"
+#include "Renderer/RenderCommand.h"
 #include "Renderer/Renderer2D.h"
 #include "Scene/Components.h"
 #include "Scene/ScriptableEntity.h"
@@ -59,6 +60,12 @@ void Scene::on_update(Timestep dt)
 
 		auto view = registry.view<cmp::Transform, cmp::SpriteRenderer>();
 
+		if (view.begin() == view.end())
+		{
+			RenderCommand::set_clear_color({0, 0, 0, 1});
+			RenderCommand::clear();
+		}
+
 		for (entt::entity entity : view)
 		{
 			auto [transform, sprite] =
@@ -90,5 +97,7 @@ Entity Scene::create(std::string name)
 	e.add<cmp::Tag>(name);
 	return e;
 }
+
+void Scene::destroy(Entity entity) { registry.destroy(entity); }
 
 } // namespace sol

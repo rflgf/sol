@@ -23,7 +23,10 @@ void SceneHierarchy::on_imgui_update()
 	SOL_CORE_ASSERT(context, "scene hierarchy context not set.");
 
 	{
+		ImGui::ShowDemoWindow();
+
 		ImGui::Begin("scene hierarchy");
+
 		context->registry.each(
 		    [this](entt::entity handle)
 		    {
@@ -33,6 +36,16 @@ void SceneHierarchy::on_imgui_update()
 
 		if (ImGui::IsWindowHovered() && ImGui::IsMouseDown(0))
 			selection_context = {};
+
+		// right-click on blank space.
+		if (ImGui::BeginPopupContextWindow(nullptr,
+		                                   ImGuiPopupFlags_MouseButtonRight |
+		                                       ImGuiPopupFlags_NoOpenOverItems))
+		{
+			if (ImGui::MenuItem("add entity"))
+				context->create("empty entity");
+			ImGui::EndPopup();
+		}
 
 		ImGui::End();
 	}
@@ -55,7 +68,15 @@ void SceneHierarchy::draw_entity_node(Entity entity)
 	flags |= ImGuiTreeNodeFlags_SpanAvailWidth;
 
 	std::string tag = entity.get<cmp::Tag>().tag;
-	bool opened = ImGui::TreeNodeEx(IDIFY(entity), flags, "%s", tag.c_str());
+	bool opened  = ImGui::TreeNodeEx(IDIFY(entity), flags, "%s", tag.c_str());
+	bool deleted = false;
+
+	if (ImGui::BeginPopupContextItem())
+	{
+		if (ImGui::MenuItem("delete entity"))
+			deleted = true;
+		ImGui::EndPopup();
+	}
 
 	if (ImGui::IsItemClicked())
 		selection_context = entity;
@@ -64,6 +85,13 @@ void SceneHierarchy::draw_entity_node(Entity entity)
 	{
 		// TODO(rafael): unfold the hierarchy tree.
 		ImGui::TreePop();
+	}
+
+	if (deleted)
+	{
+		context->destroy(entity);
+		if (selection_context == entity)
+			selection_context = {};
 	}
 }
 
@@ -77,6 +105,36 @@ void SceneHierarchy::draw_entity_properties(Entity entity)
 		ImGui::Text("tag:");
 		ImGui::InputText("##tag", buffer, cmp::Tag::MAX_SIZE);
 		tag = std::string(buffer);
+	}
+
+	{
+		const char *id = "add component";
+		if (ImGui::Button("+"))
+			ImGui::OpenPopup(id);
+
+		if (ImGui::BeginPopup(id))
+		{
+			if (!entity.has<cmp::SpriteRenderer>())
+				if (ImGui::MenuItem("sprite renderer"))
+				{
+					selection_context.add<cmp::SpriteRenderer>();
+					ImGui::CloseCurrentPopup();
+				}
+
+			if (!entity.has<cmp::Camera>())
+				if (ImGui::MenuItem("camera"))
+				{
+					selection_context.add<cmp::Camera>();
+					ImGui::CloseCurrentPopup();
+				}
+
+			// native script instances.
+			if (ImGui::MenuItem("native script"))
+			{
+			}
+
+			ImGui::EndPopup();
+		}
 	}
 
 	if (entity.has<cmp::Transform>())

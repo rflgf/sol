@@ -116,12 +116,10 @@ void Renderer2D::flush_batch()
 	                   reinterpret_cast<uint8_t *>(data.base);
 	data.vbo->set_data(data.base, data_size);
 
-	// data.vao->bind();
 	for (size_t i = 0; i < data.texture_slot_index; ++i)
-		data.textures[i].get()->bind(i);
+		data.textures[i]->bind(i);
 
 	RenderCommand::draw_indexed(*data.vao, data.quad_index_count);
-
 	++data.statistics.draw_calls;
 }
 
@@ -296,59 +294,54 @@ void Renderer2D::draw_quad(const glm::vec2 position, const glm::vec2 size,
 }
 
 void Renderer2D::draw_quad(const glm::vec2 position, const glm::vec2 size,
-                           std::shared_ptr<Subtexture2D> subtexture,
-                           const float rotation, const float tiling_factor)
+                           Subtexture2D subtexture, const float rotation,
+                           const float tiling_factor)
 {
 	draw_quad({position.x, position.y, 0.0f}, size, subtexture, rotation,
 	          tiling_factor);
 }
 
 void Renderer2D::draw_quad(const glm::vec3 position, const glm::vec2 size,
-                           std::shared_ptr<Subtexture2D> subtexture,
-                           const float rotation, const float tiling_factor)
+                           Subtexture2D subtexture, const float rotation,
+                           const float tiling_factor)
 {
 	draw_quad(position, size, subtexture, {1.0f, 1.0f, 1.0f, 1.0f}, rotation,
 	          tiling_factor);
 }
 
 void Renderer2D::draw_quad(const glm::vec2 position, const glm::vec2 size,
-                           std::shared_ptr<Subtexture2D> subtexture,
-                           const glm::vec3 tint, const float rotation,
-                           const float tiling_factor)
+                           Subtexture2D subtexture, const glm::vec3 tint,
+                           const float rotation, const float tiling_factor)
 {
 	draw_quad({position.x, position.y, 0.0f}, size, subtexture, tint, rotation,
 	          tiling_factor);
 }
 
 void Renderer2D::draw_quad(const glm::vec3 position, const glm::vec2 size,
-                           std::shared_ptr<Subtexture2D> subtexture,
-                           const glm::vec3 tint, const float rotation,
-                           const float tiling_factor)
+                           Subtexture2D subtexture, const glm::vec3 tint,
+                           const float rotation, const float tiling_factor)
 {
 	draw_quad(position, size, subtexture, {tint.r, tint.g, tint.b, 1.0f},
 	          rotation, tiling_factor);
 }
 
 void Renderer2D::draw_quad(const glm::vec2 position, const glm::vec2 size,
-                           std::shared_ptr<Subtexture2D> subtexture,
-                           const glm::vec4 tint, const float rotation,
-                           const float tiling_factor)
+                           Subtexture2D subtexture, const glm::vec4 tint,
+                           const float rotation, const float tiling_factor)
 {
 	draw_quad({position.x, position.y, 0.0f}, size, subtexture, tint, rotation,
 	          tiling_factor);
 }
 
-void Renderer2D::draw_quad(const glm::mat4 transform,
-                           std::shared_ptr<Subtexture2D> subtexture,
+void Renderer2D::draw_quad(const glm::mat4 transform, Subtexture2D subtexture,
                            const float tiling_factor)
 {
 	draw_quad(transform, subtexture, {1, 1, 1, 1}, tiling_factor);
 }
 
 void Renderer2D::draw_quad(const glm::vec3 position, const glm::vec2 size,
-                           std::shared_ptr<Subtexture2D> subtexture,
-                           const glm::vec4 tint, const float rotation,
-                           const float tiling_factor)
+                           Subtexture2D subtexture, const glm::vec4 tint,
+                           const float rotation, const float tiling_factor)
 {
 
 	glm::mat4 transform =
@@ -358,8 +351,7 @@ void Renderer2D::draw_quad(const glm::vec3 position, const glm::vec2 size,
 	draw_quad(transform, subtexture, tint, tiling_factor);
 }
 
-void Renderer2D::draw_quad(const glm::mat4 transform,
-                           std::shared_ptr<Subtexture2D> texture,
+void Renderer2D::draw_quad(const glm::mat4 transform, Subtexture2D texture,
                            const glm::vec3 tint, const float tiling_factor)
 {
 	draw_quad(transform, texture, {tint.r, tint.g, tint.b, 1}, tiling_factor);
@@ -379,12 +371,11 @@ void Renderer2D::draw_quad(const glm::mat4 transform,
 	draw_quad(transform, texture, texture_coordinates, tint, tiling_factor);
 }
 
-void Renderer2D::draw_quad(const glm::mat4 transform,
-                           std::shared_ptr<Subtexture2D> subtexture,
+void Renderer2D::draw_quad(const glm::mat4 transform, Subtexture2D subtexture,
                            const glm::vec4 tint, const float tiling_factor)
 {
-	draw_quad(transform, subtexture->get_atlas(),
-	          subtexture->get_texture_coordinates(), tint, tiling_factor);
+	draw_quad(transform, subtexture.get_atlas(),
+	          subtexture.get_texture_coordinates(), tint, tiling_factor);
 }
 
 } // namespace sol

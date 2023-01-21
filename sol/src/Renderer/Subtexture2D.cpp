@@ -33,7 +33,7 @@ Subtexture2D::Subtexture2D(
 {
 }
 
-std::shared_ptr<Subtexture2D>
+Subtexture2D
 Subtexture2D::from_coordinates(Atlas atlas, const glm::vec2 coordinates,
                                const glm::vec2 atlas_unit_dimensions,
                                const glm::vec2 subtexture_dimensions)
@@ -60,19 +60,7 @@ Subtexture2D::from_coordinates(Atlas atlas, const glm::vec2 coordinates,
 	    glm::vec2 {top_right.x, bottom_left.y}, // bottom-right
 	};
 
-	// we're constructing a Subtexture2D from a private constructor, this is
-	// just a hacky way to give std::make_shared access to that constructor.
-	struct MakeSharedEnabler : public Subtexture2D
-	{
-		MakeSharedEnabler(
-		    Atlas atlas,
-		    const std::array<const glm::vec2, 4> texture_coordinates)
-		    : Subtexture2D(atlas, texture_coordinates)
-		{
-		}
-	};
-
-	return std::make_shared<MakeSharedEnabler>(atlas, texture_coordinates);
+	return {atlas, texture_coordinates};
 }
 
 } // namespace sol

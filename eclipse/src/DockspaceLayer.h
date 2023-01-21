@@ -11,7 +11,6 @@ namespace sol::ecl
 class DockspaceLayer : public Layer
 {
 	CameraController camera_controller;
-	std::shared_ptr<Subtexture2D> subtexture;
 	std::shared_ptr<Framebuffer> framebuffer;
 	Scene active_scene;
 	Entity camera_A;

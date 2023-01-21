@@ -100,7 +100,7 @@ public:
 	sol::CameraController camera_controller;
 	glm::vec4 square_color;
 	std::shared_ptr<sol::Texture> texture;
-	std::shared_ptr<sol::Subtexture2D> subtexture;
+	sol::Subtexture2D subtexture;
 
 	Layer2D()
 	    : camera_controller(1280.0f / 720.0f)
