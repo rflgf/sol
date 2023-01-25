@@ -5,9 +5,14 @@
 #include "Event/KeyboardEvent.h"
 #include "Event/MouseEvent.h"
 
+#include <imgui.h>
+// ImGui needs to be included before ImGuizmo. this is here to prevent
+// clang-format from doing its reordering thing.
+#define SOL_DUMMY
+
+#include <ImGuizmo.h>
 #include <backends/imgui_impl_opengl3.h>
 #include <backends/imgui_impl_sdl.h>
-#include <imgui.h>
 
 void CherryTheme();
 
@@ -43,6 +48,7 @@ void ImGuiLayer::on_update_begin()
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame();
 	ImGui::NewFrame();
+	ImGuizmo::BeginFrame();
 }
 
 void ImGuiLayer::on_update_end()

@@ -42,6 +42,7 @@ target_link_libraries(imgui SDL2main SDL2-static glad)
 
 add_subdirectory(vendor/entt)
 add_subdirectory(vendor/glm)
+add_subdirectory(vendor/ImGuizmo)
 add_subdirectory(vendor/nativefiledialog-extended)
 add_subdirectory(vendor/yaml-cpp)
 

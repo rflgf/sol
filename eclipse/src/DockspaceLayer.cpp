@@ -1,6 +1,7 @@
 #include "DockspaceLayer.h"
 
 #include "ImGuiUtils.h"
+#include "ImGuizmo.h"
 #include "KeyCodes.h"
 #include "Scene/Components.h"
 #include "Scene/Scene.h"
@@ -32,21 +33,6 @@ DockspaceLayer::DockspaceLayer()
 	    glm::vec2 {0, 3}, glm::vec2 {16, 16}, {2, 2}));
 	mage.replace<cmp::Transform>(glm::vec3(0.0f), glm::vec3(0.0f),
 	                             glm::vec3(0.5f, 0.5f, 1.0f));
-
-	Entity logo = active_scene->create("logo");
-	logo.add<cmp::SpriteRenderer>(Subtexture2D::from_coordinates(
-	    Texture2D::create("assets/textures/logo.png"), glm::vec2 {0, 0},
-	    glm::vec2 {597, 604}, {1, 1}));
-	logo.replace<cmp::Transform>(glm::vec3(0.3f, 0.0f, 0.0f), glm::vec3(0.0f),
-	                             glm::vec3(1.0f));
-
-	Entity potion = active_scene->create("potion");
-	potion.add<cmp::SpriteRenderer>(Subtexture2D::from_coordinates(
-	    Texture2D::create(
-	        "assets/textures/kenney_tinydungeon/Tiles/tile_0115.png"),
-	    glm::vec2 {0, 0}, glm::vec2 {16, 16}, {1, 1}));
-	potion.replace<cmp::Transform>(glm::vec3(0.3f, 0.4f, 0.0f), glm::vec3(0.0f),
-	                               glm::vec3(1.0f));
 
 	camera_A = active_scene->create("main camera");
 	camera_A.add<cmp::Camera>(
@@ -100,6 +86,19 @@ DockspaceLayer::DockspaceLayer()
 
 void DockspaceLayer::on_update(Timestep dt)
 {
+	// gizmo operation keyboard control.
+	if (!ImGuizmo::IsUsing())
+	{
+		if (Input::is_key_pressed(KeyCode::SOL_ESCAPE))
+			gizmo_operation = static_cast<ImGuizmo::OPERATION>(-1);
+		else if (Input::is_key_pressed(KeyCode::SOL_g))
+			gizmo_operation = ImGuizmo::OPERATION::TRANSLATE;
+		else if (Input::is_key_pressed(KeyCode::SOL_r))
+			gizmo_operation = ImGuizmo::OPERATION::ROTATE;
+		else if (Input::is_key_pressed(KeyCode::SOL_s))
+			gizmo_operation = ImGuizmo::OPERATION::SCALE;
+	}
+
 	Framebuffer::Specification specification = framebuffer->get_specification();
 	if (specification.width != scene_view_size.x ||
 	    specification.height != scene_view_size.y)
@@ -124,6 +123,7 @@ void DockspaceLayer::on_update(Timestep dt)
 
 void DockspaceLayer::on_imgui_update()
 {
+	// ImGuizmo::BeginFrame();
 	static bool p_open                        = true;
 	static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 
@@ -219,7 +219,6 @@ void DockspaceLayer::on_imgui_update()
 	scene_hierarchy.on_imgui_update();
 
 	{
-		// ImGui::ShowDemoWindow();
 		ImGui::Begin("statistics");
 
 		ImGui::Text("draw calls: %d", Renderer2D::data.statistics.draw_calls);
@@ -240,7 +239,7 @@ void DockspaceLayer::on_imgui_update()
 		viewport_hovered = ImGui::IsWindowHovered();
 
 		Application::get().imgui_layer.block_events =
-		    !viewport_focused || !viewport_hovered;
+		    !viewport_focused && !viewport_hovered;
 
 		ImVec2 available_size = ImGui::GetContentRegionAvail();
 		glm::vec2 as {available_size.x, available_size.y};
@@ -251,6 +250,73 @@ void DockspaceLayer::on_imgui_update()
 		    uintptr_t {framebuffer->get_color_attachment_renderer_id()});
 		ImGui::Image(texture_id, {scene_view_size.x, scene_view_size.y}, {0, 1},
 		             {1, 0});
+
+		// ImGuizmo-related stuff.
+		if (Entity selected_entity = scene_hierarchy.selection_context)
+		{
+			// get active camera. TODO(rafael): fix this when we have a
+			// proper editor camera.
+			Camera *main_camera = nullptr;
+			glm::mat4 camera_transform;
+			{
+				auto group =
+				    active_scene->registry.group<cmp::Transform, cmp::Camera>();
+				for (entt::entity entity : group)
+				{
+					auto [transform, camera] =
+					    group.get<cmp::Transform, cmp::Camera>(entity);
+					if (camera.primary)
+					{
+						main_camera      = &camera.camera;
+						camera_transform = transform;
+						break;
+					}
+				}
+			}
+
+			if (main_camera)
+			{
+				bool should_snap = Input::is_key_pressed(KeyCode::SOL_LCTRL);
+				float snap = gizmo_operation == ImGuizmo::OPERATION::ROTATE
+				                 ? 45.0f
+				                 : 0.5f;
+				float snap_values[] = {snap, snap, snap};
+
+				ImGuizmo::SetOrthographic(false);
+				ImGuizmo::SetDrawlist();
+
+				ImGuizmo::SetRect(
+				    ImGui::GetWindowPos().x, ImGui::GetWindowPos().y,
+				    ImGui::GetWindowWidth(), ImGui::GetWindowHeight());
+
+				cmp::Transform &selected_entitys_transform_component =
+				    selected_entity.get<cmp::Transform>();
+				glm::mat4 transform   = selected_entitys_transform_component;
+				glm::mat4 camera_view = glm::inverse(camera_transform);
+
+				ImGuizmo::Manipulate(glm::value_ptr(camera_view),
+				                     glm::value_ptr(main_camera->projection),
+				                     gizmo_operation, ImGuizmo::LOCAL,
+				                     glm::value_ptr(transform), nullptr,
+				                     should_snap ? snap_values : nullptr);
+
+				if (ImGuizmo::IsUsing())
+				{
+					glm::vec3 rotation =
+					    selected_entitys_transform_component.rotation;
+					ImGuizmo::DecomposeMatrixToComponents(
+					    glm::value_ptr(transform),
+					    glm::value_ptr(
+					        selected_entitys_transform_component.translation),
+					    glm::value_ptr(rotation),
+					    glm::value_ptr(
+					        selected_entitys_transform_component.scale));
+					selected_entitys_transform_component.rotation = {
+					    glm::radians(rotation.x), glm::radians(rotation.y),
+					    glm::radians(rotation.z)};
+				}
+			}
+		}
 
 		ImGui::End();
 	}

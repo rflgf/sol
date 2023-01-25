@@ -52,7 +52,7 @@ list(TRANSFORM sol_src PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/src/")
 
 add_library(sol STATIC ${sol_src})
 
-target_link_libraries(sol debug-trap glad glm EnTT imgui nfd SDL2-static SDL2main spdlog stb_image yaml-cpp)
+target_link_libraries(sol debug-trap glad glm EnTT imgui ImGuizmo nfd SDL2-static SDL2main spdlog stb_image yaml-cpp)
 
 target_include_directories(sol
 PUBLIC
