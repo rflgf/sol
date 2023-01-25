@@ -3,7 +3,10 @@
 #include "ImGuiUtils.h"
 #include "KeyCodes.h"
 #include "Scene/Components.h"
+#include "Scene/Scene.h"
 #include "Scene/SceneCamera.h"
+#include "Scene/SceneSerializer.h"
+#include "Utils.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -15,13 +18,14 @@ namespace sol::ecl
 DockspaceLayer::DockspaceLayer()
     : camera_controller(1280.0f / 720.0f)
     , scene_view_size(1, 1)
+    , active_scene(std::make_shared<Scene>())
 {
 	Framebuffer::Specification specification;
 	specification.width  = 1280;
 	specification.height = 720;
 	framebuffer          = Framebuffer::create(specification);
 
-	Entity mage = active_scene.create("mage");
+	Entity mage = active_scene->create("mage");
 	mage.add<cmp::SpriteRenderer>(Subtexture2D::from_coordinates(
 	    Texture2D::create("assets/textures/kenney_tinydungeon/"
 	                      "Tilemap/tilemap_packed.png"),
@@ -29,14 +33,14 @@ DockspaceLayer::DockspaceLayer()
 	mage.replace<cmp::Transform>(glm::vec3(0.0f), glm::vec3(0.0f),
 	                             glm::vec3(0.5f, 0.5f, 1.0f));
 
-	Entity logo = active_scene.create("logo");
+	Entity logo = active_scene->create("logo");
 	logo.add<cmp::SpriteRenderer>(Subtexture2D::from_coordinates(
 	    Texture2D::create("assets/textures/logo.png"), glm::vec2 {0, 0},
 	    glm::vec2 {597, 604}, {1, 1}));
 	logo.replace<cmp::Transform>(glm::vec3(0.3f, 0.0f, 0.0f), glm::vec3(0.0f),
 	                             glm::vec3(1.0f));
 
-	Entity potion = active_scene.create("potion");
+	Entity potion = active_scene->create("potion");
 	potion.add<cmp::SpriteRenderer>(Subtexture2D::from_coordinates(
 	    Texture2D::create(
 	        "assets/textures/kenney_tinydungeon/Tiles/tile_0115.png"),
@@ -44,13 +48,13 @@ DockspaceLayer::DockspaceLayer()
 	potion.replace<cmp::Transform>(glm::vec3(0.3f, 0.4f, 0.0f), glm::vec3(0.0f),
 	                               glm::vec3(1.0f));
 
-	camera_A = active_scene.create("main camera");
+	camera_A = active_scene->create("main camera");
 	camera_A.add<cmp::Camera>(
 	    /*primary camera*/ true,
 	    /*fixed aspect ratio*/ true,
 	    /*camera type*/ SceneCamera::Type::PERSPECTIVE);
 
-	camera_B = active_scene.create("clip-space camera");
+	camera_B = active_scene->create("clip-space camera");
 	camera_B.add<cmp::Camera>(/*primary camera*/ false,
 	                          /*fixed aspect ratio*/ true);
 
@@ -82,7 +86,7 @@ DockspaceLayer::DockspaceLayer()
 
 	camera_A.add<cmp::NativeScript>().bind<ScriptedCameraController>();
 
-	scene_hierarchy.context = &active_scene;
+	scene_hierarchy.context = active_scene.get();
 
 	ImGuiIO &io = ImGui::GetIO();
 
@@ -102,7 +106,7 @@ void DockspaceLayer::on_update(Timestep dt)
 	{
 		framebuffer->resize(scene_view_size);
 		camera_controller.on_resize(scene_view_size.x, scene_view_size.y);
-		active_scene.on_viewport_resize(scene_view_size);
+		active_scene->on_viewport_resize(scene_view_size);
 	}
 
 	if (viewport_focused)
@@ -113,7 +117,7 @@ void DockspaceLayer::on_update(Timestep dt)
 	RenderCommand::set_clear_color({0.0f, 0.0f, 0.0f, 1});
 	RenderCommand::clear();
 
-	active_scene.on_update(dt);
+	active_scene->on_update(dt);
 
 	framebuffer->unbind();
 }
@@ -155,6 +159,49 @@ void DockspaceLayer::on_imgui_update()
 	{
 		if (ImGui::BeginMenu("options"))
 		{
+			auto new_scene = [&]()
+			{
+				// TODO(rafael): confirm save dialog.
+				// for now, only one scene can be run at the same time. in the
+				// future, make it so opening and creating scenes only opens
+				// them in a separate tab.
+				active_scene                      = std::make_shared<Scene>();
+				scene_hierarchy.context           = active_scene.get();
+				scene_hierarchy.selection_context = {};
+			};
+			ImGui::Separator();
+			if (ImGui::MenuItem("new", "Ctrl+N", false, p_open != NULL))
+				new_scene();
+
+			if (ImGui::MenuItem("open...", "Ctrl+O", false, p_open != NULL))
+			{
+				std::string filepath = utils::FileDialog::open_file(
+				    {{"sol scene", "scene,yaml"}},
+				    utils::current_working_directory("assets/scenes"));
+				if (!filepath.empty())
+				{
+					new_scene();
+					SceneSerializer serializer(active_scene);
+					serializer.deserialize_text(filepath);
+					active_scene->on_viewport_resize(scene_view_size);
+				}
+			}
+
+			ImGui::Separator();
+
+			if (ImGui::MenuItem("save as...", "Ctrl+Shift+S", false,
+			                    p_open != NULL))
+			{
+				std::string filepath = utils::FileDialog::save_file(
+				    "untitled", {{"sol scene", "scene,yaml"}},
+				    utils::current_working_directory("assets/scenes"));
+				if (!filepath.empty())
+				{
+					SceneSerializer serializer(active_scene);
+					serializer.serialize_text(filepath);
+				}
+			}
+
 			ImGui::Separator();
 
 			if (ImGui::MenuItem("close", NULL, false, p_open != NULL))
@@ -204,43 +251,6 @@ void DockspaceLayer::on_imgui_update()
 		    uintptr_t {framebuffer->get_color_attachment_renderer_id()});
 		ImGui::Image(texture_id, {scene_view_size.x, scene_view_size.y}, {0, 1},
 		             {1, 0});
-
-		ImGui::End();
-	}
-
-	{
-		ImGui::Begin("settings");
-
-		static bool primary_camera = true;
-		ImGui::Text("primary camera");
-		if (ImGui::Checkbox("##primary camera", &primary_camera))
-		{
-			camera_A.get<cmp::Camera>().primary = primary_camera;
-			camera_B.get<cmp::Camera>().primary = !primary_camera;
-		}
-
-		if (primary_camera)
-		{
-			ImGui::Text("main camera's position");
-			ImGui::DragFloat3(
-			    "##main camera's position",
-			    glm::value_ptr(camera_A.get<cmp::Transform>().translation));
-		}
-		else
-		{
-			ImGui::Text("clip-space camera's position");
-			ImGui::DragFloat3(
-			    "##clip-space camera's position",
-			    glm::value_ptr(camera_B.get<cmp::Transform>().translation));
-
-			SceneCamera &camera = camera_B.get<cmp::Camera>().camera;
-			float orthographic_projection_size = camera.orthographic_size;
-
-			ImGui::Text("orthographic projection size");
-			if (ImGui::DragFloat("##orthographic projection size",
-			                     &orthographic_projection_size))
-				camera.set_orthographic_size(orthographic_projection_size);
-		}
 
 		ImGui::End();
 	}

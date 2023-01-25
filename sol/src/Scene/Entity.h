@@ -161,6 +161,7 @@ public:
 	operator uint32_t() const { return static_cast<uint32_t>(handle); }
 
 	friend class Scene;
+	friend class SceneSerializer;
 	friend class ecl::pnl::SceneHierarchy;
 };
 

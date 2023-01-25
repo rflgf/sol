@@ -152,10 +152,11 @@ public:
 	                      const float rotation      = 0.0f,
 	                      const float tiling_factor = 1.0f);
 
-	static void
-	draw_quad(const glm::mat4 transform, std::shared_ptr<Texture> texture,
-	          const std::array<const glm::vec2, 4> texture_coordinates,
-	          const glm::vec4 tint, const float tiling_factor = 1.0f);
+	static void draw_quad(const glm::mat4 transform,
+	                      std::shared_ptr<Texture> texture,
+	                      const std::array<glm::vec2, 4> texture_coordinates,
+	                      const glm::vec4 tint,
+	                      const float tiling_factor = 1.0f);
 };
 
 } // namespace sol

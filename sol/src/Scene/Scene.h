@@ -29,6 +29,7 @@ public:
 	Entity create(std::string name = "entity");
 	void destroy(Entity entity);
 
+	friend class SceneSerializer;
 	friend class ecl::pnl::SceneHierarchy;
 };
 

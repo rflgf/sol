@@ -45,13 +45,14 @@ set(sol_src
 
     "Scene/Scene.cpp"
     "Scene/SceneCamera.cpp"
+    "Scene/SceneSerializer.cpp"
 )
 
 list(TRANSFORM sol_src PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/src/")
 
 add_library(sol STATIC ${sol_src})
 
-target_link_libraries(sol debug-trap glad glm EnTT imgui SDL2-static SDL2main spdlog stb_image)
+target_link_libraries(sol debug-trap glad glm EnTT imgui nfd SDL2-static SDL2main spdlog stb_image yaml-cpp)
 
 target_include_directories(sol
 PUBLIC
@@ -70,11 +71,6 @@ set_target_properties(sol PROPERTIES
                     RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_SOURCE_DIR}/bin/Release/sol
                     RUNTIME_OUTPUT_DIRECTORY_DIST ${CMAKE_SOURCE_DIR}/bin/Dist/sol
 )
-
-# target_precompile_headers(sol
-#   PRIVATE
-#     [[SDL.h]]
-# )
 
 target_compile_definitions(sol PRIVATE
                             _CRT_SECURE_NO_WARNINGS

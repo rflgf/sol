@@ -12,7 +12,7 @@ class DockspaceLayer : public Layer
 {
 	CameraController camera_controller;
 	std::shared_ptr<Framebuffer> framebuffer;
-	Scene active_scene;
+	std::shared_ptr<Scene> active_scene;
 	Entity camera_A;
 	Entity camera_B;
 	glm::vec2 scene_view_size;

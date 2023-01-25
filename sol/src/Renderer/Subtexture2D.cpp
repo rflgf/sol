@@ -3,11 +3,11 @@
 namespace sol
 {
 
-std::array<const glm::vec2, 4> map_coordinates(const glm::vec2 atlas_dimensions,
-                                               const glm::vec2 bottom_left,
-                                               const glm::vec2 top_right)
+std::array<glm::vec2, 4> map_coordinates(const glm::vec2 atlas_dimensions,
+                                         const glm::vec2 bottom_left,
+                                         const glm::vec2 top_right)
 {
-	return std::array<const glm::vec2, 4> {
+	return std::array<glm::vec2, 4> {
 	    glm::vec2 {bottom_left.x / atlas_dimensions.x,
 	               bottom_left.y / atlas_dimensions.y}, // bottom-left
 	    glm::vec2 {bottom_left.x / atlas_dimensions.x,
@@ -26,8 +26,8 @@ Subtexture2D::Subtexture2D(Atlas atlas, const glm::vec2 top_left,
 {
 }
 
-Subtexture2D::Subtexture2D(
-    Atlas atlas, const std::array<const glm::vec2, 4> texture_coordinates)
+Subtexture2D::Subtexture2D(Atlas atlas,
+                           std::array<glm::vec2, 4> texture_coordinates)
     : atlas(atlas)
     , texture_coordinates(texture_coordinates)
 {
@@ -53,7 +53,7 @@ Subtexture2D::from_coordinates(Atlas atlas, const glm::vec2 coordinates,
 	                     offset.y * (coordinates.y + subtexture_dimensions.y)};
 	glm::vec2 bottom_left {offset.x * coordinates.x, offset.y * coordinates.y};
 
-	std::array<const glm::vec2, 4> texture_coordinates = {
+	std::array<glm::vec2, 4> texture_coordinates = {
 	    bottom_left,                            // bottom-left
 	    glm::vec2 {bottom_left.x, top_right.y}, // top-left
 	    top_right,                              // top-right

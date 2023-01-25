@@ -139,10 +139,10 @@ void Renderer2D::Statistics::reset()
 	quad_count = 0;
 }
 
-void Renderer2D::draw_quad(
-    const glm::mat4 transform, std::shared_ptr<Texture> texture,
-    const std::array<const glm::vec2, 4> texture_coordinates,
-    const glm::vec4 tint, const float tiling_factor)
+void Renderer2D::draw_quad(const glm::mat4 transform,
+                           std::shared_ptr<Texture> texture,
+                           const std::array<glm::vec2, 4> texture_coordinates,
+                           const glm::vec4 tint, const float tiling_factor)
 {
 	if (data.quad_index_count >= Data::MAX_INDICES_PER_BATCH)
 	{
@@ -361,7 +361,7 @@ void Renderer2D::draw_quad(const glm::mat4 transform,
                            std::shared_ptr<Texture> texture,
                            const glm::vec4 tint, const float tiling_factor)
 {
-	const std::array<const glm::vec2, 4> texture_coordinates {
+	const std::array<glm::vec2, 4> texture_coordinates {
 	    glm::vec2 {0.0f, 0.0f},
 	    glm::vec2 {0.0f, 1.0f},
 	    glm::vec2 {1.0f, 1.0f},

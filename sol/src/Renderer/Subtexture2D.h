@@ -22,21 +22,22 @@ public:
 	    const glm::vec2 subtexture_dimensions = {1, 1} /* in atlas units */);
 
 	Atlas get_atlas() const { return atlas; }
-	const std::array<const glm::vec2, 4> get_texture_coordinates() const
+	std::array<glm::vec2, 4> get_texture_coordinates() const
 	{
 		return texture_coordinates;
 	}
 
 private:
-	Subtexture2D(Atlas atlas,
-	             const std::array<const glm::vec2, 4> texture_coordinates);
+	Subtexture2D(Atlas atlas, std::array<glm::vec2, 4> texture_coordinates);
 
 	Atlas atlas;
 	// TODO(rafael): maybe use smaller floats for the coordinates since they
 	// don't need to be high-res anyway? this might help with keeping the
 	// instacing-friendly (which is nice if we're to keep the draw_quad API
 	// use exclusively subtextures).
-	std::array<const glm::vec2, 4> texture_coordinates;
+	std::array<glm::vec2, 4> texture_coordinates;
+
+	friend class SceneSerializer;
 };
 
 } // namespace sol

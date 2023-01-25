@@ -8,7 +8,9 @@
 namespace sol::platform
 {
 
+// Timestep --------------------------------------------------------------------
 Timestep Clock::tick() const { return SDL_GetTicks64(); }
+// end of Timestep -------------------------------------------------------------
 
 } // namespace sol::platform
 

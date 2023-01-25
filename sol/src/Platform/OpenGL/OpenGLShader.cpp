@@ -19,7 +19,7 @@ OpenGLShader::OpenGLShader(const std::string &filepath)
 	                                             : last_dot - last_slash;
 	name         = filepath.substr(last_slash, count);
 
-	std::string source = utils::read_from_file(filepath);
+	std::string source = utils::read_from_file(filepath, std::ios::binary);
 	std::unordered_map<Shader::Step, std::string> steps = parse(source);
 	SOL_CORE_ASSERT(steps.contains(Step::VERTEX) &&
 	                    steps.contains(Step::FRAGMENT),
