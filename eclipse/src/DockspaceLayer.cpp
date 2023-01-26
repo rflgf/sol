@@ -1,14 +1,5 @@
 #include "DockspaceLayer.h"
 
-#include "ImGuiUtils.h"
-#include "ImGuizmo.h"
-#include "KeyCodes.h"
-#include "Scene/Components.h"
-#include "Scene/Scene.h"
-#include "Scene/SceneCamera.h"
-#include "Scene/SceneSerializer.h"
-#include "Utils.h"
-
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <imgui.h>
@@ -25,6 +16,7 @@ DockspaceLayer::DockspaceLayer()
 	specification.width  = 1280;
 	specification.height = 720;
 	framebuffer          = Framebuffer::create(specification);
+	camera               = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
 
 	Entity mage = active_scene->create("mage");
 	mage.add<cmp::SpriteRenderer>(Subtexture2D::from_coordinates(
@@ -34,15 +26,11 @@ DockspaceLayer::DockspaceLayer()
 	mage.replace<cmp::Transform>(glm::vec3(0.0f), glm::vec3(0.0f),
 	                             glm::vec3(0.5f, 0.5f, 1.0f));
 
-	camera_A = active_scene->create("main camera");
+	Entity camera_A = active_scene->create("main camera");
 	camera_A.add<cmp::Camera>(
 	    /*primary camera*/ true,
 	    /*fixed aspect ratio*/ true,
 	    /*camera type*/ SceneCamera::Type::PERSPECTIVE);
-
-	camera_B = active_scene->create("clip-space camera");
-	camera_B.add<cmp::Camera>(/*primary camera*/ false,
-	                          /*fixed aspect ratio*/ true);
 
 	class ScriptedCameraController : public ScriptableEntity
 	{
@@ -104,19 +92,23 @@ void DockspaceLayer::on_update(Timestep dt)
 	    specification.height != scene_view_size.y)
 	{
 		framebuffer->resize(scene_view_size);
-		camera_controller.on_resize(scene_view_size.x, scene_view_size.y);
+		// camera_controller.on_resize(scene_view_size.x, scene_view_size.y);
+		camera.set_viewport_size(scene_view_size.x, scene_view_size.y);
 		active_scene->on_viewport_resize(scene_view_size);
 	}
 
-	if (viewport_focused)
-		camera_controller.on_update(dt);
+	// if (viewport_focused)
+	// 	camera_controller.on_update(dt);
+
+	camera.on_update(dt);
 
 	framebuffer->bind();
 
 	RenderCommand::set_clear_color({0.0f, 0.0f, 0.0f, 1});
 	RenderCommand::clear();
 
-	active_scene->on_update(dt);
+	// active_scene->on_update(dt);
+	active_scene->on_update_editor(dt, camera);
 
 	framebuffer->unbind();
 }
@@ -256,65 +248,42 @@ void DockspaceLayer::on_imgui_update()
 		{
 			// get active camera. TODO(rafael): fix this when we have a
 			// proper editor camera.
-			Camera *main_camera = nullptr;
-			glm::mat4 camera_transform;
+			bool should_snap = Input::is_key_pressed(KeyCode::SOL_LCTRL);
+			float snap =
+			    gizmo_operation == ImGuizmo::OPERATION::ROTATE ? 45.0f : 0.5f;
+			float snap_values[] = {snap, snap, snap};
+
+			ImGuizmo::SetOrthographic(false);
+			ImGuizmo::SetDrawlist();
+
+			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y,
+			                  ImGui::GetWindowWidth(),
+			                  ImGui::GetWindowHeight());
+
+			cmp::Transform &selected_entitys_transform_component =
+			    selected_entity.get<cmp::Transform>();
+			glm::mat4 transform   = selected_entitys_transform_component;
+			glm::mat4 camera_view = camera.get_view_matrix();
+
+			ImGuizmo::SetGizmoSizeClipSpace(1.0f / camera.get_distance());
+			ImGuizmo::Manipulate(
+			    glm::value_ptr(camera_view), glm::value_ptr(camera.projection),
+			    gizmo_operation, ImGuizmo::LOCAL, glm::value_ptr(transform),
+			    nullptr, should_snap ? snap_values : nullptr);
+
+			if (ImGuizmo::IsUsing())
 			{
-				auto group =
-				    active_scene->registry.group<cmp::Transform, cmp::Camera>();
-				for (entt::entity entity : group)
-				{
-					auto [transform, camera] =
-					    group.get<cmp::Transform, cmp::Camera>(entity);
-					if (camera.primary)
-					{
-						main_camera      = &camera.camera;
-						camera_transform = transform;
-						break;
-					}
-				}
-			}
-
-			if (main_camera)
-			{
-				bool should_snap = Input::is_key_pressed(KeyCode::SOL_LCTRL);
-				float snap = gizmo_operation == ImGuizmo::OPERATION::ROTATE
-				                 ? 45.0f
-				                 : 0.5f;
-				float snap_values[] = {snap, snap, snap};
-
-				ImGuizmo::SetOrthographic(false);
-				ImGuizmo::SetDrawlist();
-
-				ImGuizmo::SetRect(
-				    ImGui::GetWindowPos().x, ImGui::GetWindowPos().y,
-				    ImGui::GetWindowWidth(), ImGui::GetWindowHeight());
-
-				cmp::Transform &selected_entitys_transform_component =
-				    selected_entity.get<cmp::Transform>();
-				glm::mat4 transform   = selected_entitys_transform_component;
-				glm::mat4 camera_view = glm::inverse(camera_transform);
-
-				ImGuizmo::Manipulate(glm::value_ptr(camera_view),
-				                     glm::value_ptr(main_camera->projection),
-				                     gizmo_operation, ImGuizmo::LOCAL,
-				                     glm::value_ptr(transform), nullptr,
-				                     should_snap ? snap_values : nullptr);
-
-				if (ImGuizmo::IsUsing())
-				{
-					glm::vec3 rotation =
-					    selected_entitys_transform_component.rotation;
-					ImGuizmo::DecomposeMatrixToComponents(
-					    glm::value_ptr(transform),
-					    glm::value_ptr(
-					        selected_entitys_transform_component.translation),
-					    glm::value_ptr(rotation),
-					    glm::value_ptr(
-					        selected_entitys_transform_component.scale));
-					selected_entitys_transform_component.rotation = {
-					    glm::radians(rotation.x), glm::radians(rotation.y),
-					    glm::radians(rotation.z)};
-				}
+				glm::vec3 rotation =
+				    selected_entitys_transform_component.rotation;
+				ImGuizmo::DecomposeMatrixToComponents(
+				    glm::value_ptr(transform),
+				    glm::value_ptr(
+				        selected_entitys_transform_component.translation),
+				    glm::value_ptr(rotation),
+				    glm::value_ptr(selected_entitys_transform_component.scale));
+				selected_entitys_transform_component.rotation = {
+				    glm::radians(rotation.x), glm::radians(rotation.y),
+				    glm::radians(rotation.z)};
 			}
 		}
 
@@ -326,8 +295,10 @@ void DockspaceLayer::on_imgui_update()
 
 void DockspaceLayer::on_event(Event &event)
 {
+	// if (!event.handled)
+	// 	camera_controller.on_event(event);
 	if (!event.handled)
-		camera_controller.on_event(event);
+		camera.on_event(event);
 }
 
 } // namespace sol::ecl

@@ -77,10 +77,11 @@ public:
 	bool is_in_category(Event::Category c) { return get_category_flags() & c; }
 };
 
-inline std::ostream &operator<<(std::ostream &os, const Event &e)
-{
-	return os << e.to_string();
-}
+// FIXME(rafael): this nukes EVERYTHING:
+// inline std::ostream &operator<<(std::ostream &os, const Event &e)
+// {
+// 	return os << e.to_string();
+// }
 
 #define EVENT_CLASS_TYPE(type)                                                 \
 	static Type get_static_type()                                              \

@@ -2,13 +2,14 @@
 
 #include "Entity.h"
 #include "Scene/Components.h"
-#include "glm/ext/scalar_constants.hpp"
-#include "yaml-cpp/node/parse.h"
 
 #include <fstream>
+#include <glm/ext/scalar_constants.hpp>
 #include <yaml-cpp/emitter.h>
 #include <yaml-cpp/emittermanip.h>
+#include <yaml-cpp/node/parse.h>
 #include <yaml-cpp/yaml.h>
+
 
 // forward declarations --------------------------------------------------------
 YAML::Emitter &operator<<(YAML::Emitter &out, const glm::vec4 v);

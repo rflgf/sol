@@ -1,6 +1,7 @@
 #pragma once
 
 // #include "Components.h"
+#include "Renderer/EditorCamera.h"
 #include "Timestep.h"
 
 #include <entt/entt.hpp>
@@ -23,7 +24,8 @@ public:
 	Scene();
 	~Scene();
 
-	void on_update(Timestep dt);
+	void on_update_runtime(Timestep dt);
+	void on_update_editor(Timestep dt, EditorCamera camera);
 	void on_viewport_resize(glm::vec2 new_size);
 
 	Entity create(std::string name = "entity");

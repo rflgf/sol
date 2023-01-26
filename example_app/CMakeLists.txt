@@ -24,4 +24,12 @@ set_target_properties(example_app PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_SOURCE_DIR}/bin/Release/example_app
         RUNTIME_OUTPUT_DIRECTORY_DIST    ${CMAKE_SOURCE_DIR}/bin/Dist/example_app
 )
+
+add_custom_command(TARGET example_app POST_BUILD
+                   COMMAND ${CMAKE_COMMAND} -E copy_directory
+                       ${CMAKE_CURRENT_SOURCE_DIR}/assets/ $<TARGET_FILE_DIR:eclipse>/assets/)
+
+add_custom_command(TARGET example_app POST_BUILD
+                    COMMAND ${CMAKE_COMMAND} -E copy_directory
+                        ${CMAKE_CURRENT_SOURCE_DIR}/assets/ ${CMAKE_CURRENT_BINARY_DIR}/assets/)
 # /example app #

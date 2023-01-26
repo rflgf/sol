@@ -16,7 +16,7 @@ Scene::Scene() {}
 
 Scene::~Scene() {}
 
-void Scene::on_update(Timestep dt)
+void Scene::on_update_runtime(Timestep dt)
 {
 	registry.view<cmp::NativeScriptContainer>().each(
 	    [&](entt::entity entity, cmp::NativeScriptContainer &container)
@@ -77,10 +77,26 @@ void Scene::on_update(Timestep dt)
 	}
 }
 
+void Scene::on_update_editor(Timestep dt, EditorCamera camera)
+{
+	Renderer2D::begin_scene(camera);
+
+	auto group = registry.view<cmp::Transform, cmp::SpriteRenderer>();
+	for (auto entity : group)
+	{
+		auto [transform, sprite] =
+		    group.get<cmp::Transform, cmp::SpriteRenderer>(entity);
+
+		Renderer2D::draw_quad(transform, sprite, sprite.color);
+	}
+
+	Renderer2D::end_scene();
+}
+
 void Scene::on_viewport_resize(glm::vec2 new_size)
 {
 	// resize non-fixed aspect ratio cameras.
-	auto group = registry.group<cmp::Transform, cmp::Camera>();
+	auto group = registry.view<cmp::Transform, cmp::Camera>();
 	for (entt::entity entity : group)
 	{
 		auto [transform, camera] =

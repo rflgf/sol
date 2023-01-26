@@ -35,4 +35,12 @@ target_compile_definitions(eclipse PRIVATE
                             $<$<CONFIG:Release>:ECL_RELEASE>
                             $<$<CONFIG:Dist>:ECL_DIST>
 )
+
+add_custom_command(TARGET eclipse POST_BUILD
+                   COMMAND ${CMAKE_COMMAND} -E copy_directory
+                       ${CMAKE_CURRENT_SOURCE_DIR}/assets/ $<TARGET_FILE_DIR:eclipse>/assets/)
+
+add_custom_command(TARGET eclipse POST_BUILD
+                    COMMAND ${CMAKE_COMMAND} -E copy_directory
+                        ${CMAKE_CURRENT_SOURCE_DIR}/assets/ ${CMAKE_CURRENT_BINARY_DIR}/assets/)
 # /eclipse #

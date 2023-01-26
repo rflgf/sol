@@ -316,23 +316,23 @@ enum MouseButtonCode
 	SOL_MB_X2MASK = SDL_BUTTON_X2MASK
 };
 
-inline std::ostream &operator<<(std::ostream &os, const MouseButtonCode &mbc)
-{
-	switch (mbc)
-	{
-	case MouseButtonCode::SOL_MB_LEFT:
-		return os << "left button";
-	case MouseButtonCode::SOL_MB_MIDDLE:
-		return os << "middle button";
-	case MouseButtonCode::SOL_MB_RIGHT:
-		return os << "right button";
-	case MouseButtonCode::SOL_MB_X1:
-		return os << "x1 button";
-	case MouseButtonCode::SOL_MB_X2:
-		return os << "x2 button";
-	default:
-		return os << "unkown button";
-	};
-}
+// inline std::ostream &operator<<(std::ostream &os, const MouseButtonCode &mbc)
+// {
+// 	switch (mbc)
+// 	{
+// 	case MouseButtonCode::SOL_MB_LEFT:
+// 		return os << "left button";
+// 	case MouseButtonCode::SOL_MB_MIDDLE:
+// 		return os << "middle button";
+// 	case MouseButtonCode::SOL_MB_RIGHT:
+// 		return os << "right button";
+// 	case MouseButtonCode::SOL_MB_X1:
+// 		return os << "x1 button";
+// 	case MouseButtonCode::SOL_MB_X2:
+// 		return os << "x2 button";
+// 	default:
+// 		return os << "unkown button";
+// 	};
+// }
 
 } // namespace sol

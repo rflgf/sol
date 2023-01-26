@@ -101,6 +101,15 @@ void Renderer2D::begin_scene(const Camera &camera, glm::mat4 &transform)
 	start_batch();
 }
 
+void Renderer2D::begin_scene(const EditorCamera &camera)
+{
+	data.tinted_texture_shader->bind();
+	data.tinted_texture_shader->set_matrix_4("view_projection",
+	                                         camera.get_view_projection());
+
+	start_batch();
+}
+
 void Renderer2D::end_scene() { flush_batch(); }
 
 void Renderer2D::start_batch()

@@ -3,12 +3,14 @@
 #include "Buffers.h"
 #include "Camera.h"
 #include "OrthographicCamera.h"
+#include "Renderer/EditorCamera.h"
 #include "Shader.h"
 #include "Subtexture2D.h"
 #include "Texture.h"
 
 #include <glm/glm.hpp>
 #include <memory>
+
 
 namespace sol
 {
@@ -69,6 +71,7 @@ public:
 
 	static void begin_scene(const OrthographicCamera &camera);
 	static void begin_scene(const Camera &camera, glm::mat4 &transform);
+	static void begin_scene(const EditorCamera &camera);
 	static void end_scene();
 	static void start_batch();
 	static void flush_batch();

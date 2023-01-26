@@ -33,6 +33,7 @@ set(sol_src
     "Platform/Windows/WindowsWindow.cpp"
 
     "Renderer/Buffers.cpp"
+    "Renderer/EditorCamera.cpp"
     "Renderer/Framebuffer.cpp"
     "Renderer/OrthographicCamera.cpp"
     "Renderer/RenderCommand.cpp"

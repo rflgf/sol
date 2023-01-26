@@ -23,8 +23,6 @@ void SceneHierarchy::on_imgui_update()
 	SOL_CORE_ASSERT(context, "scene hierarchy context not set.");
 
 	{
-		ImGui::ShowDemoWindow();
-
 		ImGui::Begin("scene hierarchy");
 
 		context->registry.each(
