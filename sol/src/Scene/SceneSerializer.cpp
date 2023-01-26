@@ -10,7 +10,6 @@
 #include <yaml-cpp/node/parse.h>
 #include <yaml-cpp/yaml.h>
 
-
 // forward declarations --------------------------------------------------------
 YAML::Emitter &operator<<(YAML::Emitter &out, const glm::vec4 v);
 YAML::Emitter &operator<<(YAML::Emitter &out, const glm::vec3 v);
@@ -138,6 +137,8 @@ bool SceneSerializer::deserialize_text(const std::string &filepath)
 				    serialized_camera["orthographic near"].as<float>();
 				camera_data.orthographic_far =
 				    serialized_camera["orthographic far"].as<float>();
+
+				camera_data.recalculate_projection();
 			}
 		}
 	}
@@ -198,7 +199,7 @@ void SceneSerializer::serialize_entity(YAML::Emitter &out, Entity e)
 
 		// case: has texture.
 		if (*sprite_renderer.sprite.get_atlas() !=
-		    *Renderer2D::data.white_texture)
+		    *Renderer2D::get_white_texture())
 		{
 			out << YAML::Key << "texture"
 			    << "path/to/resource";

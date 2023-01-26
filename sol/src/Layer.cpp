@@ -9,6 +9,4 @@ Layer::Layer(const std::string name, bool enabled)
 {
 }
 
-Layer::~Layer() {}
-
 } // namespace sol

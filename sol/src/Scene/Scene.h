@@ -18,9 +18,10 @@ class Entity;
 
 class Scene
 {
-public:
+private:
 	entt::registry registry;
 
+public:
 	Scene();
 	~Scene();
 
@@ -31,6 +32,7 @@ public:
 	Entity create(std::string name = "entity");
 	void destroy(Entity entity);
 
+	friend class Entity;
 	friend class SceneSerializer;
 	friend class ecl::pnl::SceneHierarchy;
 };

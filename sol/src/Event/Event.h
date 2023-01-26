@@ -17,26 +17,28 @@ public:
 	enum class Type
 	{
 		// clang-format off
-		NONE = 0,
+		SOL_NONE = 0,
 
-		APP_RENDER, APP_TICK, APP_UPDATE,
+		SOL_APP_RENDER, SOL_APP_TICK, SOL_APP_UPDATE,
 
-		KEY_PRESSED, KEY_RELEASED, KEY_TYPED,
+		SOL_KEY_PRESSED, SOL_KEY_RELEASED, SOL_KEY_TYPED,
 
-		MOUSE_BUTTON_PRESSED, MOUSE_BUTTON_RELEASED, MOUSE_MOVED, MOUSE_SCROLLED,
+		SOL_MOUSE_BUTTON_PRESSED, SOL_MOUSE_BUTTON_RELEASED,
+		SOL_MOUSE_MOVED, SOL_MOUSE_SCROLLED,
 
-		WINDOW_CLOSE, WINDOW_FOCUS, WINDOW_LOST_FOCUS, WINDOW_MOVED, WINDOW_RESIZE
+		SOL_WINDOW_CLOSE, SOL_WINDOW_FOCUS, SOL_WINDOW_LOST_FOCUS,
+		SOL_WINDOW_MOVED, SOL_WINDOW_RESIZE
 		// clang-format on
 	};
 
 	enum Category : uint16_t
 	{
-		NONE         = 0,
-		APPLICATION  = BIT(0),
-		INPUT        = BIT(1),
-		KEYBOARD     = BIT(2),
-		MOUSE        = BIT(3),
-		MOUSE_BUTTON = BIT(4)
+		SOL_NONE         = 0,
+		SOL_APPLICATION  = SOL_BIT(0),
+		SOL_INPUT        = SOL_BIT(1),
+		SOL_KEYBOARD     = SOL_BIT(2),
+		SOL_MOUSE        = SOL_BIT(3),
+		SOL_MOUSE_BUTTON = SOL_BIT(4)
 	};
 
 	class Dispatcher
@@ -83,7 +85,7 @@ public:
 // 	return os << e.to_string();
 // }
 
-#define EVENT_CLASS_TYPE(type)                                                 \
+#define SOL_EVENT_CLASS_TYPE(type)                                             \
 	static Type get_static_type()                                              \
 	{                                                                          \
 		return Type::type;                                                     \
@@ -97,7 +99,7 @@ public:
 		return #type;                                                          \
 	}
 
-#define EVENT_CLASS_CATEGORY(category)                                         \
+#define SOL_EVENT_CLASS_CATEGORY(category)                                     \
 	virtual uint16_t get_category_flags() const override                       \
 	{                                                                          \
 		return category;                                                       \

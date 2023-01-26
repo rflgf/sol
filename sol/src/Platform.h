@@ -7,8 +7,13 @@ namespace sol::platform
 
 struct Clock
 {
-	virtual Timestep tick() const;
+private:
 	static Clock clock;
+
+public:
+	virtual Timestep tick() const;
+
+	static Clock &get_clock() { return clock; }
 };
 
 } // namespace sol::platform

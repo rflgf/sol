@@ -9,6 +9,7 @@ namespace sol
 
 class CameraController
 {
+private:
 	float aspect_ratio;
 	float zoom;
 	float translation_speed;

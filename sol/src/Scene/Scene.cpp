@@ -56,7 +56,8 @@ void Scene::on_update_runtime(Timestep dt)
 
 	if (main_camera)
 	{
-		Renderer2D::begin_scene(main_camera->projection, camera_transform);
+		Renderer2D::begin_scene(main_camera->get_projection_matrix(),
+		                        camera_transform);
 
 		auto view = registry.view<cmp::Transform, cmp::SpriteRenderer>();
 

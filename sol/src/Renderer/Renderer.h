@@ -19,8 +19,10 @@ public:
 		glm::mat4 view_projection_matrix;
 	};
 
+private:
 	static SceneData *data;
 
+public:
 	static void init();
 	static void deinit();
 

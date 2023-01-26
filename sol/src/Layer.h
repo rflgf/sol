@@ -16,7 +16,7 @@ protected:
 
 public:
 	Layer(const std::string name = "Layer", bool enabled = true);
-	virtual ~Layer();
+	virtual ~Layer() = default;
 
 	virtual void on_attach() {}
 	virtual void on_detatch() {}
@@ -27,7 +27,8 @@ public:
 	virtual void disable() { enabled = false; }
 	bool is_enabled() const { return enabled; }
 
-	const std::string &get_name() { return debug_name; }
+	std::string &get_name() { return debug_name; }
+	std::string get_name() const { return debug_name; }
 };
 
 } // namespace sol

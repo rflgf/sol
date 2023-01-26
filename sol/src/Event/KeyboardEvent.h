@@ -20,7 +20,7 @@ protected:
 public:
 	KeyCode get_key_code() const { return key_code; }
 
-	EVENT_CLASS_CATEGORY(INPUT | KEYBOARD)
+	SOL_EVENT_CLASS_CATEGORY(SOL_INPUT | SOL_KEYBOARD)
 };
 
 struct KeyPressedEvent : public KeyboardEvent
@@ -46,7 +46,7 @@ public:
 		return ss.str();
 	}
 
-	EVENT_CLASS_TYPE(KEY_PRESSED)
+	SOL_EVENT_CLASS_TYPE(SOL_KEY_PRESSED)
 };
 
 struct KeyReleasedEvent : public KeyboardEvent
@@ -65,7 +65,7 @@ public:
 		return ss.str();
 	}
 
-	EVENT_CLASS_TYPE(KEY_RELEASED)
+	SOL_EVENT_CLASS_TYPE(SOL_KEY_RELEASED)
 };
 
 struct KeyTypedEvent : public KeyboardEvent
@@ -83,7 +83,7 @@ public:
 		return ss.str();
 	}
 
-	EVENT_CLASS_TYPE(KEY_TYPED)
+	SOL_EVENT_CLASS_TYPE(SOL_KEY_TYPED)
 };
 
 } // namespace sol

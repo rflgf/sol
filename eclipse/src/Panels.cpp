@@ -171,7 +171,7 @@ void SceneHierarchy::draw_entity_properties(Entity entity)
 			                                         "perspective"};
 			const char *current_projection_type_string =
 			    projection_type_strings[static_cast<int>(
-			        camera.projection_type)];
+			        camera.get_projection_type())];
 			ImGui::Text("projection type");
 			if (ImGui::BeginCombo("##projection type",
 			                      current_projection_type_string))
@@ -179,7 +179,7 @@ void SceneHierarchy::draw_entity_properties(Entity entity)
 				for (int i = 0; i < 2; ++i)
 				{
 					bool selected =
-					    static_cast<int>(camera.projection_type) == i;
+					    static_cast<int>(camera.get_projection_type()) == i;
 					if (selected)
 						ImGui::SetItemDefaultFocus();
 					if (ImGui::Selectable(projection_type_strings[i], selected))
@@ -193,30 +193,33 @@ void SceneHierarchy::draw_entity_properties(Entity entity)
 			if (ImGui::Checkbox("primary camera", &primary_camera))
 				component.primary = !component.primary;
 
-			if (camera.projection_type == SceneCamera::Type::ORTHOGRAPHIC)
+			if (camera.get_projection_type() == SceneCamera::Type::ORTHOGRAPHIC)
 			{
-				if (diu::drag_float("size", &camera.orthographic_size))
-					camera.recalculate_projection();
-				if (diu::drag_float("near clip", &camera.orthographic_near))
-					camera.recalculate_projection();
-				if (diu::drag_float("far clip", &camera.orthographic_far))
-					camera.recalculate_projection();
+				float orthographic_size = camera.get_orthographic_size();
+				float orthographic_near = camera.get_orthographic_near();
+				float orthographic_far  = camera.get_orthographic_far();
+
+				if (diu::drag_float("size", &orthographic_size))
+					camera.set_orthographic_size(orthographic_size);
+				if (diu::drag_float("near clip", &orthographic_near))
+					camera.set_orthographic_near(orthographic_near);
+				if (diu::drag_float("far clip", &orthographic_far))
+					camera.set_orthographic_far(orthographic_far);
 			}
 			else
 			{
-				float vertical_field_of_view =
-				    glm::degrees(camera.perspective_vertical_field_of_view);
-				ImGui::Text("vertical field of view");
-				if (ImGui::DragFloat("##vertical field of view",
-				                     &vertical_field_of_view))
-					camera.set_vertical_field_of_view(
-					    glm::radians(vertical_field_of_view));
-				ImGui::Text("near clip");
-				if (ImGui::DragFloat("##near clip", &camera.perspective_near))
-					camera.recalculate_projection();
-				ImGui::Text("far clip");
-				if (ImGui::DragFloat("##far clip", &camera.perspective_far))
-					camera.recalculate_projection();
+				float vertical_fov = glm::degrees(
+				    camera.get_perspective_vertical_field_of_view());
+				float perspective_near = camera.get_perspective_near();
+				float perspective_far  = camera.get_perspective_far();
+
+				if (diu::drag_float("vertical field of view", &vertical_fov))
+					camera.set_perspective_vertical_field_of_view(
+					    glm::radians(vertical_fov));
+				if (diu::drag_float("near clip", &perspective_near))
+					camera.set_perspective_near(perspective_near);
+				if (diu::drag_float("far clip", &perspective_far))
+					camera.set_perspective_far(perspective_far);
 			}
 
 			bool fixed_aspect_ratio = component.fixed_aspect_ratio;

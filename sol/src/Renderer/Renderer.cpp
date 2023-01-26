@@ -20,7 +20,7 @@ void Renderer::deinit() { Renderer2D::deinit(); }
 
 void Renderer::begin_scene(const OrthographicCamera &camera)
 {
-	data->view_projection_matrix = camera.projection_view_matrix;
+	data->view_projection_matrix = camera.get_projection_view_matrix();
 }
 
 void Renderer::end_scene() {}

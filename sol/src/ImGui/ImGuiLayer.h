@@ -10,9 +10,10 @@ namespace sol
 
 class ImGuiLayer
 {
-public:
+private:
 	bool block_events = true;
 
+public:
 	void begin();
 	void end();
 
@@ -21,6 +22,9 @@ public:
 	void on_event(Event &event);
 
 	void load_style_settings();
+
+	void set_block_events(bool block) { block_events = block; }
+	bool get_block_events() const { return block_events; }
 };
 
 } // namespace sol

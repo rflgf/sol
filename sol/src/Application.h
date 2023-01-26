@@ -25,10 +25,9 @@ protected:
 	bool running = true;
 	std::unique_ptr<Window> window;
 	LayerStack layer_stack;
-
-public:
 	ImGuiLayer imgui_layer;
 
+public:
 	Application();
 	virtual ~Application();
 
@@ -41,6 +40,8 @@ public:
 
 	static Application &get() { return *application_instance; }
 	Window *get_window() const { return window.get(); }
+	const ImGuiLayer &get_imgui_layer() const { return imgui_layer; }
+	ImGuiLayer &get_imgui_layer() { return imgui_layer; }
 };
 
 Application *GetApplication();

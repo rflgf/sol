@@ -37,7 +37,7 @@ void Application::run()
 	while (running)
 	{
 		previous_dt = now;
-		now         = platform::Clock::clock.tick();
+		now         = platform::Clock::get_clock().tick();
 		Timestep dt = now - previous_dt;
 
 		RenderCommand::set_clear_color({0.3f, 0.6f, 0.9f, 1.0f});

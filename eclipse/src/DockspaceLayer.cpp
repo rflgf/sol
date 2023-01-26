@@ -213,15 +213,17 @@ void DockspaceLayer::on_imgui_update()
 	{
 		ImGui::Begin("statistics");
 
-		ImGui::Text("draw calls: %d", Renderer2D::data.statistics.draw_calls);
-		ImGui::Text("quad count: %d", Renderer2D::data.statistics.quad_count);
+		ImGui::Text("draw calls: %d",
+		            Renderer2D::get_statistics().get_draw_calls());
+		ImGui::Text("quad count: %d",
+		            Renderer2D::get_statistics().get_quad_count());
 		ImGui::Text("index count: %d",
-		            Renderer2D::data.statistics.total_index_count());
+		            Renderer2D::get_statistics().total_index_count());
 		ImGui::Text("vertex count: %d",
-		            Renderer2D::data.statistics.total_vertex_count());
+		            Renderer2D::get_statistics().total_vertex_count());
 
 		ImGui::End();
-		Renderer2D::data.statistics.reset();
+		Renderer2D::get_statistics().reset();
 	}
 
 	{
@@ -230,8 +232,8 @@ void DockspaceLayer::on_imgui_update()
 		viewport_focused = ImGui::IsWindowFocused();
 		viewport_hovered = ImGui::IsWindowHovered();
 
-		Application::get().imgui_layer.block_events =
-		    !viewport_focused && !viewport_hovered;
+		Application::get().get_imgui_layer().set_block_events(
+		    !viewport_focused && !viewport_hovered);
 
 		ImVec2 available_size = ImGui::GetContentRegionAvail();
 		glm::vec2 as {available_size.x, available_size.y};
@@ -266,10 +268,11 @@ void DockspaceLayer::on_imgui_update()
 			glm::mat4 camera_view = camera.get_view_matrix();
 
 			ImGuizmo::SetGizmoSizeClipSpace(1.0f / camera.get_distance());
-			ImGuizmo::Manipulate(
-			    glm::value_ptr(camera_view), glm::value_ptr(camera.projection),
-			    gizmo_operation, ImGuizmo::LOCAL, glm::value_ptr(transform),
-			    nullptr, should_snap ? snap_values : nullptr);
+			ImGuizmo::Manipulate(glm::value_ptr(camera_view),
+			                     glm::value_ptr(camera.get_projection_matrix()),
+			                     gizmo_operation, ImGuizmo::LOCAL,
+			                     glm::value_ptr(transform), nullptr,
+			                     should_snap ? snap_values : nullptr);
 
 			if (ImGuizmo::IsUsing())
 			{

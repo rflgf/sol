@@ -11,7 +11,6 @@
 #include <glm/glm.hpp>
 #include <memory>
 
-
 namespace sol
 {
 
@@ -34,6 +33,8 @@ public:
 
 		uint32_t total_vertex_count() const;
 		uint32_t total_index_count() const;
+		uint32_t get_draw_calls() const;
+		uint32_t get_quad_count() const;
 		void reset();
 	};
 
@@ -64,8 +65,10 @@ public:
 		Statistics statistics;
 	};
 
+private:
 	static Data data;
 
+public:
 	static void init();
 	static void deinit();
 
@@ -160,6 +163,9 @@ public:
 	                      const std::array<glm::vec2, 4> texture_coordinates,
 	                      const glm::vec4 tint,
 	                      const float tiling_factor = 1.0f);
+
+	static std::shared_ptr<Texture2D> get_white_texture();
+	static Statistics &get_statistics();
 };
 
 } // namespace sol

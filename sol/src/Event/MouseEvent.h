@@ -20,7 +20,7 @@ protected:
 public:
 	MouseButtonCode get_button_code() const { return button_code; }
 
-	EVENT_CLASS_CATEGORY(INPUT | MOUSE | MOUSE_BUTTON)
+	SOL_EVENT_CLASS_CATEGORY(SOL_INPUT | SOL_MOUSE | SOL_MOUSE_BUTTON)
 };
 
 struct MouseButtonPressedEvent : public MouseButtonEvent
@@ -38,7 +38,7 @@ public:
 		return ss.str();
 	}
 
-	EVENT_CLASS_TYPE(MOUSE_BUTTON_PRESSED)
+	SOL_EVENT_CLASS_TYPE(SOL_MOUSE_BUTTON_PRESSED)
 };
 
 struct MouseButtonReleasedEvent : public MouseButtonEvent
@@ -56,7 +56,7 @@ public:
 		return ss.str();
 	}
 
-	EVENT_CLASS_TYPE(MOUSE_BUTTON_RELEASED)
+	SOL_EVENT_CLASS_TYPE(SOL_MOUSE_BUTTON_RELEASED)
 };
 
 struct MouseMovedEvent : public Event
@@ -81,8 +81,8 @@ public:
 		return ss.str();
 	}
 
-	EVENT_CLASS_CATEGORY(INPUT | MOUSE)
-	EVENT_CLASS_TYPE(MOUSE_MOVED)
+	SOL_EVENT_CLASS_CATEGORY(SOL_INPUT | SOL_MOUSE)
+	SOL_EVENT_CLASS_TYPE(SOL_MOUSE_MOVED)
 };
 
 struct MouseScrolledEvent : public Event
@@ -109,8 +109,8 @@ public:
 		return ss.str();
 	}
 
-	EVENT_CLASS_CATEGORY(INPUT | MOUSE)
-	EVENT_CLASS_TYPE(MOUSE_SCROLLED)
+	SOL_EVENT_CLASS_CATEGORY(SOL_INPUT | SOL_MOUSE)
+	SOL_EVENT_CLASS_TYPE(SOL_MOUSE_SCROLLED)
 };
 
 } // namespace sol

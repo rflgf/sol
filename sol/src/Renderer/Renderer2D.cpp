@@ -84,8 +84,8 @@ void Renderer2D::deinit() {}
 void Renderer2D::begin_scene(const OrthographicCamera &camera)
 {
 	data.tinted_texture_shader->bind();
-	data.tinted_texture_shader->set_matrix_4("view_projection",
-	                                         camera.projection_view_matrix);
+	data.tinted_texture_shader->set_matrix_4(
+	    "view_projection", camera.get_projection_view_matrix());
 
 	start_batch();
 }
@@ -94,7 +94,7 @@ void Renderer2D::begin_scene(const Camera &camera, glm::mat4 &transform)
 {
 	data.tinted_texture_shader->bind();
 	glm::mat4 projection_view_matrix =
-	    camera.projection * glm::inverse(transform);
+	    camera.get_projection_matrix() * glm::inverse(transform);
 	data.tinted_texture_shader->set_matrix_4("view_projection",
 	                                         projection_view_matrix);
 
@@ -141,6 +141,10 @@ uint32_t Renderer2D::Statistics::total_index_count() const
 {
 	return quad_count * Renderer2D::Data::INDICES_PER_QUAD;
 }
+
+uint32_t Renderer2D::Statistics::get_draw_calls() const { return quad_count; }
+
+uint32_t Renderer2D::Statistics::get_quad_count() const { return quad_count; }
 
 void Renderer2D::Statistics::reset()
 {
@@ -386,5 +390,12 @@ void Renderer2D::draw_quad(const glm::mat4 transform, Subtexture2D subtexture,
 	draw_quad(transform, subtexture.get_atlas(),
 	          subtexture.get_texture_coordinates(), tint, tiling_factor);
 }
+
+std::shared_ptr<Texture2D> Renderer2D::get_white_texture()
+{
+	return data.white_texture;
+};
+
+Renderer2D::Statistics &Renderer2D::get_statistics() { return data.statistics; }
 
 } // namespace sol

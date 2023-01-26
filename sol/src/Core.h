@@ -2,7 +2,7 @@
 
 #include "Log.h"
 
-#define BIT(x) (1 << x)
+#define SOL_BIT(x) (1 << x)
 
 #include <debug-trap.h>
 #define SOL_ASSERT(x, ...)                                                     \

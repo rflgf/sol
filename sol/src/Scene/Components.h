@@ -97,7 +97,7 @@ struct SpriteRenderer : public Component
 	}
 
 	SpriteRenderer()
-	    : sprite({Renderer2D::data.white_texture, {0, 1}, {1, 0}})
+	    : sprite({Renderer2D::get_white_texture(), {0, 1}, {1, 0}})
 	{
 	}
 
